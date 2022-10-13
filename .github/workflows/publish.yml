@@ -49,7 +49,7 @@ jobs:
     - name: Update manifest version
       run: |
         [xml]$manifest = get-content ".\$env:Uwp_Project_Directory\Package.appxmanifest"
-        $manifest.Package.Identity.Version = "${{ steps.version.outputs.result }}.0"
+        $manifest.Package.Identity.Version = "${{steps.version.outputs.result}}.0"
         $manifest.save(".\$env:Uwp_Project_Directory\Package.appxmanifest")
 
     - name: Decode the Pfx
@@ -68,6 +68,14 @@ jobs:
     
     - name: Remove the .pfx
       run: Remove-Item -path $env:Uwp_Project_Directory\$env:SigningCertificate
+
+    - name: Archive installation bundle
+      uses: actions/upload-artifact@v3
+      with:
+        name: Setup_bundle
+        path: $env:Uwp_Project_Directory\$env:Uwp_Project_Directory_${{steps.version.outputs.result}}.0_Test\*
+
+# ==================== DEBUGGING ====================
 
     - name: Test - List file tree
       run: tree /a /f > FileTree.txt
