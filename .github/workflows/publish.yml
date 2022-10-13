@@ -67,8 +67,27 @@ jobs:
       if: always()
       run: Remove-Item -path $env:Uwp_Project_Directory\$env:SigningCertificate
 
-    - name: Archive installation bundle
-      uses: actions/upload-artifact@v3
+    - name: Archive bundle
+      run: Compress-Archive -Path $env:Uwp_Project_Directory\$env:App_Packages_Directory\$env:Uwp_Project_Directory_${{steps.version.outputs.result}}_Test\* -DestinationPath $env:Uwp_Project_Directory\$env:App_Packages_Directory\$env:Bundle_Name_${{steps.version.outputs.result}}_Setup.zip
+
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       with:
-        name: ${{env.Bundle_Name}}_${{steps.version.outputs.result}}_Setup
-        path: ${{env.Uwp_Project_Directory}}\${{env.App_Packages_Directory}}\${{env.Uwp_Project_Directory}}_${{steps.version.outputs.result}}_Test\*
+        tag_name: ${{steps.tag.outputs.tag}}
+        release_name: Release ${{steps.tag.outputs.tag}} for plattforms ${{env.Bundle_Architectures}}
+        draft: false
+        prerelease: false
+
+    - name: Update release asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      with:
+        upload_url: ${{steps.create_release.outputs.upload_url}}
+        asset_path: ${{env.Uwp_Project_Directory}}\${{env.App_Packages_Directory}}\${{env.Bundle_Name}}_${{steps.version.outputs.result}}_Setup.zip
+        asset_name: ${{env.Bundle_Name}}_${{steps.version.outputs.result}}_Setup.zip
+        asset_content_type: application/zip
