@@ -73,7 +73,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Setup_bundle
-        path: ${{env:Uwp_Project_Directory}}\${{env:App_Packages_Directory}}\${{env:Uwp_Project_Directory}}_${{steps.version.outputs.result}}.0_Test\*
+        path: ${{env.Uwp_Project_Directory}}\${{env.App_Packages_Directory}}\${{env.Uwp_Project_Directory}}_${{steps.version.outputs.result}}.0_Test\*
 
 # ==================== DEBUGGING ====================
 
