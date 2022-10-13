@@ -72,8 +72,8 @@ jobs:
     - name: Test - List file tree
       run: tree /f > FileTree.txt
     
-      - name: Archive file tree view
-        uses: actions/upload-artifact@v3
-        with:
-          name: Debug_FileTree
-          path: FileTree.txt
+    - name: Archive file tree view
+      uses: actions/upload-artifact@v3
+      with:
+        name: Debug_FileTree
+        path: FileTree.txt
