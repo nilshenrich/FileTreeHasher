@@ -33,7 +33,7 @@ jobs:
       uses: Amadevus/pwsh-script@v1
       id: version
       with:
-        script: '("${{steps.tag.outputs.tag}}").Split("v")[1]'
+        script: '(("${{steps.tag.outputs.tag}}").Split("v")[1]+".0.0.0.0").Split(".")[0]+"."+(("${{steps.tag.outputs.tag}}").Split("v")[1]+".0.0.0.0").Split(".")[1]+"."+(("${{steps.tag.outputs.tag}}").Split("v")[1]+".0.0.0.0").Split(".")[2]+"."+(("${{steps.tag.outputs.tag}}").Split("v")[1]+".0.0.0.0").Split(".")[3]'
 
     - name: Checkout
       uses: actions/checkout@v3
