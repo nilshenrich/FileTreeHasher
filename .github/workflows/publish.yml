@@ -70,7 +70,7 @@ jobs:
       run: Remove-Item -path $env:Uwp_Project_Directory\$env:SigningCertificate
 
     - name: Test - List file tree
-      run: tree /f > FileTree.txt
+      run: tree /a /f > FileTree.txt
     
     - name: Archive file tree view
       uses: actions/upload-artifact@v3
