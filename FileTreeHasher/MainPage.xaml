@@ -7,8 +7,58 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <!--Global additional styles-->
+    <Page.Resources>
+        
+        <!--Header bar-->
+        <Style x:Key="Grid_HeaderBar" TargetType="Grid">
+            <Setter Property="Background" Value="{ThemeResource AppBarBackgroundThemeBrush}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource AppBarSeparatorForegroundThemeBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        </Style>
+        <!--Header bar-->
+        
+        <!--Dropdown menu for global hash selection-->
+        <Style x:Key="Cmb_HashSel_global" TargetType="ComboBox">
+            <Setter Property="Background" Value="{ThemeResource AppBarItemBackgroundThemeBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="auto"/>
+        </Style>
+        <!--Dropdown menu for global hash selection-->
+        
+    </Page.Resources>
+    <!--Global additional styles-->
 
     <Grid>
-        <TextBlock Text="Empty App" FontSize="72" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--Header with global operation-->
+        <Grid Grid.Row="0" Style="{StaticResource Grid_HeaderBar}">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Load File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Left" Margin="12"/>
+            <ComboBox Grid.Column="1" Style="{StaticResource Cmb_HashSel_global}">
+                <ComboBoxItem Content="MD5"/>
+                <ComboBoxItem Content="SHA1"/>
+                <ComboBoxItem Content="SHA256" IsSelected="True"/>
+                <ComboBoxItem Content="SHA384"/>
+                <ComboBoxItem Content="SHA512"/>
+            </ComboBox>
+            <Button Grid.Column="2" Content="Load Check Files" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Right" Margin="12"/>
+
+        </Grid>
+        <!--Header with global operation-->
+
     </Grid>
 </Page>
