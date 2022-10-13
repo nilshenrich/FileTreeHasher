@@ -28,7 +28,7 @@ jobs:
       uses: Amadevus/pwsh-script@v1
       id: version
       with:
-        script: '(("${{steps.tag.outputs.tag}}").Split("v")[1]+".0.0.0.0").Split(".")[0]+"."+(("${{steps.tag.outputs.tag}}").Split("v")[1]+".0.0.0.0").Split(".")[1]+"."+(("${{steps.tag.outputs.tag}}").Split("v")[1]+".0.0.0.0").Split(".")[2]+"."+(("${{steps.tag.outputs.tag}}").Split("v")[1]+".0.0.0.0").Split(".")[3]'
+        script: '(("${{ steps.tag.outputs.tag }}").Split("v")[1]+".0.0.0.0").Split(".")[0]+"."+(("${{ steps.tag.outputs.tag }}").Split("v")[1]+".0.0.0.0").Split(".")[1]+"."+(("${{ steps.tag.outputs.tag }}").Split("v")[1]+".0.0.0.0").Split(".")[2]+"."+(("${{ steps.tag.outputs.tag }}").Split("v")[1]+".0.0.0.0").Split(".")[3]'
 
     - name: Checkout
       uses: actions/checkout@v3
@@ -45,19 +45,19 @@ jobs:
 
     - name: Update manifest version
       run: |
-        [xml]$manifest = get-content ".\$env:Uwp_Project_Directory\Package.appxmanifest"
-        $manifest.Package.Identity.Version = "${{steps.version.outputs.result}}"
-        $manifest.save(".\$env:Uwp_Project_Directory\Package.appxmanifest")
+        [xml]$manifest = get-content ".\${{ env.Uwp_Project_Directory }}\Package.appxmanifest"
+        $manifest.Package.Identity.Version = "${{ steps.version.outputs.result }}"
+        $manifest.save(".\${{ env.Uwp_Project_Directory }}\Package.appxmanifest")
 
     - name: Decode the Pfx
       run: |
-        $pfx_cert_byte = [System.Convert]::FromBase64String("${{secrets.Base64_Encoded_Pfx}}")
+        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
         $currentDirectory = Get-Location
-        $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Uwp_Project_Directory -AdditionalChildPath $env:SigningCertificate
+        $certificatePath = Join-Path -Path $currentDirectory -ChildPath ${{ env.Uwp_Project_Directory }} -AdditionalChildPath ${{ env.SigningCertificate }}
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
     - name: Build solution
-      run: msbuild $env:Solution_Path /p:Platform=$env:Target_Architecture /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="$env:Bundle_Architectures" /p:AppxPackageDir=$env:App_Packages_Directory /p:PackageCertificateKeyFile=$env:SigningCertificate /restore
+      run: msbuild ${{ env.Solution_Path }} /p:Platform=${{ env.Target_Architecture }} /p:AppxBundle=${{ env.AppxBundle }} /p:AppxBundlePlatforms="${{ env.Bundle_Architectures }}" /p:AppxPackageDir=${{ env.App_Packages_Directory }} /p:PackageCertificateKeyFile=${{ env.SigningCertificate }} /restore
       env:
         AppxBundle: Always
         BuildMode: StoreUpload
@@ -65,19 +65,19 @@ jobs:
     
     - name: Remove the .pfx
       if: always()
-      run: Remove-Item -path $env:Uwp_Project_Directory\$env:SigningCertificate
+      run: Remove-Item -path ${{ env.Uwp_Project_Directory }}\${{ env.SigningCertificate }}
 
     - name: Archive bundle
-      run: Compress-Archive -Path $env:Uwp_Project_Directory\$env:App_Packages_Directory\$env:Bundle_Name_${{steps.version.outputs.result}}_Test\* -DestinationPath $env:Uwp_Project_Directory\$env:App_Packages_Directory\$env:Bundle_Name_${{steps.version.outputs.result}}_Setup.zip
+      run: Compress-Archive -Path ${{ env.Uwp_Project_Directory }}\${{ env.App_Packages_Directory }}\${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Test\* -DestinationPath ${{ env.Uwp_Project_Directory }}\${{ env.App_Packages_Directory }}\${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Setup.zip
 
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{steps.tag.outputs.tag}}
-        release_name: Release ${{steps.tag.outputs.tag}} for plattforms ${{env.Bundle_Architectures}}
+        tag_name: ${{ steps.tag.outputs.tag }}
+        release_name: Release ${{ steps.tag.outputs.tag }} for plattforms ${{ env.Bundle_Architectures }}
         draft: false
         prerelease: false
 
@@ -85,9 +85,9 @@ jobs:
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{steps.create_release.outputs.upload_url}}
-        asset_path: ${{env.Uwp_Project_Directory}}\${{env.App_Packages_Directory}}\${{env.Bundle_Name}}_${{steps.version.outputs.result}}_Setup.zip
-        asset_name: ${{env.Bundle_Name}}_${{steps.version.outputs.result}}_Setup.zip
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.Uwp_Project_Directory }}\${{ env.App_Packages_Directory }}\${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Setup.zip
+        asset_name: ${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Setup.zip
         asset_content_type: application/zip
