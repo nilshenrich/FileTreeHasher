@@ -14,6 +14,7 @@ jobs:
 
     env:
       App_Packages_Directory: AppPackages                   # Directory name to  store released packages
+      Bundle_Name: FileTreeHasher                           # Name of bundle
       SigningCertificate: FileTreeHasher_TemporaryKey.pfx   # Name of temporary generated key file (Get key from secrets.Base64_Encoded_Pfx)
       Solution_Path: FileTreeHasher.sln                     # Path to solution file (From repos root)
       Uwp_Project_Directory: FileTreeHasher                 # Directory of UWP to build (From repos root)
@@ -23,11 +24,7 @@ jobs:
     steps:
     - name: Get tag
       id: tag
-      # uses: dawidd6/action-get-tag@v1
-      run: echo '::set-output name=tag::v0.0.0'
-    
-    - name: Use tag
-      run: echo ${{steps.tag.outputs.tag}}
+      uses: dawidd6/action-get-tag@v1
     
     - name: Get version from tag name
       uses: Amadevus/pwsh-script@v1
@@ -75,18 +72,5 @@ jobs:
     - name: Archive installation bundle
       uses: actions/upload-artifact@v3
       with:
-        name: Setup_bundle
+        name: ${{env.Bundle_Name}}_${{steps.version.outputs.result}}_Setup
         path: ${{env.Uwp_Project_Directory}}\${{env.App_Packages_Directory}}\${{env.Uwp_Project_Directory}}_${{steps.version.outputs.result}}_Test\*
-
-# ==================== DEBUGGING ====================
-
-    - name: Test - List file tree
-      if: always()
-      run: tree /a /f > FileTree.txt
-    
-    - name: Archive file tree view
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: Debug_FileTree
-        path: FileTree.txt
