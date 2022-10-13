@@ -22,7 +22,8 @@ jobs:
     steps:
     - name: Get tag
       id: tag
-      uses: dawidd6/action-get-tag@v1
+      # uses: dawidd6/action-get-tag@v1
+      run: echo '::set-output name=tag::0.0.0'
     
     - name: Use tag
       run: echo ${{steps.tag.outputs.tag}}
