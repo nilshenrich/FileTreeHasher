@@ -16,14 +16,13 @@ jobs:
       App_Packages_Directory: AppPackages
       SigningCertificate: FileTreeHasher_TemporaryKey.pfx
       Solution_Path: FileTreeHasher.sln
-      Uwp_Project_Path: FileTreeHasher\FileTreeHasher.csproj
-      Uwp_Project_Directory: .\
+      Uwp_Project_Directory: FileTreeHasher
     
     steps:
     - name: Get tag
       id: tag
       # uses: dawidd6/action-get-tag@v1
-      run: echo '::set-output name=tag::0.0.0'
+      run: echo '::set-output name=tag::v0.0.0'
     
     - name: Use tag
       run: echo ${{steps.tag.outputs.tag}}
