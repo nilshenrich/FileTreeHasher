@@ -13,10 +13,12 @@ jobs:
     runs-on: windows-latest
 
     env:
-      App_Packages_Directory: AppPackages
-      SigningCertificate: FileTreeHasher_TemporaryKey.pfx
-      Solution_Path: FileTreeHasher.sln
-      Uwp_Project_Directory: FileTreeHasher
+      App_Packages_Directory: AppPackages                   # Directory name to  store released packages
+      SigningCertificate: FileTreeHasher_TemporaryKey.pfx   # Name of temporary generated key file (Get key from secrets.Base64_Encoded_Pfx)
+      Solution_Path: FileTreeHasher.sln                     # Path to solution file (From repos root)
+      Uwp_Project_Directory: FileTreeHasher                 # Directory of UWP to build (From repos root)
+      Bundle_Architectures: x64|x86|arm|arm64               # Architectures to build bundle for
+      Target_Architecture: x64                              # Architeccture of machine to build bundles at
     
     steps:
     - name: Get tag
@@ -49,7 +51,7 @@ jobs:
     - name: Update manifest version
       run: |
         [xml]$manifest = get-content ".\$env:Uwp_Project_Directory\Package.appxmanifest"
-        $manifest.Package.Identity.Version = "${{steps.version.outputs.result}}.0"
+        $manifest.Package.Identity.Version = "${{steps.version.outputs.result}}"
         $manifest.save(".\$env:Uwp_Project_Directory\Package.appxmanifest")
 
     - name: Decode the Pfx
@@ -60,27 +62,30 @@ jobs:
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
     - name: Build solution
-      run: msbuild $env:Solution_Path /p:Platform=x64 /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="x64:x86" /p:AppxPackageDir=$env:App_Packages_Directory /p:PackageCertificateKeyFile=$env:SigningCertificate /restore
+      run: msbuild $env:Solution_Path /p:Platform=$env:Target_Architecture /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="$env:Bundle_Architectures" /p:AppxPackageDir=$env:App_Packages_Directory /p:PackageCertificateKeyFile=$env:SigningCertificate /restore
       env:
         AppxBundle: Always
         BuildMode: StoreUpload
         Configuration: Release
     
     - name: Remove the .pfx
+      if: always()
       run: Remove-Item -path $env:Uwp_Project_Directory\$env:SigningCertificate
 
     - name: Archive installation bundle
       uses: actions/upload-artifact@v3
       with:
         name: Setup_bundle
-        path: ${{env.Uwp_Project_Directory}}\${{env.App_Packages_Directory}}\${{env.Uwp_Project_Directory}}_${{steps.version.outputs.result}}.0_Test\*
+        path: ${{env.Uwp_Project_Directory}}\${{env.App_Packages_Directory}}\${{env.Uwp_Project_Directory}}_${{steps.version.outputs.result}}_Test\*
 
 # ==================== DEBUGGING ====================
 
     - name: Test - List file tree
+      if: always()
       run: tree /a /f > FileTree.txt
     
     - name: Archive file tree view
+      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: Debug_FileTree
