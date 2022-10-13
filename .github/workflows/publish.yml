@@ -68,7 +68,7 @@ jobs:
       run: Remove-Item -path $env:Uwp_Project_Directory\$env:SigningCertificate
 
     - name: Archive bundle
-      run: Compress-Archive -Path $env:Uwp_Project_Directory\$env:App_Packages_Directory\$env:Uwp_Project_Directory_${{steps.version.outputs.result}}_Test\* -DestinationPath $env:Uwp_Project_Directory\$env:App_Packages_Directory\$env:Bundle_Name_${{steps.version.outputs.result}}_Setup.zip
+      run: Compress-Archive -Path $env:Uwp_Project_Directory\$env:App_Packages_Directory\$env:Bundle_Name_${{steps.version.outputs.result}}_Test\* -DestinationPath $env:Uwp_Project_Directory\$env:App_Packages_Directory\$env:Bundle_Name_${{steps.version.outputs.result}}_Setup.zip
 
     - name: Create release
       id: create_release
