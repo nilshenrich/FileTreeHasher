@@ -8,7 +8,7 @@ namespace FileTreeHasher
     // Hash algorithms
     public enum HashAlgirithms : int
     {
-        MD5,
+        MD5 = 0,
         SHA1,
         SHA256,
         SHA384,

@@ -30,7 +30,9 @@ namespace FileTreeHasher
             ExplorerFile SampleNestedFile = new ExplorerFile()
             {
                 Name = "Sample nested file",
-                IconSource = new Uri(BaseUri, "/Icons/Wait.png")
+                IconSource = new Uri(BaseUri, "/Icons/Wait.png"),
+                GeneratedHash = "d41d8cd98f00b204e9800998ecf8427e",
+                SelectedHashAlg = HashAlgirithms.SHA1
             };
             SampleTopLevelFolder.Children.Add(SampleNestedFile);
             data.Add(SampleTopLevelFolder);
