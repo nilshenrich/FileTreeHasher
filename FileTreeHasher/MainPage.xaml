@@ -37,6 +37,29 @@
 
         <!-- ==================== Tree view ==================== -->
 
+        <DataTemplate x:Key="FolderTemplate" x:DataType="local:ExplorerItem">
+            <muxc:TreeViewItem ItemsSource="{x:Bind Children}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Icons/Folder.png"/>
+                    <TextBlock Text="{x:Bind Name}" />
+                </StackPanel>
+            </muxc:TreeViewItem>
+        </DataTemplate>
+
+        <DataTemplate x:Key="FileTemplate" x:DataType="local:ExplorerItem">
+            <muxc:TreeViewItem>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Icons/Wait.png"/>
+                    <TextBlock Text="{x:Bind Name}"/>
+                </StackPanel>
+            </muxc:TreeViewItem>
+        </DataTemplate>
+
+        <local:ExplorerItemTemplateSelector
+            x:Key="ExplorerItemTemplateSelector"
+            FolderTemplate="{StaticResource FolderTemplate}"
+            FileTemplate="{StaticResource FileTemplate}" />
+
     </Page.Resources>
     <!--Global additional styles-->
 
@@ -68,6 +91,13 @@
 
         </Grid>
         <!--Header with global operation-->
+
+        <!--Loaded file tree-->
+        <!--This is made of a single tree view element with nested items-->
+        <muxc:TreeView Grid.Row="1"
+                       ItemsSource="{x:Bind DataSource}"
+                       ItemTemplateSelector="{StaticResource ExplorerItemTemplateSelector}"/>
+        <!--Loaded file tree-->
 
     </Grid>
 </Page>
