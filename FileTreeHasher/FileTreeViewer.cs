@@ -5,16 +5,6 @@ using Windows.UI.Xaml.Controls;
 
 namespace FileTreeHasher
 {
-    // Hash algorithms
-    public enum HashAlgirithms : int
-    {
-        MD5 = 0,
-        SHA1,
-        SHA256,
-        SHA384,
-        SHA512
-    }
-
     public class ExplorerItem
     {
         public string Name { get; set; }
@@ -46,7 +36,7 @@ namespace FileTreeHasher
         public Uri IconSource { get; set; }
         public string GeneratedHash { get; set; }
         public string CheckHash { get; set; }
-        public int SelectedHashAlgIndex = (int)HashAlgirithms.SHA256;
+        public int SelectedHashAlgIndex = (int)HashAlgirithmNames.SHA256;
     }
 
     public class ExplorerItemTemplateSelector : DataTemplateSelector

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
@@ -15,7 +16,7 @@ namespace FileTreeHasher
     public sealed partial class MainPage : Page
     {
         // Globally selected hash algorithm
-        private int GlobalHashAlgIndex = (int)HashAlgirithms.SHA256;
+        private int GlobalHashAlgIndex = (int)HashAlgirithmNames.SHA256;
 
         // Tree view content
         private ObservableCollection<ExplorerItem> LoadedFileTreeItems = new ObservableCollection<ExplorerItem>();
@@ -58,6 +59,8 @@ namespace FileTreeHasher
                 rootExplorer.Add(explorerFile);
 
                 // Start has generation asynchronously
+                // TODO: Hash is written but not updated on UI for all items
+                explorerFile.GeneratedHash = await HashGenerator.generateHashAsync(file, (HashAlgirithmNames)GlobalHashAlgIndex);
             }
         }
 
