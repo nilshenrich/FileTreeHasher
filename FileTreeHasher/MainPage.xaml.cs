@@ -24,7 +24,8 @@ namespace FileTreeHasher
             ObservableCollection<ExplorerItem> data = new ObservableCollection<ExplorerItem>();
             ExplorerFolder SampleTopLevelFolder = new ExplorerFolder()
             {
-                Name = "Sample top level folder"
+                Name = "Sample top level folder",
+                IsExpanded = true
             };
             ExplorerFile SampleNestedFile = new ExplorerFile()
             {
