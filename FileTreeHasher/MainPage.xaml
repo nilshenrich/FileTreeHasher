@@ -6,10 +6,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <!--Global additional styles-->
     <Page.Resources>
+
+        <!-- ==================== General settings ==================== -->
+
+        <GridLength x:Key="General_HashSelSpaceWidth_px">150</GridLength>
+
+        <!-- ==================== Header ==================== -->
 
         <!--Header bar-->
         <Style x:Key="Grid_HeaderBar" TargetType="Grid">
@@ -28,6 +35,8 @@
         </Style>
         <!--Dropdown menu for global hash selection-->
 
+        <!-- ==================== Tree view ==================== -->
+
     </Page.Resources>
     <!--Global additional styles-->
 
@@ -43,7 +52,7 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="{StaticResource General_HashSelSpaceWidth_px}"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
