@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
@@ -25,6 +26,11 @@ namespace FileTreeHasher
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Bring folder content to UI
+        /// </summary>
+        /// <param name="rootFolder"></param>
+        /// <param name="rootExplorer"></param>
         private async void loadFileTree(StorageFolder rootFolder, ObservableCollection<ExplorerItem> rootExplorer)
         {
             // Draw all direct subdirectories
@@ -52,14 +58,14 @@ namespace FileTreeHasher
                 {
                     Name = file.Name,
                     IconSource = new Uri(BaseUri, "/Icons/Wait.png"),
-                    SelectedHashAlgIndex = GlobalHashAlgIndex,
-                    GeneratedHash = await HashGenerator.generateHashAsync(file, (HashAlgirithmNames)GlobalHashAlgIndex)
+                    SelectedHashAlgIndex = GlobalHashAlgIndex
                 };
 
                 // Add file to UI
-                // !! Important to do at the end !!
-                // !! Items modified after insersion won't be updated on UI !!
                 rootExplorer.Add(explorerFile);
+
+                // Generate hash in task
+                _ = Task.Run(() => HashGenerator.addHashAsync(file, explorerFile));
             }
         }
 

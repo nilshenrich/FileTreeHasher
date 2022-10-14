@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
@@ -18,11 +17,11 @@ namespace FileTreeHasher
 
     internal static class HashGenerator
     {
-        public static async Task<string> generateHashAsync(StorageFile file, HashAlgirithmNames hashAlgirithmName)
+        public static async void addHashAsync(StorageFile fileOnDisk, ExplorerFile fileInUi)
         {
             // Select hash generator
             HashAlgorithm hasher;
-            switch (hashAlgirithmName)
+            switch (fileInUi.SelectedHashAlgName)
             {
                 case HashAlgirithmNames.MD5:
                     hasher = MD5.Create();
@@ -45,19 +44,19 @@ namespace FileTreeHasher
                     break;
 
                 default:
-                    return "";
+                    fileInUi.GeneratedHash = "";
+                    return;
             }
 
             // Read file content
-            var fileBuffer = await FileIO.ReadBufferAsync(file);
+            var fileBuffer = await FileIO.ReadBufferAsync(fileOnDisk);
             byte[] fileBytes = new byte[fileBuffer.Length];
             DataReader.FromBuffer(fileBuffer).ReadBytes(fileBytes);
 
-            // Generate and return hash string
+            // Generate hash string and update UI
             byte[] hashRaw = hasher.ComputeHash(fileBytes);
             string hash = BitConverter.ToString(hashRaw).Replace("-", "").ToLower();
-
-            return hash;
+            fileInUi.GeneratedHash = hash;
         }
     }
 }
