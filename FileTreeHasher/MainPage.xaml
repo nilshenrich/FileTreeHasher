@@ -139,7 +139,7 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Content="Load File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Left" Margin="12" Click="Click_LoadFileTree"/>
-            <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex}" Style="{StaticResource Cmb_HashSel_global}">
+            <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}">
                 <ComboBoxItem Content="MD5"/>
                 <ComboBoxItem Content="SHA1"/>
                 <ComboBoxItem Content="SHA256"/>
