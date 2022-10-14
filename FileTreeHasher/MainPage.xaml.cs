@@ -21,15 +21,13 @@ namespace FileTreeHasher
         private ObservableCollection<ExplorerItem> GetData()
         {
             ObservableCollection<ExplorerItem> data = new ObservableCollection<ExplorerItem>();
-            ExplorerItem SampleTopLevelFolder = new ExplorerItem()
+            ExplorerFolder SampleTopLevelFolder = new ExplorerFolder()
             {
-                Name = "Sample top level folder",
-                Type = ExplorerItemType.Folder
+                Name = "Sample top level folder"
             };
-            ExplorerItem SampleNestedFile = new ExplorerItem()
+            ExplorerFile SampleNestedFile = new ExplorerFile()
             {
-                Name = "Sample nested file",
-                Type = ExplorerItemType.File
+                Name = "Sample nested file"
             };
             SampleTopLevelFolder.Children.Add(SampleNestedFile);
             data.Add(SampleTopLevelFolder);

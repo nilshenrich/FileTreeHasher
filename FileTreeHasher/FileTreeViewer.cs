@@ -10,7 +10,6 @@ namespace FileTreeHasher
     {
         //public event PropertyChangedEventHandler PropertyChanged;
         public string Name { get; set; }
-        public ExplorerItemType Type { get; set; }
         private ObservableCollection<ExplorerItem> m_children;
         public ObservableCollection<ExplorerItem> Children
         {
@@ -68,15 +67,22 @@ namespace FileTreeHasher
         //}
     }
 
-    class ExplorerItemTemplateSelector : DataTemplateSelector
+    public class ExplorerFolder : ExplorerItem
+    {
+    }
+
+    public class ExplorerFile : ExplorerItem
+    {
+    }
+
+    public class ExplorerItemTemplateSelector : DataTemplateSelector
     {
         public DataTemplate FolderTemplate { get; set; }
         public DataTemplate FileTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            var explorerItem = (ExplorerItem)item;
-            return explorerItem.Type == ExplorerItemType.Folder ? FolderTemplate : FileTemplate;
+            return item is ExplorerFile ? FileTemplate : FolderTemplate;
         }
     }
 }
