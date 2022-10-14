@@ -37,6 +37,11 @@ namespace FileTreeHasher
         public string GeneratedHash { get; set; }
         public string CheckHash { get; set; }
         public int SelectedHashAlgIndex = (int)HashAlgirithmNames.SHA256;
+        public HashAlgirithmNames SelectedHashAlgName
+        {
+            get { return (HashAlgirithmNames)SelectedHashAlgIndex; }
+            set { SelectedHashAlgIndex = (int)value; }
+        }
     }
 
     public class ExplorerItemTemplateSelector : DataTemplateSelector

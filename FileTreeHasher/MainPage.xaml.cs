@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
@@ -57,8 +58,7 @@ namespace FileTreeHasher
                 {
                     Name = file.Name,
                     IconSource = new Uri(BaseUri, "/Icons/Wait.png"),
-                    SelectedHashAlgIndex = GlobalHashAlgIndex,
-                    GeneratedHash = await HashGenerator.generateHashAsync(file, (HashAlgirithmNames)GlobalHashAlgIndex)
+                    SelectedHashAlgIndex = GlobalHashAlgIndex
                 };
 
                 // Add file to UI
@@ -66,6 +66,9 @@ namespace FileTreeHasher
                 // !! Items modified after insersion won't be updated on UI !!
                 // -> Solution: https://www.syncfusion.com/forums/142654/sftree-does-not-refresh-when-items-are-added?reply=NSgzwQ
                 rootExplorer.Add(explorerFile);
+
+                // Generate hash in task
+                _ = Task.Run(() => HashGenerator.addHashAsync(file, explorerFile));
             }
         }
 
