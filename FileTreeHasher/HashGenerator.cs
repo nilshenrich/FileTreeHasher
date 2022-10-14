@@ -45,7 +45,7 @@ namespace FileTreeHasher
                     break;
 
                 default:
-                    return "<Invalid hash algorithm>";
+                    return "";
             }
 
             // Read file content

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
@@ -48,19 +47,19 @@ namespace FileTreeHasher
             foreach (StorageFile file in files)
             {
                 // Create item for file
+                // TODO: Adding hash here stucks file tree loading
                 ExplorerFile explorerFile = new ExplorerFile()
                 {
                     Name = file.Name,
                     IconSource = new Uri(BaseUri, "/Icons/Wait.png"),
-                    SelectedHashAlgIndex = GlobalHashAlgIndex
+                    SelectedHashAlgIndex = GlobalHashAlgIndex,
+                    GeneratedHash = await HashGenerator.generateHashAsync(file, (HashAlgirithmNames)GlobalHashAlgIndex)
                 };
 
                 // Add file to UI
+                // !! Important to do at the end !!
+                // !! Items modified after insersion won't be updated on UI !!
                 rootExplorer.Add(explorerFile);
-
-                // Start has generation asynchronously
-                // TODO: Hash is written but not updated on UI for all items
-                explorerFile.GeneratedHash = await HashGenerator.generateHashAsync(file, (HashAlgirithmNames)GlobalHashAlgIndex);
             }
         }
 
@@ -79,6 +78,9 @@ namespace FileTreeHasher
             // Cancel if no folder was selected
             if (folder == null)
                 return;
+
+            // Clear all old lodaded elements
+            LoadedFileTreeItems.Clear();
 
             // Load file structure to UI
             loadFileTree(folder, LoadedFileTreeItems);
