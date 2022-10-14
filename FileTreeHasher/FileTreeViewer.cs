@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -31,12 +32,24 @@ namespace FileTreeHasher
         public bool IsExpanded { get; set; } = true;
     }
 
-    public class ExplorerFile : ExplorerItem
+    public class ExplorerFile : ExplorerItem, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public Uri IconSource { get; set; }
-        public string GeneratedHash { get; set; }
+        private string m_generatedHash;
+        public string GeneratedHash
+        {
+            get { return m_generatedHash; }
+            set
+            {
+                m_generatedHash = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(value));
+            }
+        }
         public string CheckHash { get; set; }
         public int SelectedHashAlgIndex = (int)HashAlgirithmNames.SHA256;
+
         public HashAlgirithmNames SelectedHashAlgName
         {
             get { return (HashAlgirithmNames)SelectedHashAlgIndex; }
