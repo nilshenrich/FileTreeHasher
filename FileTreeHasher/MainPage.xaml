@@ -37,7 +37,7 @@
 
         <!-- ==================== Tree view ==================== -->
 
-        <DataTemplate x:Key="FolderTemplate" x:DataType="local:ExplorerItem">
+        <DataTemplate x:Key="FolderTemplate" x:DataType="local:ExplorerFolder">
             <muxc:TreeViewItem ItemsSource="{x:Bind Children}">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Icons/Folder.png"/>
@@ -46,10 +46,14 @@
             </muxc:TreeViewItem>
         </DataTemplate>
 
-        <DataTemplate x:Key="FileTemplate" x:DataType="local:ExplorerItem">
+        <DataTemplate x:Key="FileTemplate" x:DataType="local:ExplorerFile">
             <muxc:TreeViewItem>
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/Icons/Wait.png"/>
+                    <Image>
+                        <Image.Source>
+                            <BitmapImage UriSource="{x:Bind IconSource}"/>
+                        </Image.Source>
+                    </Image>
                     <TextBlock Text="{x:Bind Name}"/>
                 </StackPanel>
             </muxc:TreeViewItem>

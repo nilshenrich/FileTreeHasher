@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -67,12 +68,11 @@ namespace FileTreeHasher
         //}
     }
 
-    public class ExplorerFolder : ExplorerItem
-    {
-    }
+    public class ExplorerFolder : ExplorerItem { }
 
     public class ExplorerFile : ExplorerItem
     {
+        public Uri IconSource { get; set; }
     }
 
     public class ExplorerItemTemplateSelector : DataTemplateSelector
