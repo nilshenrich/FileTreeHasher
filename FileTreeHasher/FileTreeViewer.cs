@@ -46,12 +46,6 @@ namespace FileTreeHasher
         public Uri IconSource { get; set; }
         public string GeneratedHash { get; set; }
         public string CheckHash { get; set; }
-        // TODO: Needed?
-        public HashAlgirithms SelectedHashAlg
-        {
-            get { return (HashAlgirithms)SelectedHashAlgIndex; }
-            set { SelectedHashAlgIndex = (int)value; }
-        }
         public int SelectedHashAlgIndex = (int)HashAlgirithms.SHA256;
     }
 

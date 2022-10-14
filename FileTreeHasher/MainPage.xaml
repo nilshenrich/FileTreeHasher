@@ -79,7 +79,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="/Icons/Folder.png" HorizontalAlignment="Left"/>
+                    <Image Grid.Column="0" Source="/Icons/Folder.png"/>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
                 </Grid>
             </muxc:TreeViewItem>
@@ -94,7 +94,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" HorizontalAlignment="Left">
+                    <Image Grid.Column="0">
                         <Image.Source>
                             <BitmapImage UriSource="{x:Bind IconSource}"/>
                         </Image.Source>
