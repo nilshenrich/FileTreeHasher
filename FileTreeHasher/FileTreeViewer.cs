@@ -5,7 +5,15 @@ using Windows.UI.Xaml.Controls;
 
 namespace FileTreeHasher
 {
-    public enum ExplorerItemType { Folder, File };
+    // Hash algorithms
+    public enum HashAlgirithms : int
+    {
+        MD5,
+        SHA1,
+        SHA256,
+        SHA384,
+        SHA512
+    }
 
     public class ExplorerItem
     {
@@ -36,6 +44,14 @@ namespace FileTreeHasher
     public class ExplorerFile : ExplorerItem
     {
         public Uri IconSource { get; set; }
+        public string GeneratedHash { get; set; }
+        public string CheckHash { get; set; }
+        public HashAlgirithms SelectedHashAlg
+        {
+            get { return (HashAlgirithms)SelectedHashAlgIndex; }
+            set { SelectedHashAlgIndex = (int)value; }
+        }
+        public int SelectedHashAlgIndex = (int)HashAlgirithms.SHA256;
     }
 
     public class ExplorerItemTemplateSelector : DataTemplateSelector

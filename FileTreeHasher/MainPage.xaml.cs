@@ -14,7 +14,7 @@ namespace FileTreeHasher
         private ObservableCollection<ExplorerItem> DataSource;
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             DataSource = GetData();
         }
 
