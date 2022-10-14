@@ -6,10 +6,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <!--Global additional styles-->
     <Page.Resources>
+
+        <!-- ==================== General settings ==================== -->
+
+        <x:Double x:Key="General_FileTreeLineHeight_px">20</x:Double>
+        <GridLength x:Key="General_HashSelSpaceWidth_px">150</GridLength>
+        <Thickness x:Key="General_FileTreeItemMargin_px">10,0,0,0</Thickness>
+
+        <!-- ==================== Header ==================== -->
 
         <!--Header bar-->
         <Style x:Key="Grid_HeaderBar" TargetType="Grid">
@@ -28,6 +37,88 @@
         </Style>
         <!--Dropdown menu for global hash selection-->
 
+        <!-- ==================== Tree view ==================== -->
+
+        <!--Folder/File name-->
+        <Style x:Key="Txt_ItemName" TargetType="TextBlock">
+            <Setter Property="Margin" Value="{StaticResource General_FileTreeItemMargin_px}"/>
+        </Style>
+        <!--Folder/File name-->
+
+        <!--Generated hash-->
+        <Style x:Key="Txt_GenHash" TargetType="TextBlock">
+            <Setter Property="Margin" Value="{StaticResource General_FileTreeItemMargin_px}"/>
+            <Setter Property="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
+        </Style>
+        <!--Generated hash-->
+
+        <!--Input for hash check-->
+        <Style x:Key="Inp_HashCheck" TargetType="TextBox">
+            <Setter Property="Margin" Value="{StaticResource General_FileTreeItemMargin_px}"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Padding" Value="5,2,0,2"/>
+        </Style>
+        <!--Input for hash check-->
+
+        <!--Hash algorithm selector for single file-->
+        <Style x:Key="Cmb_HashSel_special" TargetType="ComboBox">
+            <Setter Property="Margin" Value="{StaticResource General_FileTreeItemMargin_px}"/>
+            <Setter Property="Width" Value="90"/>
+            <!-- TODO: Caret hidden -->
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Padding" Value="12,0,0,0"/>
+        </Style>
+        <!--Hash algorithm selector for single file-->
+
+        <!--Template for tree view line-->
+        <DataTemplate x:Key="FolderTemplate" x:DataType="local:ExplorerFolder">
+            <muxc:TreeViewItem ItemsSource="{x:Bind Children, Mode=OneWay}" IsExpanded="{x:Bind IsExpanded, Mode=TwoWay}">
+                <Grid Height="{StaticResource General_FileTreeLineHeight_px}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" Source="/Icons/Folder.png"/>
+                    <TextBlock Grid.Column="1" Text="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
+                </Grid>
+            </muxc:TreeViewItem>
+        </DataTemplate>
+        <DataTemplate x:Key="FileTemplate" x:DataType="local:ExplorerFile">
+            <muxc:TreeViewItem>
+                <Grid Height="{StaticResource General_FileTreeLineHeight_px}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0">
+                        <Image.Source>
+                            <BitmapImage UriSource="{x:Bind IconSource}"/>
+                        </Image.Source>
+                    </Image>
+                    <TextBlock Grid.Column="1" Text="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
+                    <TextBlock Grid.Column="2" Text="{x:Bind GeneratedHash}" Style="{StaticResource Txt_GenHash}"/>
+                    <!--Maybe needed for live update input: https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.data.binding.mode?view=winrt-22621-->
+                    <TextBox Grid.Column="3" Text="{x:Bind CheckHash, Mode=TwoWay}" Style="{StaticResource Inp_HashCheck}"/>
+                    <ComboBox Grid.Column="4" SelectedIndex="{x:Bind SelectedHashAlgIndex, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_special}">
+                        <ComboBoxItem Content="MD5"/>
+                        <ComboBoxItem Content="SHA1"/>
+                        <ComboBoxItem Content="SHA256"/>
+                        <ComboBoxItem Content="SHA384"/>
+                        <ComboBoxItem Content="SHA512"/>
+                    </ComboBox>
+                </Grid>
+            </muxc:TreeViewItem>
+        </DataTemplate>
+        <local:ExplorerItemTemplateSelector
+            x:Key="ExplorerItemTemplateSelector"
+            FolderTemplate="{StaticResource FolderTemplate}"
+            FileTemplate="{StaticResource FileTemplate}" />
+        <!--Template for tree view line-->
+
     </Page.Resources>
     <!--Global additional styles-->
 
@@ -43,15 +134,15 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="{StaticResource General_HashSelSpaceWidth_px}"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="Load File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Left" Margin="12"/>
-            <ComboBox Grid.Column="1" Style="{StaticResource Cmb_HashSel_global}">
+            <Button Grid.Column="0" Content="Load File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Left" Margin="12" Click="Click_LoadFileTree"/>
+            <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex}" Style="{StaticResource Cmb_HashSel_global}">
                 <ComboBoxItem Content="MD5"/>
                 <ComboBoxItem Content="SHA1"/>
-                <ComboBoxItem Content="SHA256" IsSelected="True"/>
+                <ComboBoxItem Content="SHA256"/>
                 <ComboBoxItem Content="SHA384"/>
                 <ComboBoxItem Content="SHA512"/>
             </ComboBox>
@@ -59,6 +150,13 @@
 
         </Grid>
         <!--Header with global operation-->
+
+        <!--Loaded file tree-->
+        <!--This is made of a single tree view element with nested items-->
+        <muxc:TreeView Grid.Row="1"
+                       ItemsSource="{x:Bind LoadedFileTreeItems, Mode=OneWay}"
+                       ItemTemplateSelector="{StaticResource ExplorerItemTemplateSelector}"/>
+        <!--Loaded file tree-->
 
     </Grid>
 </Page>
