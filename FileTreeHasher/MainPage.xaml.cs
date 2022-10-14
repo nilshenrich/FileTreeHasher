@@ -25,6 +25,11 @@ namespace FileTreeHasher
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Bring folder content to UI
+        /// </summary>
+        /// <param name="rootFolder"></param>
+        /// <param name="rootExplorer"></param>
         private async void loadFileTree(StorageFolder rootFolder, ObservableCollection<ExplorerItem> rootExplorer)
         {
             // Draw all direct subdirectories
@@ -59,6 +64,7 @@ namespace FileTreeHasher
                 // Add file to UI
                 // !! Important to do at the end !!
                 // !! Items modified after insersion won't be updated on UI !!
+                // -> Solution: https://www.syncfusion.com/forums/142654/sftree-does-not-refresh-when-items-are-added?reply=NSgzwQ
                 rootExplorer.Add(explorerFile);
             }
         }
