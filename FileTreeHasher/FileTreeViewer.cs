@@ -2,18 +2,22 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace FileTreeHasher
 {
-    public class ExplorerItem: INotifyPropertyChanged
+    public class ExplorerItem : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             // Raise the PropertyChanged event, passing the name of the property whose value has changed.
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            var args = new PropertyChangedEventArgs(propertyName);
+            _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            PropertyChanged?.Invoke(this, args));
         }
 
         public string Name { get; set; }

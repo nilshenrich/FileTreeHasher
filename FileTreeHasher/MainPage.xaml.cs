@@ -62,9 +62,6 @@ namespace FileTreeHasher
                 };
 
                 // Add file to UI
-                // !! Important to do at the end !!
-                // !! Items modified after insersion won't be updated on UI !!
-                // -> Solution: https://www.syncfusion.com/forums/142654/sftree-does-not-refresh-when-items-are-added?reply=NSgzwQ
                 rootExplorer.Add(explorerFile);
 
                 // Generate hash in task
