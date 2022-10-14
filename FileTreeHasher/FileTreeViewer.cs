@@ -38,7 +38,7 @@ namespace FileTreeHasher
 
     public class ExplorerFolder : ExplorerItem
     {
-        public bool IsExpanded { get; set; } = false;
+        public bool IsExpanded { get; set; } = true;
     }
 
     public class ExplorerFile : ExplorerItem
@@ -46,6 +46,7 @@ namespace FileTreeHasher
         public Uri IconSource { get; set; }
         public string GeneratedHash { get; set; }
         public string CheckHash { get; set; }
+        // TODO: Needed?
         public HashAlgirithms SelectedHashAlg
         {
             get { return (HashAlgirithms)SelectedHashAlgIndex; }

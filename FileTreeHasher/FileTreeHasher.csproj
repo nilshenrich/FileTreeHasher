@@ -193,8 +193,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Icons\Check.png" />
-    <Content Include="Icons\Collapse.png" />
-    <Content Include="Icons\Expand.png" />
     <Content Include="Icons\Fail.png" />
     <Content Include="Icons\Folder.png" />
     <Content Include="Properties\Default.rd.xml" />
