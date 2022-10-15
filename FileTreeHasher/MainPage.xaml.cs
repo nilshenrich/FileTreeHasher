@@ -23,7 +23,7 @@ namespace FileTreeHasher
         private ObservableObject<int> GlobalHashAlgIndex = new ObservableObject<int>((int)HashAlgirithmNames.SHA256);
 
         // Path of currentliy selected folder
-       private const string SelectedFolderPath_default = "<No folder selected>";
+        private const string SelectedFolderPath_default = "<No folder selected>";
         private ObservableObject<string> SelectedFolderPath = new ObservableObject<string>(SelectedFolderPath_default);
 
         // Tree view content
@@ -77,6 +77,10 @@ namespace FileTreeHasher
         /// <param name="hash"></param>
         private void compareFileHash(ExplorerFile file, string hash)
         {
+            // For empty generated string, do nothing
+            if (string.IsNullOrEmpty(file.GeneratedHash.Value))
+                return;
+
             // For empty comparison string, don't compare
             if (string.IsNullOrEmpty(hash))
             {
@@ -249,5 +253,5 @@ namespace FileTreeHasher
             string hash = (sender as TextBox).Text;
             compareFileHash(file, hash);
         }
-}
+    }
 }
