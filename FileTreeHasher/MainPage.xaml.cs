@@ -7,6 +7,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
@@ -224,6 +225,17 @@ namespace FileTreeHasher
             ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
             string hash = (sender as TextBox).Text;
             compareFileHash(file, hash);
+        }
+
+        /// <summary>
+        /// Click event: Load files that contain hash strings and paste hashes to inputs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Click_LoadHashTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var messageDialog = new MessageDialog("Button not implemented!\nClicking this button shall open another folder browsing dialog to select a folder of .md5/.sha1/.sha256/.sha384/.sha512 files that contain belonging check strings and pasting those strings into input fields of loaded files");
+            _ = messageDialog.ShowAsync();
         }
     }
 }

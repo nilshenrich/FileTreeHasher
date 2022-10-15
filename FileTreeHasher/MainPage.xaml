@@ -134,7 +134,6 @@
                     </Image>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
                     <TextBlock Grid.Column="2" Text="{x:Bind GeneratedHash.Value, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind GeneratedHash.Value}" Style="{StaticResource Txt_GenHash}"/>
-                    <!--Maybe needed for live update input: https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.data.binding.mode?view=winrt-22621-->
                     <TextBox Grid.Column="3" Text="{x:Bind CheckHash, Mode=TwoWay}" Style="{StaticResource Inp_HashCheck}" TextChanged="Type_CheckHashChanged"/>
                     <ComboBox Grid.Column="4" SelectedIndex="{x:Bind SelectedHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_special}" SelectionChanged="Change_SpecialHashChanged">
                         <ComboBoxItem Content="MD5"/>
@@ -179,7 +178,7 @@
                 <ComboBoxItem Content="SHA384"/>
                 <ComboBoxItem Content="SHA512"/>
             </ComboBox>
-            <Button Grid.Column="2" Content="Load Check Files" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Right" Margin="12"/>
+            <Button Grid.Column="2" Content="Load Check Files" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Right" Margin="12" Click="Click_LoadHashTree"/>
 
         </Grid>
         <!--Header with global operation-->
