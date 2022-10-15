@@ -72,7 +72,7 @@ namespace FileTreeHasher
         public StorageFile FileOnDisk;
         public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
-        public string CheckHash;
+        public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
         public int OldSelectedHashAlgIndex;
         public HashAlgirithmNames SelectedHashAlgName

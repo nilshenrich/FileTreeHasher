@@ -138,7 +138,7 @@
                     </Image>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
                     <TextBlock Grid.Column="2" Text="{x:Bind GeneratedHash.Value, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind GeneratedHash.Value}" Style="{StaticResource Txt_GenHash}"/>
-                    <TextBox Grid.Column="3" Style="{StaticResource Inp_HashCheck}" TextChanged="Type_CheckHashChanged"/>
+                    <TextBox Grid.Column="3" Text="{x:Bind CheckHash.Value, Mode=OneWay}" Style="{StaticResource Inp_HashCheck}" TextChanged="Type_CheckHashChanged"/>
                     <ComboBox Grid.Column="4" SelectedIndex="{x:Bind SelectedHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_special}" SelectionChanged="Change_SpecialHashChanged">
                         <ComboBoxItem Content="MD5"/>
                         <ComboBoxItem Content="SHA1"/>
@@ -219,7 +219,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0" Content="Load Check Files" Style="{ThemeResource PivotTitleContentControlStyle}" Margin="12,12,0,12" Click="Click_LoadHashTree"/>
-                <Button Grid.Column="1" Content="Clear all Inputs" Style="{ThemeResource PivotTitleContentControlStyle}" Margin="12"/>
+                <Button Grid.Column="1" Content="Clear all Inputs" Style="{ThemeResource PivotTitleContentControlStyle}" Margin="12" Click="Click_ClearCheckinputs"/>
 
             </Grid>
             <!--Load/Clear hash files from system-->

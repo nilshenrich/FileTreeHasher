@@ -81,14 +81,14 @@ namespace FileTreeHasher
                 return;
 
             // For empty comparison string, don't compare
-            if (string.IsNullOrEmpty(file.CheckHash))
+            if (string.IsNullOrEmpty(file.CheckHash.Value))
             {
                 markFileReady(file);
                 return;
             }
 
             // Check string
-            if (file.GeneratedHash.Value == file.CheckHash.ToLower())
+            if (file.GeneratedHash.Value == file.CheckHash.Value.ToLower())
                 markAsPassed(file);
             else
                 markAsFailed(file);
@@ -169,6 +169,16 @@ namespace FileTreeHasher
                 file.SelectedHashAlgIndex.Value = GlobalHashAlgIndex.Value;
         }
 
+        private void clearAllInputs(ObservableCollection<ExplorerItem> rootFolder)
+        {
+            // Clear all inputs for hash comparison
+            foreach (ExplorerFolder folder in rootFolder.OfType<ExplorerFolder>())
+                clearAllInputs(folder.Children);
+
+            foreach (ExplorerFile file in rootFolder.OfType<ExplorerFile>())
+                file.CheckHash.Value = "";
+        }
+
         /// <summary>
         /// Click event: Load file tree to hash
         /// </summary>
@@ -218,6 +228,15 @@ namespace FileTreeHasher
         }
 
         /// <summary>
+        /// Click event: Clear all inputs for hash checking
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Click_ClearCheckinputs(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            clearAllInputs(LoadedFileTreeItems);
+        }
+        /// <summary>
         /// Change event: Selected global hash algorithm changed
         /// -> Set all special hash algorithm selectors to new value
         /// </summary>
@@ -264,7 +283,7 @@ namespace FileTreeHasher
         {
             // Get loaded file, update check hash and compare
             ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
-            file.CheckHash = (sender as TextBox).Text;  // Not updated on UI as not observable. Not not needed
+            file.CheckHash.Value = (sender as TextBox).Text;  // Not updated on UI as not observable. Not not needed
             compareFileHash(file);
         }
     }
