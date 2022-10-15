@@ -203,7 +203,7 @@
                     <ComboBoxItem Content="SHA384"/>
                     <ComboBoxItem Content="SHA512"/>
                 </ComboBox>
-                <Button Grid.Column="2" HorizontalAlignment="Left" Style="{StaticResource Btn_HashSelRefresh_global}">
+                <Button Grid.Column="2" HorizontalAlignment="Left" Style="{StaticResource Btn_HashSelRefresh_global}" Click="Click_RefreshAllHashSelectors">
                     <SymbolIcon Symbol="Refresh"/>
                 </Button>
 

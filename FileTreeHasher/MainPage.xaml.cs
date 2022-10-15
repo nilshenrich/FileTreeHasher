@@ -245,6 +245,16 @@ namespace FileTreeHasher
         }
 
         /// <summary>
+        /// Click event: Set all special hash selectors to current vlue of global
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Click_RefreshAllHashSelectors(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            updateSpecialHashSelectors(LoadedFileTreeItems);
+        }
+
+        /// <summary>
         /// Type event: Input for check hash is tyed/canged
         /// -> Compare generated hash with entered string
         /// </summary>
