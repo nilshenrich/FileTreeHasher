@@ -4,11 +4,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace FileTreeHasher
 {
@@ -82,7 +80,6 @@ namespace FileTreeHasher
             get { return (HashAlgirithmNames)SelectedHashAlgIndex.Value; }
             set { SelectedHashAlgIndex.Value = (int)value; }
         }
-        public ObservableObject<Brush> ComparisonColor = new ObservableObject<Brush>();
     }
 
     public class ExplorerItemTemplateSelector : DataTemplateSelector
@@ -94,12 +91,5 @@ namespace FileTreeHasher
         {
             return item is ExplorerFile ? FileTemplate : FolderTemplate;
         }
-    }
-
-    public static class ComparisonColors
-    {
-        public static readonly Brush Neutral = new SolidColorBrush(Colors.Transparent);
-        public static readonly Brush Passed = new SolidColorBrush(Colors.LightGreen);
-        public static readonly Brush Failed = new SolidColorBrush(Colors.LightPink);
     }
 }

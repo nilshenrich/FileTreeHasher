@@ -39,7 +39,6 @@ namespace FileTreeHasher
         private void markFileWaiting(ExplorerFile file)
         {
             file.IconSource.Value = new Uri(BaseUri, "/Icons/Wait.png");
-            file.ComparisonColor.Value = ComparisonColors.Neutral;
         }
 
         /// <summary>
@@ -49,7 +48,6 @@ namespace FileTreeHasher
         private void markFileReady(ExplorerFile file)
         {
             file.IconSource.Value = new Uri(BaseUri, "/Icons/Hashed.png");
-            file.ComparisonColor.Value = ComparisonColors.Neutral;
         }
 
         /// <summary>
@@ -59,7 +57,6 @@ namespace FileTreeHasher
         private void markAsPassed(ExplorerFile file)
         {
             file.IconSource.Value = new Uri(BaseUri, "/Icons/Check.png");
-            file.ComparisonColor.Value = ComparisonColors.Passed;
         }
 
         /// <summary>
@@ -69,9 +66,13 @@ namespace FileTreeHasher
         private void markAsFailed(ExplorerFile file)
         {
             file.IconSource.Value = new Uri(BaseUri, "/Icons/Fail.png");
-            file.ComparisonColor.Value = ComparisonColors.Failed;
         }
 
+        /// <summary>
+        /// Compare generated hash with string and mark file item acordingly
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="hash"></param>
         private void compareFileHash(ExplorerFile file, string hash)
         {
             // For empty comparison string, don't compare
