@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -16,11 +17,9 @@ namespace FileTreeHasher
     public sealed partial class MainPage : Page
     {
         // Globally selected hash algorithm
-        // TODO: UI not updated on change
         private ObservableObject<int> GlobalHashAlgIndex = new ObservableObject<int>((int)HashAlgirithmNames.SHA256);
 
         // Path of currentliy selected folder
-        // TODO: UI not updated on change
         private ObservableObject<string> SelectedFolderPath = new ObservableObject<string>("<No folder selected>");
 
         // Tree view content
@@ -62,7 +61,7 @@ namespace FileTreeHasher
                 {
                     Name = file.Name,
                     IconSource = new Uri(BaseUri, "/Icons/Wait.png"),
-                    SelectedHashAlgIndex = GlobalHashAlgIndex.Value
+                    SelectedHashAlgIndex = new ObservableObject<int>(GlobalHashAlgIndex.Value)
                 };
 
                 // Add file to UI
@@ -71,6 +70,16 @@ namespace FileTreeHasher
                 // Generate hash in task
                 _ = Task.Run(() => HashGenerator.addHashAsync(file, explorerFile));
             }
+        }
+
+        private void updateSpecialHashSelectors(ObservableCollection<ExplorerItem> rootFolder)
+        {
+            // Update all special hash algorithm selectors
+            foreach (ExplorerFolder folder in rootFolder.OfType<ExplorerFolder>())
+                updateSpecialHashSelectors(folder.Children);
+
+            foreach (ExplorerFile file in rootFolder.OfType<ExplorerFile>())
+                file.SelectedHashAlgIndex.Value = GlobalHashAlgIndex.Value;
         }
 
         /// <summary>
@@ -97,6 +106,16 @@ namespace FileTreeHasher
 
             // Load file structure to UI
             loadFileTree(folder, LoadedFileTreeItems);
+        }
+
+        /// <summary>
+        /// Event: Selected global hash algorithm changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Event_GlobalHashChanged(object sender, SelectionChangedEventArgs e)
+        {
+            updateSpecialHashSelectors(LoadedFileTreeItems);
         }
     }
 }

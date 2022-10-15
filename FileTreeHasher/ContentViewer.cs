@@ -66,12 +66,12 @@ namespace FileTreeHasher
         public Uri IconSource;
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public string CheckHash;
-        public int SelectedHashAlgIndex = (int)HashAlgirithmNames.SHA256;
+        public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>((int)HashAlgirithmNames.SHA256);
 
         public HashAlgirithmNames SelectedHashAlgName
         {
-            get { return (HashAlgirithmNames)SelectedHashAlgIndex; }
-            set { SelectedHashAlgIndex = (int)value; }
+            get { return (HashAlgirithmNames)SelectedHashAlgIndex.Value; }
+            set { SelectedHashAlgIndex.Value = (int)value; }
         }
     }
 
