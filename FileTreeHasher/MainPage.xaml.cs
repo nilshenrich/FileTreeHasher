@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
 
@@ -31,13 +32,43 @@ namespace FileTreeHasher
         }
 
         /// <summary>
-        /// Mark loaded file as waiting for string calculation
+        /// Mark loaded file as waiting for hash string calculation
         /// </summary>
         /// <param name="file"></param>
         private void markFileWaiting(ExplorerFile file)
         {
-            file.IconSource = new Uri(BaseUri, "/Icons/Wait.png");
-            file.GeneratedHash.Value = "";
+            file.IconSource.Value = new Uri(BaseUri, "/Icons/Wait.png");
+            file.ComparisonColor.Value = ComparisonColors.Neutral;
+        }
+
+        /// <summary>
+        /// Mark loaded file as ready for hash comparison (hash string calculated)
+        /// </summary>
+        /// <param name="file"></param>
+        private void markFileReady(ExplorerFile file)
+        {
+            file.IconSource.Value = new Uri(BaseUri, "/Icons/Hashed.png");
+            file.ComparisonColor.Value = ComparisonColors.Neutral;
+        }
+
+        /// <summary>
+        /// Marks loaded file as passed for hash checking
+        /// </summary>
+        /// <param name="file"></param>
+        private void markAsPassed(ExplorerFile file)
+        {
+            file.IconSource.Value = new Uri(BaseUri, "/Icons/Check.png");
+            file.ComparisonColor.Value = ComparisonColors.Passed;
+        }
+
+        /// <summary>
+        /// Marks loaded file as failed for hash checking
+        /// </summary>
+        /// <param name="file"></param>
+        private void markAsFailed(ExplorerFile file)
+        {
+            file.IconSource.Value = new Uri(BaseUri, "/Icons/Fail.png");
+            file.ComparisonColor.Value = ComparisonColors.Failed;
         }
 
         /// <summary>
@@ -47,10 +78,12 @@ namespace FileTreeHasher
         private void startHashGeneration(ExplorerFile file)
         {
             markFileWaiting(file);
+            file.GeneratedHash.Value = "";
             Task.Run(async () =>
             {
                 string hash = await HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName);
                 file.GeneratedHash.Value = hash;
+                markFileReady(file);    // TODO: Nor set on UI
             });
         }
 
@@ -85,6 +118,9 @@ namespace FileTreeHasher
                 {
                     FileOnDisk = file,
                     Name = file.Name,
+                    IconSource = new ObservableObject<Uri>(),
+                    GeneratedHash = new ObservableObject<string>(),
+                    ComparisonColor = new ObservableObject<Brush>(),
                     SelectedHashAlgIndex = new ObservableObject<int>(GlobalHashAlgIndex.Value),
                     OldSelectedHashAlgIndex = GlobalHashAlgIndex.Value
                 };
@@ -135,6 +171,7 @@ namespace FileTreeHasher
 
         /// <summary>
         /// Change event: Selected global hash algorithm changed
+        /// -> Set all special hash algorithm selectors to new value
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -145,6 +182,7 @@ namespace FileTreeHasher
 
         /// <summary>
         /// Change event: Selected special hash algorithm changed
+        /// -> Regenerate and show hash if algorithm changed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -156,6 +194,31 @@ namespace FileTreeHasher
                 file.OldSelectedHashAlgIndex = file.SelectedHashAlgIndex.Value;
                 startHashGeneration(file);
             }
+        }
+
+        /// <summary>
+        /// Type event: Input for check hash is tyed/canged
+        /// -> Compare generated hash with entered string
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Type_CheckHashChanged(object sender, TextChangedEventArgs e)
+        {
+            // Get loaded file
+            ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
+
+            // For empty comparison string, don't compare
+            if (string.IsNullOrEmpty((sender as TextBox).Text))
+            {
+                markFileReady(file);
+                return;
+            }
+
+            // Check string
+            if (file.GeneratedHash.Value == (sender as TextBox).Text)
+                markAsPassed(file);
+            else
+                markAsFailed(file);
         }
     }
 }
