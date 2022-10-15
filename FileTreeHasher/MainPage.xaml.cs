@@ -131,6 +131,7 @@ namespace FileTreeHasher
             if (file.SelectedHashAlgIndex.Value != file.OldSelectedHashAlgIndex)
             {
                 file.OldSelectedHashAlgIndex = file.SelectedHashAlgIndex.Value;
+                file.GeneratedHash.Value = "";
                 Task.Run(() => HashGenerator.addOrUpdateHashAsync(file));
             }
         }
