@@ -16,7 +16,12 @@ namespace FileTreeHasher
     public sealed partial class MainPage : Page
     {
         // Globally selected hash algorithm
+        // TODO: UI not updated on change
         private int GlobalHashAlgIndex = (int)HashAlgirithmNames.SHA256;
+
+        // Path of currentliy selected folder
+        // TODO: UI not updated on change
+        private string SelectedFolderPath;
 
         // Tree view content
         private ObservableCollection<ExplorerItem> LoadedFileTreeItems = new ObservableCollection<ExplorerItem>();
@@ -53,7 +58,6 @@ namespace FileTreeHasher
             foreach (StorageFile file in files)
             {
                 // Create item for file
-                // TODO: Adding hash here stucks file tree loading
                 ExplorerFile explorerFile = new ExplorerFile()
                 {
                     Name = file.Name,
@@ -84,6 +88,9 @@ namespace FileTreeHasher
             // Cancel if no folder was selected
             if (folder == null)
                 return;
+
+            // Set selected folder path
+            SelectedFolderPath = "Test new folder";
 
             // Clear all old lodaded elements
             LoadedFileTreeItems.Clear();
