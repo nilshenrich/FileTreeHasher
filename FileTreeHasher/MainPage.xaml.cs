@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
 
@@ -22,9 +15,88 @@ namespace FileTreeHasher
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        // Globally selected hash algorithm
+        // TODO: UI not updated on change
+        private ObservableObject<int> GlobalHashAlgIndex = new ObservableObject<int>((int)HashAlgirithmNames.SHA256);
+
+        // Path of currentliy selected folder
+        // TODO: UI not updated on change
+        private ObservableObject<string> SelectedFolderPath = new ObservableObject<string>("<No folder selected>");
+
+        // Tree view content
+        private ObservableCollection<ExplorerItem> LoadedFileTreeItems = new ObservableCollection<ExplorerItem>();
+
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+        }
+
+        /// <summary>
+        /// Bring folder content to UI
+        /// </summary>
+        /// <param name="rootFolder"></param>
+        /// <param name="rootExplorer"></param>
+        private async void loadFileTree(StorageFolder rootFolder, ObservableCollection<ExplorerItem> rootExplorer)
+        {
+            // Draw all direct subdirectories
+            // Load items of each subdirectory recursively
+            IReadOnlyList<StorageFolder> subfolders = await rootFolder.GetFoldersAsync();
+            foreach (StorageFolder subfolder in subfolders)
+            {
+                // Create new item for folder
+                ExplorerFolder explorerFolder = new ExplorerFolder() { Name = subfolder.Name };
+
+                // Add folder to UI
+                rootExplorer.Add(explorerFolder);
+
+                // Load all items of folder
+                loadFileTree(subfolder, explorerFolder.Children);
+            }
+
+            // Draw all files
+            IReadOnlyList<StorageFile> files = await rootFolder.GetFilesAsync();
+            foreach (StorageFile file in files)
+            {
+                // Create item for file
+                ExplorerFile explorerFile = new ExplorerFile()
+                {
+                    Name = file.Name,
+                    IconSource = new Uri(BaseUri, "/Icons/Wait.png"),
+                    SelectedHashAlgIndex = GlobalHashAlgIndex.Value
+                };
+
+                // Add file to UI
+                rootExplorer.Add(explorerFile);
+
+                // Generate hash in task
+                _ = Task.Run(() => HashGenerator.addHashAsync(file, explorerFile));
+            }
+        }
+
+        /// <summary>
+        /// Click event: Load file tree to hash
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Click_LoadFileTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            // Open file explorer to select a folder
+            FolderPicker folderPicker = new FolderPicker();
+            folderPicker.FileTypeFilter.Add("*");
+            StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+
+            // Cancel if no folder was selected
+            if (folder == null)
+                return;
+
+            // Set selected folder path
+            SelectedFolderPath.Value = folder.Path;
+
+            // Clear all old lodaded elements
+            LoadedFileTreeItems.Clear();
+
+            // Load file structure to UI
+            loadFileTree(folder, LoadedFileTreeItems);
         }
     }
 }
