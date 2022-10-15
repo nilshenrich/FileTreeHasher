@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -63,6 +64,7 @@ namespace FileTreeHasher
 
     public class ExplorerFile : ExplorerItem
     {
+        public StorageFile FileOnDisk;
         public Uri IconSource;
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public string CheckHash;

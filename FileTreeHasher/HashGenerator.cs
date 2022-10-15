@@ -17,11 +17,11 @@ namespace FileTreeHasher
 
     internal static class HashGenerator
     {
-        public static async void addHashAsync(StorageFile fileOnDisk, ExplorerFile fileInUi)
+        public static async void addHashAsync( ExplorerFile file)
         {
             // Select hash generator
             HashAlgorithm hasher;
-            switch (fileInUi.SelectedHashAlgName)
+            switch (file.SelectedHashAlgName)
             {
                 case HashAlgirithmNames.MD5:
                     hasher = MD5.Create();
@@ -44,19 +44,19 @@ namespace FileTreeHasher
                     break;
 
                 default:
-                    fileInUi.GeneratedHash.Value = "";
+                    file.GeneratedHash.Value = "";
                     return;
             }
 
             // Read file content
-            var fileBuffer = await FileIO.ReadBufferAsync(fileOnDisk);
+            var fileBuffer = await FileIO.ReadBufferAsync(file.FileOnDisk);
             byte[] fileBytes = new byte[fileBuffer.Length];
             DataReader.FromBuffer(fileBuffer).ReadBytes(fileBytes);
 
             // Generate hash string and update UI
             byte[] hashRaw = hasher.ComputeHash(fileBytes);
             string hash = BitConverter.ToString(hashRaw).Replace("-", "").ToLower();
-            fileInUi.GeneratedHash.Value = hash;
+            file.GeneratedHash.Value = hash;
         }
     }
 }

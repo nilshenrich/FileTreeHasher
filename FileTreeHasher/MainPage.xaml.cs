@@ -59,6 +59,7 @@ namespace FileTreeHasher
                 // Create item for file
                 ExplorerFile explorerFile = new ExplorerFile()
                 {
+                    FileOnDisk = file,
                     Name = file.Name,
                     IconSource = new Uri(BaseUri, "/Icons/Wait.png"),
                     SelectedHashAlgIndex = new ObservableObject<int>(GlobalHashAlgIndex.Value)
@@ -68,7 +69,7 @@ namespace FileTreeHasher
                 rootExplorer.Add(explorerFile);
 
                 // Generate hash in task
-                _ = Task.Run(() => HashGenerator.addHashAsync(file, explorerFile));
+                _ = Task.Run(() => HashGenerator.addHashAsync(explorerFile));
             }
         }
 
