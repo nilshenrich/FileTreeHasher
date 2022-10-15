@@ -17,11 +17,11 @@ namespace FileTreeHasher
     {
         // Globally selected hash algorithm
         // TODO: UI not updated on change
-        private int GlobalHashAlgIndex = (int)HashAlgirithmNames.SHA256;
+        private ObservableObject<int> GlobalHashAlgIndex = new ObservableObject<int>() { Value = (int)HashAlgirithmNames.SHA256 };
 
         // Path of currentliy selected folder
         // TODO: UI not updated on change
-        private string SelectedFolderPath;
+        private ObservableObject<string> SelectedFolderPath = new ObservableObject<string>() { Value = "<No folder selected>" };
 
         // Tree view content
         private ObservableCollection<ExplorerItem> LoadedFileTreeItems = new ObservableCollection<ExplorerItem>();
@@ -62,7 +62,7 @@ namespace FileTreeHasher
                 {
                     Name = file.Name,
                     IconSource = new Uri(BaseUri, "/Icons/Wait.png"),
-                    SelectedHashAlgIndex = GlobalHashAlgIndex
+                    SelectedHashAlgIndex = GlobalHashAlgIndex.Value
                 };
 
                 // Add file to UI
@@ -90,7 +90,7 @@ namespace FileTreeHasher
                 return;
 
             // Set selected folder path
-            SelectedFolderPath = "Test new folder";
+            SelectedFolderPath.Value = folder.Path;
 
             // Clear all old lodaded elements
             LoadedFileTreeItems.Clear();

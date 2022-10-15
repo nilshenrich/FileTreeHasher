@@ -171,7 +171,7 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Content="Load File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Left" Margin="12" Click="Click_LoadFileTree"/>
-            <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}">
+            <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}">
                 <ComboBoxItem Content="MD5"/>
                 <ComboBoxItem Content="SHA1"/>
                 <ComboBoxItem Content="SHA256"/>
@@ -187,7 +187,7 @@
         <StackPanel Grid.Row="1">
 
             <!--Path of loaded folder-->
-            <TextBlock Text="{x:Bind SelectedFolderPath}" Margin="0,20,0,0" Style="{StaticResource Txt_LoadedFolderPath}"/>
+            <TextBlock Text="{x:Bind SelectedFolderPath.Value, Mode=OneWay}" Margin="0,20,0,0" Style="{StaticResource Txt_LoadedFolderPath}"/>
             <!--Path of loaded folder-->
 
             <!--Loaded file tree-->
