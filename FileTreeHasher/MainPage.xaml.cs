@@ -8,9 +8,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Popups;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
 
@@ -73,25 +71,24 @@ namespace FileTreeHasher
         }
 
         /// <summary>
-        /// Compare generated hash with string and mark file item acordingly
+        /// Compare generated hash with check string and mark file item acordingly
         /// </summary>
         /// <param name="file"></param>
-        /// <param name="hash"></param>
-        private void compareFileHash(ExplorerFile file, string hash)
+        private void compareFileHash(ExplorerFile file)
         {
             // For empty generated string, do nothing
             if (string.IsNullOrEmpty(file.GeneratedHash.Value))
                 return;
 
             // For empty comparison string, don't compare
-            if (string.IsNullOrEmpty(hash))
+            if (string.IsNullOrEmpty(file.CheckHash))
             {
                 markFileReady(file);
                 return;
             }
 
             // Check string
-            if (file.GeneratedHash.Value == hash.ToLower())
+            if (file.GeneratedHash.Value == file.CheckHash.ToLower())
                 markAsPassed(file);
             else
                 markAsFailed(file);
@@ -110,7 +107,7 @@ namespace FileTreeHasher
                 string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
                 file.GeneratedHash.Value = hash;
                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                compareFileHash(file, file.CheckHash));
+                compareFileHash(file));
             });
         }
 
@@ -255,24 +252,10 @@ namespace FileTreeHasher
         /// <param name="e"></param>
         private void Type_CheckHashChanged(object sender, TextChangedEventArgs e)
         {
-            // Get loaded file
+            // Get loaded file, update check hash and compare
             ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
-            string hash = (sender as TextBox).Text;
-            compareFileHash(file, hash);
-        }
-
-        /// <summary>
-        /// Type event: Input for check hash is losing focus
-        /// -> Compare generated hash with entered string
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void Type_CheckHashChanged(UIElement sender, LosingFocusEventArgs args)
-        {
-            // Get loaded file
-            ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
-            string hash = (sender as TextBox).Text;
-            compareFileHash(file, hash);
+            file.CheckHash = (sender as TextBox).Text;  // Not updated on UI as not observable. Not not needed
+            compareFileHash(file);
         }
     }
 }
