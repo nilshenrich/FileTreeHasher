@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
 
@@ -79,11 +80,12 @@ namespace FileTreeHasher
         {
             markFileWaiting(file);
             file.GeneratedHash.Value = "";
-            Task.Run(async () =>
+            Task.Run(() =>
             {
-                string hash = await HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName);
+                string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
                 file.GeneratedHash.Value = hash;
-                markFileReady(file);    // TODO: Nor set on UI
+                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                markFileReady(file));
             });
         }
 
