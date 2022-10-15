@@ -132,7 +132,7 @@
                         </Image.Source>
                     </Image>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
-                    <TextBlock Grid.Column="2" Text="{x:Bind GeneratedHash, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind GeneratedHash}" Style="{StaticResource Txt_GenHash}"/>
+                    <TextBlock Grid.Column="2" Text="{x:Bind GeneratedHash.Value, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind GeneratedHash}" Style="{StaticResource Txt_GenHash}"/>
                     <!--Maybe needed for live update input: https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.data.binding.mode?view=winrt-22621-->
                     <TextBox Grid.Column="3" Text="{x:Bind CheckHash, Mode=TwoWay}" Style="{StaticResource Inp_HashCheck}"/>
                     <ComboBox Grid.Column="4" SelectedIndex="{x:Bind SelectedHashAlgIndex, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_special}">
@@ -171,7 +171,7 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Content="Load File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Left" Margin="12" Click="Click_LoadFileTree"/>
-            <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}">
+            <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}">
                 <ComboBoxItem Content="MD5"/>
                 <ComboBoxItem Content="SHA1"/>
                 <ComboBoxItem Content="SHA256"/>
@@ -187,10 +187,11 @@
         <StackPanel Grid.Row="1">
 
             <!--Path of loaded folder-->
-            <TextBlock Text="{x:Bind SelectedFolderPath}" Margin="0,20,0,0" Style="{StaticResource Txt_LoadedFolderPath}"/>
+            <TextBlock Text="{x:Bind SelectedFolderPath.Value, Mode=OneWay}" Margin="0,20,0,0" Style="{StaticResource Txt_LoadedFolderPath}"/>
             <!--Path of loaded folder-->
 
             <!--Loaded file tree-->
+            <!--TODO: Not scrollable-->
             <muxc:TreeView Margin="0,10,0,0" ItemsSource="{x:Bind LoadedFileTreeItems}" ItemTemplateSelector="{StaticResource ExplorerItemTemplateSelector}"/>
             <!--Loaded file tree-->
 
