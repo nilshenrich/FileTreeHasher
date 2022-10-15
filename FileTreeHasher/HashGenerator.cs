@@ -17,7 +17,7 @@ namespace FileTreeHasher
 
     internal static class HashGenerator
     {
-        public static async void addHashAsync( ExplorerFile file)
+        public static async void addOrUpdateHashAsync( ExplorerFile file)
         {
             // Select hash generator
             HashAlgorithm hasher;

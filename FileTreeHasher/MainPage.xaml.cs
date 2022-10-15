@@ -69,7 +69,7 @@ namespace FileTreeHasher
                 rootExplorer.Add(explorerFile);
 
                 // Generate hash in task
-                _ = Task.Run(() => HashGenerator.addHashAsync(explorerFile));
+                _ = Task.Run(() => HashGenerator.addOrUpdateHashAsync(explorerFile));
             }
         }
 
@@ -110,13 +110,25 @@ namespace FileTreeHasher
         }
 
         /// <summary>
-        /// Event: Selected global hash algorithm changed
+        /// Change event: Selected global hash algorithm changed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Event_GlobalHashChanged(object sender, SelectionChangedEventArgs e)
+        private void Change_GlobalHashChanged(object sender, SelectionChangedEventArgs e)
         {
             updateSpecialHashSelectors(LoadedFileTreeItems);
+        }
+
+        /// <summary>
+        /// Change event: Selected special hash algorithm changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// TODO: Also called on file creation -> Don't generate hash while creation?
+        private void Change_SpecialHashChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ExplorerFile file = (sender as ComboBox).DataContext as ExplorerFile;
+            Task.Run(() => HashGenerator.addOrUpdateHashAsync(file));
         }
     }
 }

@@ -136,7 +136,7 @@
                     <TextBlock Grid.Column="2" Text="{x:Bind GeneratedHash.Value, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind GeneratedHash}" Style="{StaticResource Txt_GenHash}"/>
                     <!--Maybe needed for live update input: https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.data.binding.mode?view=winrt-22621-->
                     <TextBox Grid.Column="3" Text="{x:Bind CheckHash, Mode=TwoWay}" Style="{StaticResource Inp_HashCheck}"/>
-                    <ComboBox Grid.Column="4" SelectedIndex="{x:Bind SelectedHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_special}">
+                    <ComboBox Grid.Column="4" SelectedIndex="{x:Bind SelectedHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_special}" SelectionChanged="Change_SpecialHashChanged">
                         <ComboBoxItem Content="MD5"/>
                         <ComboBoxItem Content="SHA1"/>
                         <ComboBoxItem Content="SHA256"/>
@@ -172,7 +172,7 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Content="Load File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Left" Margin="12" Click="Click_LoadFileTree"/>
-            <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}" SelectionChanged="Event_GlobalHashChanged">
+            <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}" SelectionChanged="Change_GlobalHashChanged">
                 <ComboBoxItem Content="MD5"/>
                 <ComboBoxItem Content="SHA1"/>
                 <ComboBoxItem Content="SHA256"/>
