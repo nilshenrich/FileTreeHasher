@@ -118,9 +118,6 @@ namespace FileTreeHasher
                 {
                     FileOnDisk = file,
                     Name = file.Name,
-                    IconSource = new ObservableObject<Uri>(),
-                    GeneratedHash = new ObservableObject<string>(),
-                    ComparisonColor = new ObservableObject<Brush>(),
                     SelectedHashAlgIndex = new ObservableObject<int>(GlobalHashAlgIndex.Value),
                     OldSelectedHashAlgIndex = GlobalHashAlgIndex.Value
                 };

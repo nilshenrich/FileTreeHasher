@@ -72,17 +72,17 @@ namespace FileTreeHasher
     public class ExplorerFile : ExplorerItem
     {
         public StorageFile FileOnDisk;
-        public ObservableObject<Uri> IconSource;
-        public ObservableObject<string> GeneratedHash;
+        public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
+        public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public string CheckHash;
-        public ObservableObject<int> SelectedHashAlgIndex;
+        public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
         public int OldSelectedHashAlgIndex;
         public HashAlgirithmNames SelectedHashAlgName
         {
             get { return (HashAlgirithmNames)SelectedHashAlgIndex.Value; }
             set { SelectedHashAlgIndex.Value = (int)value; }
         }
-        public ObservableObject<Brush> ComparisonColor;
+        public ObservableObject<Brush> ComparisonColor = new ObservableObject<Brush>();
     }
 
     public class ExplorerItemTemplateSelector : DataTemplateSelector
