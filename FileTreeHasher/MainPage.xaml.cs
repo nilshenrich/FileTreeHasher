@@ -37,6 +37,7 @@ namespace FileTreeHasher
         private void markFileWaiting(ExplorerFile file)
         {
             file.IconSource = new Uri(BaseUri, "/Icons/Wait.png");
+            file.GeneratedHash.Value = "";
         }
 
         /// <summary>
@@ -46,7 +47,11 @@ namespace FileTreeHasher
         private void startHashGeneration(ExplorerFile file)
         {
             markFileWaiting(file);
-            Task.Run(() => HashGenerator.addOrUpdateHashAsync(file));
+            Task.Run(async () =>
+            {
+                string hash = await HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName);
+                file.GeneratedHash.Value = hash;
+            });
         }
 
         /// <summary>
