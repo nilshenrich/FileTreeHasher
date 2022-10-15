@@ -22,7 +22,7 @@ namespace FileTreeHasher
         }
 
         public ObservableObject() { }
-        public ObservableObject(T value) { m_value = value; }
+        public ObservableObject(T value) { m_value = m_oldvalue = value; }
 
         private T m_value;
         private T m_oldvalue;
