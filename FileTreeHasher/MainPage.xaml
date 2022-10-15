@@ -170,7 +170,19 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="Load File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Left" Margin="12" Click="Click_LoadFileTree"/>
+            <!--Load/Clear file tree-->
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Content="Load File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Left" Margin="12" Click="Click_LoadFileTree"/>
+                <Button Grid.Column="1" Content="Clear File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" HorizontalAlignment="Left" Margin="0,12,12,12" Click="Click_ClearFileTree"/>
+                
+            </Grid>
+            <!--Load/Clear file tree-->
+
             <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}" SelectionChanged="Change_GlobalHashChanged">
                 <ComboBoxItem Content="MD5"/>
                 <ComboBoxItem Content="SHA1"/>

@@ -23,7 +23,8 @@ namespace FileTreeHasher
         private ObservableObject<int> GlobalHashAlgIndex = new ObservableObject<int>((int)HashAlgirithmNames.SHA256);
 
         // Path of currentliy selected folder
-        private ObservableObject<string> SelectedFolderPath = new ObservableObject<string>("<No folder selected>");
+       private const string SelectedFolderPath_default = "<No folder selected>";
+        private ObservableObject<string> SelectedFolderPath = new ObservableObject<string>(SelectedFolderPath_default);
 
         // Tree view content
         private ObservableCollection<ExplorerItem> LoadedFileTreeItems = new ObservableCollection<ExplorerItem>();
@@ -187,6 +188,28 @@ namespace FileTreeHasher
         }
 
         /// <summary>
+        /// Click event: Clear file tree
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Click_ClearFileTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            LoadedFileTreeItems.Clear();
+            SelectedFolderPath.Value = SelectedFolderPath_default;
+        }
+
+        /// <summary>
+        /// Click event: Load files that contain hash strings and paste hashes to inputs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Click_LoadHashTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var messageDialog = new MessageDialog("Button not implemented!\nClicking this button shall open another folder browsing dialog to select a folder of .md5/.sha1/.sha256/.sha384/.sha512 files that contain belonging check strings and pasting those strings into input fields of loaded files");
+            _ = messageDialog.ShowAsync();
+        }
+
+        /// <summary>
         /// Change event: Selected global hash algorithm changed
         /// -> Set all special hash algorithm selectors to new value
         /// </summary>
@@ -226,16 +249,5 @@ namespace FileTreeHasher
             string hash = (sender as TextBox).Text;
             compareFileHash(file, hash);
         }
-
-        /// <summary>
-        /// Click event: Load files that contain hash strings and paste hashes to inputs
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Click_LoadHashTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            var messageDialog = new MessageDialog("Button not implemented!\nClicking this button shall open another folder browsing dialog to select a folder of .md5/.sha1/.sha256/.sha384/.sha512 files that contain belonging check strings and pasting those strings into input fields of loaded files");
-            _ = messageDialog.ShowAsync();
-        }
-    }
+}
 }
