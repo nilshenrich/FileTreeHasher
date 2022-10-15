@@ -130,7 +130,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileTreeViewer.cs" />
+    <Compile Include="ContentViewer.cs" />
     <Compile Include="HashGenerator.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

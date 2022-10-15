@@ -20,6 +20,9 @@ namespace FileTreeHasher
             PropertyChanged?.Invoke(this, args));
         }
 
+        public ObservableObject() { }
+        public ObservableObject(T value) { m_value = value; }
+
         private T m_value;
         public T Value
         {
