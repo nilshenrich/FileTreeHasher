@@ -34,7 +34,7 @@ namespace FileTreeHasher
 
     public class ExplorerItem
     {
-        public string Name { get; set; }
+        public string Name;
         private ObservableCollection<ExplorerItem> m_children;
         public ObservableCollection<ExplorerItem> Children
         {
@@ -55,14 +55,14 @@ namespace FileTreeHasher
 
     public class ExplorerFolder : ExplorerItem
     {
-        public bool IsExpanded { get; set; } = true;
+        public bool IsExpanded = true;
     }
 
     public class ExplorerFile : ExplorerItem
     {
-        public Uri IconSource { get; set; }
-        public ObservableObject<string> GeneratedHash { get; set; }= new ObservableObject<string>();
-        public string CheckHash { get; set; }
+        public Uri IconSource;
+        public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
+        public string CheckHash;
         public int SelectedHashAlgIndex = (int)HashAlgirithmNames.SHA256;
 
         public HashAlgirithmNames SelectedHashAlgName
