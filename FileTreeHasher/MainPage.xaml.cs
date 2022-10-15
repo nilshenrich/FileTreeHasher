@@ -72,6 +72,22 @@ namespace FileTreeHasher
             file.ComparisonColor.Value = ComparisonColors.Failed;
         }
 
+        private void compareFileHash(ExplorerFile file, string hash)
+        {
+            // For empty comparison string, don't compare
+            if (string.IsNullOrEmpty(hash))
+            {
+                markFileReady(file);
+                return;
+            }
+
+            // Check string
+            if (file.GeneratedHash.Value == hash.ToLower())
+                markAsPassed(file);
+            else
+                markAsFailed(file);
+        }
+
         /// <summary>
         /// Start hash generation and pasting of loaded file in background
         /// </summary>
@@ -85,7 +101,7 @@ namespace FileTreeHasher
                 string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
                 file.GeneratedHash.Value = hash;
                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                markFileReady(file));
+                compareFileHash(file, file.CheckHash));
             });
         }
 
@@ -205,19 +221,8 @@ namespace FileTreeHasher
         {
             // Get loaded file
             ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
-
-            // For empty comparison string, don't compare
-            if (string.IsNullOrEmpty((sender as TextBox).Text))
-            {
-                markFileReady(file);
-                return;
-            }
-
-            // Check string
-            if (file.GeneratedHash.Value == (sender as TextBox).Text)
-                markAsPassed(file);
-            else
-                markAsFailed(file);
+            string hash = (sender as TextBox).Text;
+            compareFileHash(file, hash);
         }
     }
 }
