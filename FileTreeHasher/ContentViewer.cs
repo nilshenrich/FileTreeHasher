@@ -70,10 +70,10 @@ namespace FileTreeHasher
     public class ExplorerFile : ExplorerItem
     {
         public StorageFile FileOnDisk;
-        public Uri IconSource;
+        public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public string CheckHash;
-        public ObservableObject<int> SelectedHashAlgIndex;
+        public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
         public int OldSelectedHashAlgIndex;
         public HashAlgirithmNames SelectedHashAlgName
         {

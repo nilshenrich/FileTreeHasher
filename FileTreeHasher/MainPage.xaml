@@ -129,13 +129,13 @@
                     </Grid.ColumnDefinitions>
                     <Image Grid.Column="0" Style="{StaticResource Img_FileTreeItemIcon}">
                         <Image.Source>
-                            <BitmapImage UriSource="{x:Bind IconSource}"/>
+                            <BitmapImage UriSource="{x:Bind IconSource.Value, Mode=OneWay}"/>
                         </Image.Source>
                     </Image>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
                     <TextBlock Grid.Column="2" Text="{x:Bind GeneratedHash.Value, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind GeneratedHash}" Style="{StaticResource Txt_GenHash}"/>
                     <!--Maybe needed for live update input: https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.data.binding.mode?view=winrt-22621-->
-                    <TextBox Grid.Column="3" Text="{x:Bind CheckHash, Mode=TwoWay}" Style="{StaticResource Inp_HashCheck}"/>
+                    <TextBox Grid.Column="3" Text="{x:Bind CheckHash, Mode=TwoWay}" Style="{StaticResource Inp_HashCheck}" TextChanged="Type_CheckHashChanged"/>
                     <ComboBox Grid.Column="4" SelectedIndex="{x:Bind SelectedHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_special}" SelectionChanged="Change_SpecialHashChanged">
                         <ComboBoxItem Content="MD5"/>
                         <ComboBoxItem Content="SHA1"/>
