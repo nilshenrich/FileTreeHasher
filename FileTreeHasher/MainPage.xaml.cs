@@ -62,7 +62,8 @@ namespace FileTreeHasher
                     FileOnDisk = file,
                     Name = file.Name,
                     IconSource = new Uri(BaseUri, "/Icons/Wait.png"),
-                    SelectedHashAlgIndex = new ObservableObject<int>(GlobalHashAlgIndex.Value)
+                    SelectedHashAlgIndex = new ObservableObject<int>(GlobalHashAlgIndex.Value),
+                    OldSelectedHashAlgIndex = GlobalHashAlgIndex.Value
                 };
 
                 // Add file to UI
@@ -124,11 +125,14 @@ namespace FileTreeHasher
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        /// TODO: Also called on file creation -> Don't generate hash while creation?
         private void Change_SpecialHashChanged(object sender, SelectionChangedEventArgs e)
         {
             ExplorerFile file = (sender as ComboBox).DataContext as ExplorerFile;
-            Task.Run(() => HashGenerator.addOrUpdateHashAsync(file));
+            if (file.SelectedHashAlgIndex.Value != file.OldSelectedHashAlgIndex)
+            {
+                file.OldSelectedHashAlgIndex = file.SelectedHashAlgIndex.Value;
+                Task.Run(() => HashGenerator.addOrUpdateHashAsync(file));
+            }
         }
     }
 }

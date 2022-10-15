@@ -68,8 +68,8 @@ namespace FileTreeHasher
         public Uri IconSource;
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public string CheckHash;
-        public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>((int)HashAlgirithmNames.SHA256);
-
+        public ObservableObject<int> SelectedHashAlgIndex;
+        public int OldSelectedHashAlgIndex;
         public HashAlgirithmNames SelectedHashAlgName
         {
             get { return (HashAlgirithmNames)SelectedHashAlgIndex.Value; }
