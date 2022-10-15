@@ -42,6 +42,7 @@
         <!--Info of loded folder-->
         <Style x:Key="Txt_LoadedFolderPath" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource AppBarItemDisabledForegroundThemeBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
             <Setter Property="Padding" Value="20,0,20,0"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
         </Style>
@@ -184,18 +185,22 @@
         <!--Header with global operation-->
 
         <!--Page content-->
-        <StackPanel Grid.Row="1">
+        <Grid Grid.Row="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
             <!--Path of loaded folder-->
-            <TextBlock Text="{x:Bind SelectedFolderPath.Value, Mode=OneWay}" Margin="0,20,0,0" Style="{StaticResource Txt_LoadedFolderPath}"/>
+            <TextBlock Grid.Row="0" Text="{x:Bind SelectedFolderPath.Value, Mode=OneWay}" Style="{StaticResource Txt_LoadedFolderPath}"/>
             <!--Path of loaded folder-->
 
             <!--Loaded file tree-->
-            <!--TODO: Not scrollable-->
-            <muxc:TreeView Margin="0,10,0,0" ItemsSource="{x:Bind LoadedFileTreeItems}" ItemTemplateSelector="{StaticResource ExplorerItemTemplateSelector}"/>
+            <muxc:TreeView Grid.Row="1" Margin="0,10,0,0" ItemsSource="{x:Bind LoadedFileTreeItems}" ItemTemplateSelector="{StaticResource ExplorerItemTemplateSelector}"/>
             <!--Loaded file tree-->
 
-        </StackPanel>
+        </Grid>
         <!--Page content-->
 
     </Grid>
