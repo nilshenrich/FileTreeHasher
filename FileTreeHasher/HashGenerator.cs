@@ -44,7 +44,7 @@ namespace FileTreeHasher
                     break;
 
                 default:
-                    fileInUi.GeneratedHash = "";
+                    fileInUi.GeneratedHash.Value = "";
                     return;
             }
 
@@ -56,7 +56,7 @@ namespace FileTreeHasher
             // Generate hash string and update UI
             byte[] hashRaw = hasher.ComputeHash(fileBytes);
             string hash = BitConverter.ToString(hashRaw).Replace("-", "").ToLower();
-            fileInUi.GeneratedHash = hash;
+            fileInUi.GeneratedHash.Value = hash;
         }
     }
 }

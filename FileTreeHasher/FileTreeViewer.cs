@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace FileTreeHasher
 {
-    public class ExplorerItem : INotifyPropertyChanged
+    public class ObservableObject<T> : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -20,6 +20,20 @@ namespace FileTreeHasher
             PropertyChanged?.Invoke(this, args));
         }
 
+        private T m_value;
+        public T Value
+        {
+            get { return m_value; }
+            set
+            {
+                m_value = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public class ExplorerItem
+    {
         public string Name { get; set; }
         private ObservableCollection<ExplorerItem> m_children;
         public ObservableCollection<ExplorerItem> Children
@@ -47,16 +61,7 @@ namespace FileTreeHasher
     public class ExplorerFile : ExplorerItem
     {
         public Uri IconSource { get; set; }
-        private string m_generatedHash;
-        public string GeneratedHash
-        {
-            get { return m_generatedHash; }
-            set
-            {
-                m_generatedHash = value;
-                OnPropertyChanged();
-            }
-        }
+        public ObservableObject<string> GeneratedHash { get; set; }= new ObservableObject<string>();
         public string CheckHash { get; set; }
         public int SelectedHashAlgIndex = (int)HashAlgirithmNames.SHA256;
 
