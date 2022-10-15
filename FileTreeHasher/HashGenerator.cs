@@ -17,8 +17,15 @@ namespace FileTreeHasher
 
     internal static class HashGenerator
     {
+        /// <summary>
+        /// Generate hash string for a loaded file and paste it on the screen when done
+        /// </summary>
+        /// <param name="file"></param>
         public static async void addOrUpdateHashAsync(ExplorerFile file)
         {
+            // Empty generated hash while regenerating
+            file.GeneratedHash.Value = "";
+
             // Select hash generator
             HashAlgorithm hasher;
             switch (file.SelectedHashAlgName)
@@ -44,7 +51,6 @@ namespace FileTreeHasher
                     break;
 
                 default:
-                    file.GeneratedHash.Value = "";
                     return;
             }
 

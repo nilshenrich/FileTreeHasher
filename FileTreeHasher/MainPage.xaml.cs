@@ -31,6 +31,25 @@ namespace FileTreeHasher
         }
 
         /// <summary>
+        /// Mark loaded file as waiting for string calculation
+        /// </summary>
+        /// <param name="file"></param>
+        private void markFileWaiting(ExplorerFile file)
+        {
+            file.IconSource = new Uri(BaseUri, "/Icons/Wait.png");
+        }
+
+        /// <summary>
+        /// Start hash generation and pasting of loaded file in background
+        /// </summary>
+        /// <param name="file"></param>
+        private void startHashGeneration(ExplorerFile file)
+        {
+            markFileWaiting(file);
+            Task.Run(() => HashGenerator.addOrUpdateHashAsync(file));
+        }
+
+        /// <summary>
         /// Bring folder content to UI
         /// </summary>
         /// <param name="rootFolder"></param>
@@ -61,7 +80,6 @@ namespace FileTreeHasher
                 {
                     FileOnDisk = file,
                     Name = file.Name,
-                    IconSource = new Uri(BaseUri, "/Icons/Wait.png"),
                     SelectedHashAlgIndex = new ObservableObject<int>(GlobalHashAlgIndex.Value),
                     OldSelectedHashAlgIndex = GlobalHashAlgIndex.Value
                 };
@@ -70,7 +88,7 @@ namespace FileTreeHasher
                 rootExplorer.Add(explorerFile);
 
                 // Generate hash in task
-                _ = Task.Run(() => HashGenerator.addOrUpdateHashAsync(explorerFile));
+                startHashGeneration(explorerFile);
             }
         }
 
@@ -131,8 +149,7 @@ namespace FileTreeHasher
             if (file.SelectedHashAlgIndex.Value != file.OldSelectedHashAlgIndex)
             {
                 file.OldSelectedHashAlgIndex = file.SelectedHashAlgIndex.Value;
-                file.GeneratedHash.Value = "";
-                Task.Run(() => HashGenerator.addOrUpdateHashAsync(file));
+                startHashGeneration(file);
             }
         }
     }
