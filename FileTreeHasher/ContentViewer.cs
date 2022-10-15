@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,16 +22,21 @@ namespace FileTreeHasher
         }
 
         public ObservableObject() { }
-        public ObservableObject(T value) { m_value = value; }
+        public ObservableObject(T value) { m_value = m_oldvalue = value; }
 
         private T m_value;
+        private T m_oldvalue;
         public T Value
         {
             get { return m_value; }
             set
             {
                 m_value = value;
-                OnPropertyChanged();
+                if (!value.Equals(m_oldvalue))
+                {
+                    m_oldvalue = value;
+                    OnPropertyChanged();
+                }
             }
         }
     }
@@ -38,6 +44,11 @@ namespace FileTreeHasher
     public class ExplorerItem
     {
         public string Name;
+    }
+
+    public class ExplorerFolder : ExplorerItem
+    {
+        public bool IsExpanded = true;
         private ObservableCollection<ExplorerItem> m_children;
         public ObservableCollection<ExplorerItem> Children
         {
@@ -56,22 +67,18 @@ namespace FileTreeHasher
         }
     }
 
-    public class ExplorerFolder : ExplorerItem
-    {
-        public bool IsExpanded = true;
-    }
-
     public class ExplorerFile : ExplorerItem
     {
-        public Uri IconSource;
+        public StorageFile FileOnDisk;
+        public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
-        public string CheckHash;
-        public int SelectedHashAlgIndex = (int)HashAlgirithmNames.SHA256;
-
+        public ObservableObject<string> CheckHash = new ObservableObject<string>();
+        public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
+        public int OldSelectedHashAlgIndex;
         public HashAlgirithmNames SelectedHashAlgName
         {
-            get { return (HashAlgirithmNames)SelectedHashAlgIndex; }
-            set { SelectedHashAlgIndex = (int)value; }
+            get { return (HashAlgirithmNames)SelectedHashAlgIndex.Value; }
+            set { SelectedHashAlgIndex.Value = (int)value; }
         }
     }
 
