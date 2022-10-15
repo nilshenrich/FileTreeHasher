@@ -8,7 +8,9 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
 
@@ -155,6 +157,11 @@ namespace FileTreeHasher
             }
         }
 
+        /// <summary>
+        /// Update all special hash algorithm selectors to have same value as global selector
+        /// </summary>
+        /// <param name="rootFolder"></param>
+        /// TODO: Not updated if global switches to MD5 first time
         private void updateSpecialHashSelectors(ObservableCollection<ExplorerItem> rootFolder)
         {
             // Update all special hash algorithm selectors
@@ -247,6 +254,20 @@ namespace FileTreeHasher
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Type_CheckHashChanged(object sender, TextChangedEventArgs e)
+        {
+            // Get loaded file
+            ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
+            string hash = (sender as TextBox).Text;
+            compareFileHash(file, hash);
+        }
+
+        /// <summary>
+        /// Type event: Input for check hash is losing focus
+        /// -> Compare generated hash with entered string
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void Type_CheckHashChanged(UIElement sender, LosingFocusEventArgs args)
         {
             // Get loaded file
             ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
