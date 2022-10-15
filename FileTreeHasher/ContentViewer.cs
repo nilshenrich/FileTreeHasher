@@ -38,6 +38,11 @@ namespace FileTreeHasher
     public class ExplorerItem
     {
         public string Name;
+    }
+
+    public class ExplorerFolder : ExplorerItem
+    {
+        public bool IsExpanded = true;
         private ObservableCollection<ExplorerItem> m_children;
         public ObservableCollection<ExplorerItem> Children
         {
@@ -54,11 +59,6 @@ namespace FileTreeHasher
                 m_children = value;
             }
         }
-    }
-
-    public class ExplorerFolder : ExplorerItem
-    {
-        public bool IsExpanded = true;
     }
 
     public class ExplorerFile : ExplorerItem
