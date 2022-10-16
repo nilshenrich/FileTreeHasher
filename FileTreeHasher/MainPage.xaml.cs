@@ -135,6 +135,7 @@ namespace FileTreeHasher
             SelectedFolderPath.Value = folder.Path;
 
             // Clear all old lodaded elements
+            ExplorerFile.CancelAllHashingTasks();
             LoadedFileTreeItems.Clear();
 
             // Load file structure to UI
@@ -173,6 +174,7 @@ namespace FileTreeHasher
         {
             clearAllInputs(LoadedFileTreeItems);
         }
+
         /// <summary>
         /// Change event: Selected global hash algorithm changed
         /// -> Set all special hash algorithm selectors to new value

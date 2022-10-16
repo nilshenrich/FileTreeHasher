@@ -102,8 +102,9 @@ namespace FileTreeHasher
             {
                 // TODO: Also cancel pending hashing process
                 // TODO: If hashing can be cancelled, tasks could be started in parallel again
+                // TODO: Same file could have multiple hash calculations in pipeline after changing algorithm
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
-                GeneratedHash.Value = "...";
+                GeneratedHash.Value = ". . .";
                 string hash = HashGenerator.generateHashAsync(FileOnDisk, SelectedHashAlgName).Result;
                 GeneratedHash.Value = hash;
                 compareFileHash();
