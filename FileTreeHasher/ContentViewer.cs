@@ -95,7 +95,6 @@ namespace FileTreeHasher
         /// <summary>
         /// Cancel pending task and restart with given action
         /// </summary>
-        /// <param name="action"></param>
         public void StartHashingTask()
         {
             // Queue new process to run consecutively
@@ -105,12 +104,10 @@ namespace FileTreeHasher
                 // TODO: If hashing can be cancelled, tasks could be started in parallel again
                 // TODO: Same file could have multiple hash calculations in pipeline after changing algorithm
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
-                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    markPending());
+                    markPending();
                 string hash = HashGenerator.generateHash(FileOnDisk, SelectedHashAlgName);
                 GeneratedHash.Value = hash;
-                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    compareFileHash());
+                    compareFileHash();
             }, m_taskCancellationTokenSource.Token);
         }
 
