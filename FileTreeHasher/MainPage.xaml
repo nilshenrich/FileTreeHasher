@@ -116,7 +116,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="/Icons/Folder.png" Style="{StaticResource Img_FileTreeItemIcon}"/>
+                    <SymbolIcon Grid.Column="0" Symbol="Folder" Foreground="Yellow" Style="{StaticResource Img_FileTreeItemIcon}"/>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
                 </Grid>
             </muxc:TreeViewItem>
@@ -131,11 +131,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Style="{StaticResource Img_FileTreeItemIcon}">
-                        <Image.Source>
-                            <BitmapImage UriSource="{x:Bind IconSource.Value, Mode=OneWay}"/>
-                        </Image.Source>
-                    </Image>
+                    <SymbolIcon Grid.Column="0" Symbol="OpenFile" Style="{StaticResource Img_FileTreeItemIcon}"/>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
                     <TextBlock Grid.Column="2" Text="{x:Bind GeneratedHash.Value, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind GeneratedHash.Value, Mode=OneWay}" Style="{StaticResource Txt_GenHash}"/>
                     <TextBox Grid.Column="3" Text="{x:Bind CheckHash.Value, Mode=OneWay}" Style="{StaticResource Inp_HashCheck}" TextChanged="Type_CheckHashChanged"/>

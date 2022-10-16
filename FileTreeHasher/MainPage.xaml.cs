@@ -29,12 +29,6 @@ namespace FileTreeHasher
         public MainPage()
         {
             InitializeComponent();
-
-            // Set icon sources
-            ExplorerFile.IconSourceWait = new Uri(BaseUri, "/Icons/Wait.png");
-            ExplorerFile.IconSourceHashed = new Uri(BaseUri, "/Icons/Hashed.png");
-            ExplorerFile.IconSourceCheck = new Uri(BaseUri, "/Icons/Check.png");
-            ExplorerFile.IconSourceFail = new Uri(BaseUri, "/Icons/Fail.png");
         }
 
         /// <summary>

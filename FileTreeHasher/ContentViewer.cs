@@ -70,7 +70,6 @@ namespace FileTreeHasher
     {
         // Visible UI outputs
         public StorageFile FileOnDisk;
-        public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
@@ -80,12 +79,6 @@ namespace FileTreeHasher
             get { return (HashAlgirithmNames)SelectedHashAlgIndex.Value; }
             set { SelectedHashAlgIndex.Value = (int)value; }
         }
-
-        // Collection of Image source uris
-        public static Uri IconSourceWait;
-        public static Uri IconSourceHashed;
-        public static Uri IconSourceCheck;
-        public static Uri IconSourceFail;
 
         // Hash generation task
         private static Task m_hashGenerationTask = Task.CompletedTask;
@@ -125,7 +118,6 @@ namespace FileTreeHasher
         /// </summary>
         public void markWaiting()
         {
-            IconSource.Value = IconSourceWait;
         }
 
         /// <summary>
@@ -133,7 +125,6 @@ namespace FileTreeHasher
         /// </summary>
         public void markReady()
         {
-            IconSource.Value = IconSourceHashed;
         }
 
         /// <summary>
@@ -141,7 +132,6 @@ namespace FileTreeHasher
         /// </summary>
         public void markPassed()
         {
-            IconSource.Value = IconSourceCheck;
         }
 
         /// <summary>
@@ -149,7 +139,6 @@ namespace FileTreeHasher
         /// </summary>
         public void markFailed()
         {
-            IconSource.Value = IconSourceFail;
         }
 
         /// <summary>
