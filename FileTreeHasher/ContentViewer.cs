@@ -101,7 +101,6 @@ namespace FileTreeHasher
             {
                 // TODO: Also cancel pending hashing process
                 // TODO: If hashing can be cancelled, tasks could be started in parallel again
-                // TODO: If the alg changes while calc is pending, status is ready but hash is from old alg (But will be recalculaated correctly)
 
                 // Break if the task queue is cancelled
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
@@ -115,9 +114,14 @@ namespace FileTreeHasher
                 GeneratedHashAlgIndex = null;
                 int hashId = SelectedHashAlgIndex.Value;
                 string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId);
-                GeneratedHash.Value = hash;
-                GeneratedHashAlgIndex = hashId;
-                compareFileHash();
+
+                // Generation done if hash selector didn't change
+                if (SelectedHashAlgIndex.Value == hashId)
+                {
+                    GeneratedHash.Value = hash;
+                    GeneratedHashAlgIndex = hashId;
+                    compareFileHash();
+                }
             }, m_taskCancellationTokenSource.Token);
         }
 
