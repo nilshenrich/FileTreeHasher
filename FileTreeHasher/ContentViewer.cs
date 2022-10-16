@@ -75,6 +75,7 @@ namespace FileTreeHasher
         public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
         private int? GeneratedHashAlgIndex = null;
+        public int OldSelectedHashAlgIndex;
 
         // Collection of Image source uris
         public static Uri IconSourceWait;
