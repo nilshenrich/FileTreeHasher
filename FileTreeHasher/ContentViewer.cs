@@ -22,21 +22,18 @@ namespace FileTreeHasher
         }
 
         public ObservableObject() { }
-        public ObservableObject(T value) { m_value = m_oldvalue = value; }
+        public ObservableObject(T value) { m_value = value; }
 
         private T m_value;
-        private T m_oldvalue;
         public T Value
         {
             get { return m_value; }
             set
             {
+                bool equal = value.Equals(m_value);
                 m_value = value;
-                if (!value.Equals(m_oldvalue))
-                {
-                    m_oldvalue = value;
+                if (!equal)
                     OnPropertyChanged();
-                }
             }
         }
     }
