@@ -83,6 +83,7 @@ namespace FileTreeHasher
 
         // Collection of Image source uris
         public static Uri IconSourceWait;
+        public static Uri IconSourceCalc;
         public static Uri IconSourceHashed;
         public static Uri IconSourceCheck;
         public static Uri IconSourceFail;
@@ -138,7 +139,7 @@ namespace FileTreeHasher
         /// </summary>
         public void markPending()
         {
-            GeneratedHash.Value = ". . .";
+            IconSource.Value = IconSourceCalc;
         }
 
         /// <summary>
