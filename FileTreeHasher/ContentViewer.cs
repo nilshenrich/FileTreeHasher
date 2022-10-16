@@ -92,7 +92,12 @@ namespace FileTreeHasher
         public void StartHashingTask(Action action)
         {
             CancelHashingTask();
-            m_hashGenerationTask = Task.Run(action, m_taskCancellationTokenSource.Token);
+            m_hashGenerationTask = Task.Run(()=>
+            {
+                // TODO: Not working for parallel tasks
+                m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                action();
+            }, m_taskCancellationTokenSource.Token);
         }
 
         /// <summary>
