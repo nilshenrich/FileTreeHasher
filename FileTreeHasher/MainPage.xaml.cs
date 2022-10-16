@@ -29,6 +29,9 @@ namespace FileTreeHasher
         // Tree view content
         private ObservableCollection<ExplorerItem> LoadedFileTreeItems = new ObservableCollection<ExplorerItem>();
 
+        // Task for hash generation
+        private Task HashGenerationTask = Task.CompletedTask;
+
         public MainPage()
         {
             InitializeComponent();
@@ -102,13 +105,14 @@ namespace FileTreeHasher
         {
             markFileWaiting(file);
             file.GeneratedHash.Value = "";
-            Task.Run(() =>
-            {
-                string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
-                file.GeneratedHash.Value = hash;
-                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                compareFileHash(file));
-            });
+            HashGenerationTask = HashGenerationTask.ContinueWith((HashGenerationTask) =>
+             {
+                 file.GeneratedHash.Value = "...";
+                 string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
+                 file.GeneratedHash.Value = hash;
+                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                 compareFileHash(file));
+             });
         }
 
         /// <summary>
