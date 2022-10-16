@@ -39,16 +39,6 @@ namespace FileTreeHasher
         }
 
         /// <summary>
-        /// Start hash generation and pasting of loaded file in background
-        /// </summary>
-        /// <param name="file"></param>
-        private void startHashGeneration(ExplorerFile file)
-        {
-            file.markWaiting();
-            file.QueueNewHashingTask();
-        }
-
-        /// <summary>
         /// Bring folder content to UI
         /// </summary>
         /// <param name="rootFolder"></param>
@@ -87,7 +77,7 @@ namespace FileTreeHasher
                 rootExplorer.Add(explorerFile);
 
                 // Generate hash in task
-                startHashGeneration(explorerFile);
+                explorerFile.QueueNewHashingTask();
             }
         }
 
@@ -198,7 +188,7 @@ namespace FileTreeHasher
             if (file.SelectedHashAlgIndex.Value != file.OldSelectedHashAlgIndex)
             {
                 file.OldSelectedHashAlgIndex = file.SelectedHashAlgIndex.Value;
-                startHashGeneration(file);
+                file.QueueNewHashingTask();
             }
         }
 

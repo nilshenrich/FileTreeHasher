@@ -93,6 +93,7 @@ namespace FileTreeHasher
         /// </summary>
         public void QueueNewHashingTask()
         {
+            markWaiting();
             GeneratedHash.Value = "";
             GeneratedHashAlgIndex = null;
 
@@ -135,7 +136,7 @@ namespace FileTreeHasher
         /// <summary>
         /// Mark file as waiting for hash string calculation
         /// </summary>
-        public void markWaiting()
+        private void markWaiting()
         {
             IconSource.Value = IconSourceWait;
         }
@@ -143,7 +144,7 @@ namespace FileTreeHasher
         /// <summary>
         /// Mark file as pending hash calculation
         /// </summary>
-        public void markPending()
+        private void markPending()
         {
             IconSource.Value = IconSourceCalc;
         }
@@ -151,7 +152,7 @@ namespace FileTreeHasher
         /// <summary>
         /// Mark file as ready for hash comparison (hash string calculated)
         /// </summary>
-        public void markReady()
+        private void markReady()
         {
             IconSource.Value = IconSourceHashed;
         }
@@ -159,7 +160,7 @@ namespace FileTreeHasher
         /// <summary>
         /// Marks file as passed for hash checking
         /// </summary>
-        public void markPassed()
+        private void markPassed()
         {
             IconSource.Value = IconSourceCheck;
         }
@@ -167,7 +168,7 @@ namespace FileTreeHasher
         /// <summary>
         /// Marks file as failed for hash checking
         /// </summary>
-        public void markFailed()
+        private void markFailed()
         {
             IconSource.Value = IconSourceFail;
         }
