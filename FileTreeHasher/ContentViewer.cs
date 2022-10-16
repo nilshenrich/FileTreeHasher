@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace FileTreeHasher
 {
@@ -70,6 +71,8 @@ namespace FileTreeHasher
     {
         // Visible UI outputs
         public StorageFile FileOnDisk;
+        public ObservableObject<Symbol> IconSymbol = new ObservableObject<Symbol>();
+        public ObservableObject<Brush> IconColor = new ObservableObject<Brush>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
@@ -100,7 +103,8 @@ namespace FileTreeHasher
                 GeneratedHash.Value = ". . .";
                 string hash = HashGenerator.generateHashAsync(FileOnDisk, SelectedHashAlgName).Result;
                 GeneratedHash.Value = hash;
-                compareFileHash();
+                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    compareFileHash());
             }, m_taskCancellationTokenSource.Token);
         }
 
@@ -118,6 +122,8 @@ namespace FileTreeHasher
         /// </summary>
         public void markWaiting()
         {
+            IconSymbol.Value = Symbol.Clock;
+            IconColor.Value = new SolidColorBrush(Colors.Orange);
         }
 
         /// <summary>
@@ -125,6 +131,8 @@ namespace FileTreeHasher
         /// </summary>
         public void markReady()
         {
+            IconSymbol.Value = Symbol.Accept;
+            IconColor.Value = new SolidColorBrush(Colors.Blue);
         }
 
         /// <summary>
@@ -132,6 +140,8 @@ namespace FileTreeHasher
         /// </summary>
         public void markPassed()
         {
+            IconSymbol.Value = Symbol.Accept;
+            IconColor.Value = new SolidColorBrush(Colors.Green);
         }
 
         /// <summary>
@@ -139,6 +149,8 @@ namespace FileTreeHasher
         /// </summary>
         public void markFailed()
         {
+            IconSymbol.Value = Symbol.Cancel;
+            IconColor.Value = new SolidColorBrush(Colors.Red);
         }
 
         /// <summary>
