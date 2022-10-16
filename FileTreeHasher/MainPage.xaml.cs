@@ -8,7 +8,6 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
-// TODO: App crashes when starting without debugging
 
 namespace FileTreeHasher
 {
@@ -30,6 +29,13 @@ namespace FileTreeHasher
         public MainPage()
         {
             InitializeComponent();
+
+            // Set icon sources
+            ExplorerFile.IconSourceWait = new Uri(BaseUri, "/Icons/Wait.png");
+            ExplorerFile.IconSourceCalc = new Uri(BaseUri, "/Icons/Calc.png");
+            ExplorerFile.IconSourceHashed = new Uri(BaseUri, "/Icons/Hashed.png");
+            ExplorerFile.IconSourceCheck = new Uri(BaseUri, "/Icons/Check.png");
+            ExplorerFile.IconSourceFail = new Uri(BaseUri, "/Icons/Fail.png");
         }
 
         /// <summary>
