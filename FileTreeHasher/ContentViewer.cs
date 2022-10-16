@@ -122,6 +122,8 @@ namespace FileTreeHasher
                     GeneratedHashAlgIndex = hashId;
                     compareFileHash();
                 }
+                else
+                    QueueNewHashingTask();
             }, m_taskCancellationTokenSource.Token);
         }
 
