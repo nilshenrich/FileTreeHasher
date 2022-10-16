@@ -98,7 +98,6 @@ namespace FileTreeHasher
                 // TODO: Also cancel pending hashing process
                 // TODO: If hashing can be cancelled, tasks could be started in parallel again
                 // TODO: Same file could have multiple hash calculations in pipeline after changing algorithm
-                // TODO: Files don't starthashing when reloading new file tree cancelled earlier process
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     markPending());
@@ -115,7 +114,10 @@ namespace FileTreeHasher
         public static void CancelAllHashingTasks()
         {
             if (!m_hashGenerationTask.IsCompleted)
+            {
                 m_taskCancellationTokenSource.Cancel();
+                m_taskCancellationTokenSource = new CancellationTokenSource();
+            }
         }
 
         /// <summary>
