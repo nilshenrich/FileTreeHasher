@@ -77,6 +77,67 @@ namespace FileTreeHasher
             get { return (HashAlgirithmNames)SelectedHashAlgIndex.Value; }
             set { SelectedHashAlgIndex.Value = (int)value; }
         }
+
+        // Collection of Image source uris
+        public static Uri IconSourceWait;
+        public static Uri IconSourceHashed;
+        public static Uri IconSourceCheck;
+        public static Uri IconSourceFail;
+
+        /// <summary>
+        /// Mark file as waiting for hash string calculation
+        /// </summary>
+        public void markWaiting()
+        {
+            IconSource.Value = IconSourceWait;
+        }
+
+        /// <summary>
+        /// Mark file as ready for hash comparison (hash string calculated)
+        /// </summary>
+        public void markReady()
+        {
+            IconSource.Value = IconSourceHashed;
+        }
+
+        /// <summary>
+        /// Marks file as passed for hash checking
+        /// </summary>
+        public void markPassed()
+        {
+            IconSource.Value = IconSourceCheck;
+        }
+
+        /// <summary>
+        /// Marks file as failed for hash checking
+        /// </summary>
+        public void markFailed()
+        {
+            IconSource.Value = IconSourceFail;
+        }
+
+        /// <summary>
+        /// Compare generated hash with check string and mark file item acordingly
+        /// </summary>
+        public void compareFileHash()
+        {
+            // For empty generated string, do nothing
+            if (string.IsNullOrEmpty(GeneratedHash.Value))
+                return;
+
+            // For empty comparison string, don't compare
+            if (string.IsNullOrEmpty(CheckHash.Value))
+            {
+                markReady();
+                return;
+            }
+
+            // Check string
+            if (GeneratedHash.Value == CheckHash.Value.ToLower())
+                markPassed();
+            else
+                markFailed();
+        }
     }
 
     public class ExplorerItemTemplateSelector : DataTemplateSelector
