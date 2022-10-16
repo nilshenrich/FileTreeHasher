@@ -100,7 +100,8 @@ namespace FileTreeHasher
                 // TODO: If hashing can be cancelled, tasks could be started in parallel again
                 // TODO: Same file could have multiple hash calculations in pipeline after changing algorithm
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
-                GeneratedHash.Value = ". . .";
+                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    markPending());
                 string hash = HashGenerator.generateHashAsync(FileOnDisk, SelectedHashAlgName).Result;
                 GeneratedHash.Value = hash;
                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -124,6 +125,15 @@ namespace FileTreeHasher
         {
             IconSymbol.Value = Symbol.Clock;
             IconColor.Value = new SolidColorBrush(Colors.Orange);
+        }
+
+        /// <summary>
+        /// Mark file as pending hash calculation
+        /// </summary>
+        public void markPending()
+        {
+            IconSymbol.Value = Symbol.Forward;
+            IconColor.Value = new SolidColorBrush(Colors.Purple);
         }
 
         /// <summary>
