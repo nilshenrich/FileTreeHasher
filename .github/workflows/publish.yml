@@ -5,7 +5,6 @@ on:
   push:
     tags:
       - "v*"
-      - "test*"
 
 jobs:
   release:
@@ -40,63 +39,60 @@ jobs:
       id: commit-message
       uses: ericcornelissen/git-tag-annotation-action@v2
     
-    - name: Print commit message after checkout
-      run: echo "${{ steps.commit-message.outputs.git-tag-annotation }}"
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
 
-    # - name: Install .NET Core
-    #   uses: actions/setup-dotnet@v3
-    #   with:
-    #     dotnet-version: 6.0.x
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
 
-    # - name: Setup MSBuild.exe
-    #   uses: microsoft/setup-msbuild@v1.0.2
+    - name: Update manifest version
+      run: |
+        [xml]$manifest = get-content ".\${{ env.Uwp_Project_Directory }}\Package.appxmanifest"
+        $manifest.Package.Identity.Version = "${{ steps.version.outputs.result }}"
+        $manifest.save(".\${{ env.Uwp_Project_Directory }}\Package.appxmanifest")
 
-    # - name: Update manifest version
-    #   run: |
-    #     [xml]$manifest = get-content ".\${{ env.Uwp_Project_Directory }}\Package.appxmanifest"
-    #     $manifest.Package.Identity.Version = "${{ steps.version.outputs.result }}"
-    #     $manifest.save(".\${{ env.Uwp_Project_Directory }}\Package.appxmanifest")
+    - name: Decode the Pfx
+      run: |
+        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
+        $currentDirectory = Get-Location
+        $certificatePath = Join-Path -Path $currentDirectory -ChildPath ${{ env.Uwp_Project_Directory }} -AdditionalChildPath ${{ env.SigningCertificate }}
+        [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
-    # - name: Decode the Pfx
-    #   run: |
-    #     $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
-    #     $currentDirectory = Get-Location
-    #     $certificatePath = Join-Path -Path $currentDirectory -ChildPath ${{ env.Uwp_Project_Directory }} -AdditionalChildPath ${{ env.SigningCertificate }}
-    #     [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
-
-    # - name: Build solution
-    #   run: msbuild ${{ env.Solution_Path }} /p:Platform=${{ env.Target_Architecture }} /p:AppxBundle=${{ env.AppxBundle }} /p:AppxBundlePlatforms="${{ env.Bundle_Architectures }}" /p:AppxPackageDir=${{ env.App_Packages_Directory }} /p:PackageCertificateKeyFile=${{ env.SigningCertificate }} /restore
-    #   env:
-    #     AppxBundle: Always
-    #     BuildMode: StoreUpload
-    #     Configuration: Release
+    - name: Build solution
+      run: msbuild ${{ env.Solution_Path }} /p:Platform=${{ env.Target_Architecture }} /p:AppxBundle=${{ env.AppxBundle }} /p:AppxBundlePlatforms="${{ env.Bundle_Architectures }}" /p:AppxPackageDir=${{ env.App_Packages_Directory }} /p:PackageCertificateKeyFile=${{ env.SigningCertificate }} /restore
+      env:
+        AppxBundle: Always
+        BuildMode: StoreUpload
+        Configuration: Release
     
-    # - name: Remove the .pfx
-    #   if: always()
-    #   run: Remove-Item -path ${{ env.Uwp_Project_Directory }}\${{ env.SigningCertificate }}
+    - name: Remove the .pfx
+      if: always()
+      run: Remove-Item -path ${{ env.Uwp_Project_Directory }}\${{ env.SigningCertificate }}
 
-    # - name: Archive bundle
-    #   run: Compress-Archive -Path ${{ env.Uwp_Project_Directory }}\${{ env.App_Packages_Directory }}\${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Test\* -DestinationPath ${{ env.Uwp_Project_Directory }}\${{ env.App_Packages_Directory }}\${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Setup.zip
+    - name: Archive bundle
+      run: Compress-Archive -Path ${{ env.Uwp_Project_Directory }}\${{ env.App_Packages_Directory }}\${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Test\* -DestinationPath ${{ env.Uwp_Project_Directory }}\${{ env.App_Packages_Directory }}\${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Setup.zip
 
-    # - name: Create release
-    #   id: create_release
-    #   uses: actions/create-release@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     tag_name: ${{ steps.tag-name.outputs.tag }}
-    #     release_name: Release ${{ steps.tag-name.outputs.tag }} for plattforms ${{ env.Bundle_Architectures }}
-    #     body: ${{ steps.commit-message.outputs.git-tag-annotation }}
-    #     draft: false
-    #     prerelease: false
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag-name.outputs.tag }}
+        release_name: Release ${{ steps.tag-name.outputs.tag }} for plattforms ${{ env.Bundle_Architectures }}
+        body: ${{ steps.commit-message.outputs.git-tag-annotation }}
+        draft: false
+        prerelease: false
 
-    # - name: Update release asset
-    #   id: upload-release-asset
-    #   uses: actions/upload-release-asset@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #     asset_path: ${{ env.Uwp_Project_Directory }}\${{ env.App_Packages_Directory }}\${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Setup.zip
-    #     asset_name: ${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Setup.zip
-    #     asset_content_type: application/zip
+    - name: Update release asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.Uwp_Project_Directory }}\${{ env.App_Packages_Directory }}\${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Setup.zip
+        asset_name: ${{ env.Bundle_Name }}_${{ steps.version.outputs.result }}_Setup.zip
+        asset_content_type: application/zip
