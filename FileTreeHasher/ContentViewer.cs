@@ -101,7 +101,7 @@ namespace FileTreeHasher
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     markPending());
-                string hash = HashGenerator.generateHashAsync(FileOnDisk, SelectedHashAlgName).Result;
+                string hash = HashGenerator.generateHash(FileOnDisk, SelectedHashAlgName);
                 GeneratedHash.Value = hash;
                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     compareFileHash());

@@ -47,11 +47,11 @@ namespace FileTreeHasher
         /// </summary>
         /// <param name="rootFolder"></param>
         /// <param name="rootExplorer"></param>
-        private async void loadFileTree(StorageFolder rootFolder, ObservableCollection<ExplorerItem> rootExplorer)
+        private void loadFileTree(StorageFolder rootFolder, ObservableCollection<ExplorerItem> rootExplorer)
         {
             // Draw all direct subdirectories
             // Load items of each subdirectory recursively
-            IReadOnlyList<StorageFolder> subfolders = await rootFolder.GetFoldersAsync();
+            IReadOnlyList<StorageFolder> subfolders = rootFolder.GetFoldersAsync().AsTask().Result;
             foreach (StorageFolder subfolder in subfolders)
             {
                 // Create new item for folder
@@ -65,7 +65,7 @@ namespace FileTreeHasher
             }
 
             // Draw all files
-            IReadOnlyList<StorageFile> files = await rootFolder.GetFilesAsync();
+            IReadOnlyList<StorageFile> files = rootFolder.GetFilesAsync().AsTask().Result;
             foreach (StorageFile file in files)
             {
                 // Create item for file

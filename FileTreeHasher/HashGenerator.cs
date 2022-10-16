@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace FileTreeHasher
@@ -22,7 +21,7 @@ namespace FileTreeHasher
         /// Generate hash string for a file
         /// </summary>
         /// <param name="file"></param>
-        public static async Task<string> generateHashAsync(StorageFile file, HashAlgirithmNames hashAlgirithm)
+        public static string generateHash(StorageFile file, HashAlgirithmNames hashAlgirithm)
         {
             // Select hash generator
             HashAlgorithm hasher;
@@ -53,7 +52,7 @@ namespace FileTreeHasher
             }
 
             // Generate and return hash string from file stream
-            Stream fileStream = await file.OpenStreamForReadAsync();
+            Stream fileStream = file.OpenStreamForReadAsync().Result;
             byte[] hashRaw = hasher.ComputeHash(fileStream);
             return BitConverter.ToString(hashRaw).Replace("-", "").ToLower();
         }
