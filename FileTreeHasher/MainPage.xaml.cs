@@ -105,6 +105,7 @@ namespace FileTreeHasher
         {
             markFileWaiting(file);
             file.GeneratedHash.Value = "";
+            // TODO: Can tasks now be started in parallel again when using file streams?
             HashGenerationTask = HashGenerationTask.ContinueWith((HashGenerationTask) =>
              {
                  file.GeneratedHash.Value = "<Calculation pending>";

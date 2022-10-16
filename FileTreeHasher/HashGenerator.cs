@@ -1,8 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Streams;
 
 namespace FileTreeHasher
 {
@@ -52,15 +52,10 @@ namespace FileTreeHasher
                     return "";
             }
 
-            // Read file content
-            var fileBuffer = await FileIO.ReadBufferAsync(file);
-            byte[] fileBytes = new byte[fileBuffer.Length];
-            DataReader.FromBuffer(fileBuffer).ReadBytes(fileBytes);
-
-            // Generate hash string and update UI
-            byte[] hashRaw = hasher.ComputeHash(fileBytes);
-            string hash = BitConverter.ToString(hashRaw).Replace("-", "").ToLower();
-            return hash;
+            // Generate and return hash string from file stream
+            Stream fileStream = await file.OpenStreamForReadAsync();
+            byte[] hashRaw = hasher.ComputeHash(fileStream);
+            return BitConverter.ToString(hashRaw).Replace("-", "").ToLower();
         }
     }
 }
