@@ -8,6 +8,7 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
+// TODO: App crashes when starting without debugging
 
 namespace FileTreeHasher
 {
