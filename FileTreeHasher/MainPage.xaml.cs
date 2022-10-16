@@ -158,7 +158,6 @@ namespace FileTreeHasher
         /// Update all special hash algorithm selectors to have same value as global selector
         /// </summary>
         /// <param name="rootFolder"></param>
-        /// TODO: Not updated if global switches to MD5 first time
         private void updateSpecialHashSelectors(ObservableCollection<ExplorerItem> rootFolder)
         {
             // Update all special hash algorithm selectors
