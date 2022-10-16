@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
@@ -48,13 +45,7 @@ namespace FileTreeHasher
         {
             file.markWaiting();
             file.GeneratedHash.Value = "";
-            Task.Run(() =>
-             {
-                 string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
-                 file.GeneratedHash.Value = hash;
-                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                 file.compareFileHash());
-             });
+            file.StartHashingTask();
         }
 
         /// <summary>
@@ -144,6 +135,7 @@ namespace FileTreeHasher
             SelectedFolderPath.Value = folder.Path;
 
             // Clear all old lodaded elements
+            ExplorerFile.CancelAllHashingTasks();
             LoadedFileTreeItems.Clear();
 
             // Load file structure to UI
@@ -157,6 +149,7 @@ namespace FileTreeHasher
         /// <param name="e"></param>
         private void Click_ClearFileTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            ExplorerFile.CancelAllHashingTasks();
             LoadedFileTreeItems.Clear();
             SelectedFolderPath.Value = SelectedFolderPath_default;
         }
@@ -181,6 +174,7 @@ namespace FileTreeHasher
         {
             clearAllInputs(LoadedFileTreeItems);
         }
+
         /// <summary>
         /// Change event: Selected global hash algorithm changed
         /// -> Set all special hash algorithm selectors to new value

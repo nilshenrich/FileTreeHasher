@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;
@@ -66,6 +68,7 @@ namespace FileTreeHasher
 
     public class ExplorerFile : ExplorerItem
     {
+        // Visible UI outputs
         public StorageFile FileOnDisk;
         public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
@@ -83,6 +86,39 @@ namespace FileTreeHasher
         public static Uri IconSourceHashed;
         public static Uri IconSourceCheck;
         public static Uri IconSourceFail;
+
+        // Hash generation task
+        private static Task m_hashGenerationTask = Task.CompletedTask;
+        private static CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
+
+        /// <summary>
+        /// Cancel pending task and restart with given action
+        /// </summary>
+        /// <param name="action"></param>
+        public void StartHashingTask()
+        {
+            // Queue new process to run consecutively
+            m_hashGenerationTask = m_hashGenerationTask.ContinueWith((m_hashGenerationTask) =>
+            {
+                // TODO: Also cancel pending hashing process
+                // TODO: If hashing can be cancelled, tasks could be started in parallel again
+                // TODO: Same file could have multiple hash calculations in pipeline after changing algorithm
+                m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                GeneratedHash.Value = ". . .";
+                string hash = HashGenerator.generateHashAsync(FileOnDisk, SelectedHashAlgName).Result;
+                GeneratedHash.Value = hash;
+                compareFileHash();
+            }, m_taskCancellationTokenSource.Token);
+        }
+
+        /// <summary>
+        /// Cancel pending hash calculation task if running
+        /// </summary>
+        public static void CancelAllHashingTasks()
+        {
+            if (!m_hashGenerationTask.IsCompleted)
+                m_taskCancellationTokenSource.Cancel();
+        }
 
         /// <summary>
         /// Mark file as waiting for hash string calculation
