@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -102,13 +101,13 @@ namespace FileTreeHasher
         {
             markFileWaiting(file);
             file.GeneratedHash.Value = "";
-            Task.Run(() =>
-             {
-                 string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
-                 file.GeneratedHash.Value = hash;
-                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                 compareFileHash(file));
-             });
+            file.StartHashingTask(() =>
+            {
+                string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
+                file.GeneratedHash.Value = hash;
+                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                compareFileHash(file));
+            });
         }
 
         /// <summary>

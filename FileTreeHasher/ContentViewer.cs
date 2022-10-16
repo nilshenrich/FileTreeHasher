@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;
@@ -66,6 +67,7 @@ namespace FileTreeHasher
 
     public class ExplorerFile : ExplorerItem
     {
+        // Visible UI outputs
         public StorageFile FileOnDisk;
         public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
@@ -76,6 +78,13 @@ namespace FileTreeHasher
         {
             get { return (HashAlgirithmNames)SelectedHashAlgIndex.Value; }
             set { SelectedHashAlgIndex.Value = (int)value; }
+        }
+
+        // Hash generation task
+        private Task m_hashGenerationTask;
+        public void StartHashingTask(Action action)
+        {
+            m_hashGenerationTask = Task.Run(action);
         }
     }
 
