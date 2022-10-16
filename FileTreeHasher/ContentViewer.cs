@@ -95,7 +95,7 @@ namespace FileTreeHasher
         /// Cancel pending task and restart with given action
         /// </summary>
         /// <param name="action"></param>
-        public void StartHashingTask(Action action)
+        public void StartHashingTask()
         {
             // Queue new process to run consecutively
             m_hashGenerationTask = m_hashGenerationTask.ContinueWith((m_hashGenerationTask) =>
@@ -104,7 +104,10 @@ namespace FileTreeHasher
                 // TODO: If hashing can be cancelled, tasks could be started in parallel again
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
                 GeneratedHash.Value = "...";
-                action();
+                string hash = HashGenerator.generateHashAsync(FileOnDisk, SelectedHashAlgName).Result;
+                GeneratedHash.Value = hash;
+                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                compareFileHash());
             }, m_taskCancellationTokenSource.Token);
         }
 
