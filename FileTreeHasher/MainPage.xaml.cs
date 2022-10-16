@@ -107,7 +107,7 @@ namespace FileTreeHasher
             file.GeneratedHash.Value = "";
             HashGenerationTask = HashGenerationTask.ContinueWith((HashGenerationTask) =>
              {
-                 // TODO: New icon for calculating?
+                 file.GeneratedHash.Value = "<Calculation pending>";
                  string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
                  file.GeneratedHash.Value = hash;
                  _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
