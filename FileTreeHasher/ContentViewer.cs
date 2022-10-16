@@ -101,6 +101,7 @@ namespace FileTreeHasher
             {
                 // TODO: Also cancel pending hashing process
                 // TODO: If hashing can be cancelled, tasks could be started in parallel again
+                // TODO: If the alg changes while calc is pending, status is ready but hash is from old alg (But will be recalculaated correctly)
 
                 // Break if the task queue is cancelled
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
