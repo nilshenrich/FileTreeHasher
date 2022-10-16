@@ -90,7 +90,6 @@ namespace FileTreeHasher
         /// <summary>
         /// Cancel pending task and restart with given action
         /// </summary>
-        /// <param name="action"></param>
         public void StartHashingTask()
         {
             // Queue new process to run consecutively
