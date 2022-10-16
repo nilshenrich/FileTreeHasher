@@ -31,66 +31,12 @@ namespace FileTreeHasher
         public MainPage()
         {
             InitializeComponent();
-        }
 
-        /// <summary>
-        /// Mark loaded file as waiting for hash string calculation
-        /// </summary>
-        /// <param name="file"></param>
-        private void markFileWaiting(ExplorerFile file)
-        {
-            file.IconSource.Value = new Uri(BaseUri, "/Icons/Wait.png");
-        }
-
-        /// <summary>
-        /// Mark loaded file as ready for hash comparison (hash string calculated)
-        /// </summary>
-        /// <param name="file"></param>
-        private void markFileReady(ExplorerFile file)
-        {
-            file.IconSource.Value = new Uri(BaseUri, "/Icons/Hashed.png");
-        }
-
-        /// <summary>
-        /// Marks loaded file as passed for hash checking
-        /// </summary>
-        /// <param name="file"></param>
-        private void markAsPassed(ExplorerFile file)
-        {
-            file.IconSource.Value = new Uri(BaseUri, "/Icons/Check.png");
-        }
-
-        /// <summary>
-        /// Marks loaded file as failed for hash checking
-        /// </summary>
-        /// <param name="file"></param>
-        private void markAsFailed(ExplorerFile file)
-        {
-            file.IconSource.Value = new Uri(BaseUri, "/Icons/Fail.png");
-        }
-
-        /// <summary>
-        /// Compare generated hash with check string and mark file item acordingly
-        /// </summary>
-        /// <param name="file"></param>
-        private void compareFileHash(ExplorerFile file)
-        {
-            // For empty generated string, do nothing
-            if (string.IsNullOrEmpty(file.GeneratedHash.Value))
-                return;
-
-            // For empty comparison string, don't compare
-            if (string.IsNullOrEmpty(file.CheckHash.Value))
-            {
-                markFileReady(file);
-                return;
-            }
-
-            // Check string
-            if (file.GeneratedHash.Value == file.CheckHash.Value.ToLower())
-                markAsPassed(file);
-            else
-                markAsFailed(file);
+            // Set icon sources
+            ExplorerFile.IconSourceWait = new Uri(BaseUri, "/Icons/Wait.png");
+            ExplorerFile.IconSourceHashed = new Uri(BaseUri, "/Icons/Hashed.png");
+            ExplorerFile.IconSourceCheck = new Uri(BaseUri, "/Icons/Check.png");
+            ExplorerFile.IconSourceFail = new Uri(BaseUri, "/Icons/Fail.png");
         }
 
         /// <summary>
@@ -99,14 +45,14 @@ namespace FileTreeHasher
         /// <param name="file"></param>
         private void startHashGeneration(ExplorerFile file)
         {
-            markFileWaiting(file);
+            file.markWaiting();
             file.GeneratedHash.Value = "";
             file.StartHashingTask(() =>
             {
                 string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
                 file.GeneratedHash.Value = hash;
                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                compareFileHash(file));
+                file.compareFileHash());
             });
         }
 
@@ -283,7 +229,7 @@ namespace FileTreeHasher
             // Get loaded file, update check hash and compare
             ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
             file.CheckHash.Value = (sender as TextBox).Text;  // Not updated on UI as not observable. Not not needed
-            compareFileHash(file);
+            file.compareFileHash();
         }
     }
 }
