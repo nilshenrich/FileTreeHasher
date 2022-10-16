@@ -5,8 +5,7 @@ on:
   push:
     tags:
       - "v*"
-    branches:
-      - "feature/*"
+      - "test*"
 
 jobs:
   release:
@@ -40,6 +39,9 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    
+    - name: Print tag message after checkout
+      run: echo "${{ steps.tag-message.outputs.git-tag-annotation }}"
 
     # - name: Install .NET Core
     #   uses: actions/setup-dotnet@v3
