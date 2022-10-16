@@ -45,8 +45,7 @@ namespace FileTreeHasher
         private void startHashGeneration(ExplorerFile file)
         {
             file.markWaiting();
-            file.GeneratedHash.Value = "";
-            file.StartHashingTask();
+            file.QueueNewHashingTask();
         }
 
         /// <summary>

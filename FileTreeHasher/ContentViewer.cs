@@ -74,12 +74,8 @@ namespace FileTreeHasher
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
+        private int? GeneratedHashAlgIndex = null;
         public int OldSelectedHashAlgIndex;
-        public HashAlgirithmNames SelectedHashAlgName
-        {
-            get { return (HashAlgirithmNames)SelectedHashAlgIndex.Value; }
-            set { SelectedHashAlgIndex.Value = (int)value; }
-        }
 
         // Collection of Image source uris
         public static Uri IconSourceWait;
@@ -95,19 +91,32 @@ namespace FileTreeHasher
         /// <summary>
         /// Cancel pending task and restart with given action
         /// </summary>
-        public void StartHashingTask()
+        public void QueueNewHashingTask()
         {
+            GeneratedHash.Value = "";
+            GeneratedHashAlgIndex = null;
+
             // Queue new process to run consecutively
             m_hashGenerationTask = m_hashGenerationTask.ContinueWith((m_hashGenerationTask) =>
             {
                 // TODO: Also cancel pending hashing process
                 // TODO: If hashing can be cancelled, tasks could be started in parallel again
-                // TODO: Same file could have multiple hash calculations in pipeline after changing algorithm
+
+                // Break if the task queue is cancelled
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
-                    markPending();
-                string hash = HashGenerator.generateHash(FileOnDisk, SelectedHashAlgName);
+
+                // Break if the correct hash is already displayed
+                if (SelectedHashAlgIndex.Value == GeneratedHashAlgIndex)
+                    return;
+
+                // Generate hash and update UI
+                markPending();
+                GeneratedHashAlgIndex = null;
+                int hashId = SelectedHashAlgIndex.Value;
+                string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId);
                 GeneratedHash.Value = hash;
-                    compareFileHash();
+                GeneratedHashAlgIndex = hashId;
+                compareFileHash();
             }, m_taskCancellationTokenSource.Token);
         }
 
