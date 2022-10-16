@@ -106,8 +106,7 @@ namespace FileTreeHasher
                 GeneratedHash.Value = "...";
                 string hash = HashGenerator.generateHashAsync(FileOnDisk, SelectedHashAlgName).Result;
                 GeneratedHash.Value = hash;
-                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                compareFileHash());
+                compareFileHash();
             }, m_taskCancellationTokenSource.Token);
         }
 
