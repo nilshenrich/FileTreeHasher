@@ -21,18 +21,9 @@ jobs:
       Target_Architecture: x64                              # Architeccture of machine to build bundles at
     
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    
     - name: Get tag name
       id: tag-name
       uses: dawidd6/action-get-tag@v1
-    
-    - name: Get tag message
-      id: tag-message
-      uses: ericcornelissen/git-tag-annotation-action@v2
     
     - name: Get version from tag name
       uses: Amadevus/pwsh-script@v1
@@ -40,8 +31,17 @@ jobs:
       with:
         script: '(("${{ steps.tag-name.outputs.tag }}").Split("v")[1]+".0.0.0.0").Split(".")[0]+"."+(("${{ steps.tag-name.outputs.tag }}").Split("v")[1]+".0.0.0.0").Split(".")[1]+"."+(("${{ steps.tag-name.outputs.tag }}").Split("v")[1]+".0.0.0.0").Split(".")[2]+"."+(("${{ steps.tag-name.outputs.tag }}").Split("v")[1]+".0.0.0.0").Split(".")[3]'
 
-    - name: Print tag message after checkout
-      run: echo "${{ steps.tag-message.outputs.git-tag-annotation }}"
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Get commit message
+      id: commit-message
+      uses: ericcornelissen/git-tag-annotation-action@v2
+    
+    - name: Print commit message after checkout
+      run: echo "${{ steps.commit-message.outputs.git-tag-annotation }}"
 
     # - name: Install .NET Core
     #   uses: actions/setup-dotnet@v3
@@ -86,7 +86,7 @@ jobs:
     #   with:
     #     tag_name: ${{ steps.tag-name.outputs.tag }}
     #     release_name: Release ${{ steps.tag-name.outputs.tag }} for plattforms ${{ env.Bundle_Architectures }}
-    #     body: ${{ steps.tag-message.outputs.git-tag-annotation }}
+    #     body: ${{ steps.commit-message.outputs.git-tag-annotation }}
     #     draft: false
     #     prerelease: false
 
