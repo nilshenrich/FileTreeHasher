@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
@@ -32,66 +29,12 @@ namespace FileTreeHasher
         public MainPage()
         {
             InitializeComponent();
-        }
 
-        /// <summary>
-        /// Mark loaded file as waiting for hash string calculation
-        /// </summary>
-        /// <param name="file"></param>
-        private void markFileWaiting(ExplorerFile file)
-        {
-            file.IconSource.Value = new Uri(BaseUri, "/Icons/Wait.png");
-        }
-
-        /// <summary>
-        /// Mark loaded file as ready for hash comparison (hash string calculated)
-        /// </summary>
-        /// <param name="file"></param>
-        private void markFileReady(ExplorerFile file)
-        {
-            file.IconSource.Value = new Uri(BaseUri, "/Icons/Hashed.png");
-        }
-
-        /// <summary>
-        /// Marks loaded file as passed for hash checking
-        /// </summary>
-        /// <param name="file"></param>
-        private void markAsPassed(ExplorerFile file)
-        {
-            file.IconSource.Value = new Uri(BaseUri, "/Icons/Check.png");
-        }
-
-        /// <summary>
-        /// Marks loaded file as failed for hash checking
-        /// </summary>
-        /// <param name="file"></param>
-        private void markAsFailed(ExplorerFile file)
-        {
-            file.IconSource.Value = new Uri(BaseUri, "/Icons/Fail.png");
-        }
-
-        /// <summary>
-        /// Compare generated hash with check string and mark file item acordingly
-        /// </summary>
-        /// <param name="file"></param>
-        private void compareFileHash(ExplorerFile file)
-        {
-            // For empty generated string, do nothing
-            if (string.IsNullOrEmpty(file.GeneratedHash.Value))
-                return;
-
-            // For empty comparison string, don't compare
-            if (string.IsNullOrEmpty(file.CheckHash.Value))
-            {
-                markFileReady(file);
-                return;
-            }
-
-            // Check string
-            if (file.GeneratedHash.Value == file.CheckHash.Value.ToLower())
-                markAsPassed(file);
-            else
-                markAsFailed(file);
+            // Set icon sources
+            ExplorerFile.IconSourceWait = new Uri(BaseUri, "/Icons/Wait.png");
+            ExplorerFile.IconSourceHashed = new Uri(BaseUri, "/Icons/Hashed.png");
+            ExplorerFile.IconSourceCheck = new Uri(BaseUri, "/Icons/Check.png");
+            ExplorerFile.IconSourceFail = new Uri(BaseUri, "/Icons/Fail.png");
         }
 
         /// <summary>
@@ -100,15 +43,9 @@ namespace FileTreeHasher
         /// <param name="file"></param>
         private void startHashGeneration(ExplorerFile file)
         {
-            markFileWaiting(file);
+            file.markWaiting();
             file.GeneratedHash.Value = "";
-            Task.Run(() =>
-            {
-                string hash = HashGenerator.generateHashAsync(file.FileOnDisk, file.SelectedHashAlgName).Result;
-                file.GeneratedHash.Value = hash;
-                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                compareFileHash(file));
-            });
+            file.StartHashingTask();
         }
 
         /// <summary>
@@ -158,7 +95,6 @@ namespace FileTreeHasher
         /// Update all special hash algorithm selectors to have same value as global selector
         /// </summary>
         /// <param name="rootFolder"></param>
-        /// TODO: Not updated if global switches to MD5 first time
         private void updateSpecialHashSelectors(ObservableCollection<ExplorerItem> rootFolder)
         {
             // Update all special hash algorithm selectors
@@ -199,6 +135,7 @@ namespace FileTreeHasher
             SelectedFolderPath.Value = folder.Path;
 
             // Clear all old lodaded elements
+            ExplorerFile.CancelAllHashingTasks();
             LoadedFileTreeItems.Clear();
 
             // Load file structure to UI
@@ -212,6 +149,7 @@ namespace FileTreeHasher
         /// <param name="e"></param>
         private void Click_ClearFileTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            ExplorerFile.CancelAllHashingTasks();
             LoadedFileTreeItems.Clear();
             SelectedFolderPath.Value = SelectedFolderPath_default;
         }
@@ -236,6 +174,7 @@ namespace FileTreeHasher
         {
             clearAllInputs(LoadedFileTreeItems);
         }
+
         /// <summary>
         /// Change event: Selected global hash algorithm changed
         /// -> Set all special hash algorithm selectors to new value
@@ -284,7 +223,7 @@ namespace FileTreeHasher
             // Get loaded file, update check hash and compare
             ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
             file.CheckHash.Value = (sender as TextBox).Text;  // Not updated on UI as not observable. Not not needed
-            compareFileHash(file);
+            file.compareFileHash();
         }
     }
 }
