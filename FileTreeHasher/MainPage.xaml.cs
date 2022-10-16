@@ -69,8 +69,7 @@ namespace FileTreeHasher
                 {
                     FileOnDisk = file,
                     Name = file.Name,
-                    SelectedHashAlgIndex = new ObservableObject<int>(GlobalHashAlgIndex.Value),
-                    OldSelectedHashAlgIndex = GlobalHashAlgIndex.Value
+                    SelectedHashAlgIndex = new ObservableObject<int>(GlobalHashAlgIndex.Value)
                 };
 
                 // Add file to UI
@@ -185,11 +184,7 @@ namespace FileTreeHasher
         private void Change_SpecialHashChanged(object sender, SelectionChangedEventArgs e)
         {
             ExplorerFile file = (sender as ComboBox).DataContext as ExplorerFile;
-            if (file.SelectedHashAlgIndex.Value != file.OldSelectedHashAlgIndex)
-            {
-                file.OldSelectedHashAlgIndex = file.SelectedHashAlgIndex.Value;
-                file.QueueNewHashingTask();
-            }
+            file.QueueNewHashingTask();
         }
 
         /// <summary>
