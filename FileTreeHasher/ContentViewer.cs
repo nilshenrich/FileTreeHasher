@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
@@ -81,10 +82,26 @@ namespace FileTreeHasher
         }
 
         // Hash generation task
-        private Task m_hashGenerationTask;
+        private Task m_hashGenerationTask = Task.CompletedTask;
+        private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
+
+        /// <summary>
+        /// Cancel pending task and restart with given action
+        /// </summary>
+        /// <param name="action"></param>
         public void StartHashingTask(Action action)
         {
-            m_hashGenerationTask = Task.Run(action);
+            CancelHashingTask();
+            m_hashGenerationTask = Task.Run(action, m_taskCancellationTokenSource.Token);
+        }
+
+        /// <summary>
+        /// Cancel pending hash calculation task if running
+        /// </summary>
+        public void CancelHashingTask()
+        {
+            if (!m_hashGenerationTask.IsCompleted)
+                m_taskCancellationTokenSource.Cancel();
         }
     }
 
