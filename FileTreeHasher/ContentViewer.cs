@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace FileTreeHasher
 {
@@ -70,7 +71,8 @@ namespace FileTreeHasher
     {
         // Visible UI outputs
         public StorageFile FileOnDisk;
-        public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
+        public ObservableObject<Symbol> IconSymbol = new ObservableObject<Symbol>();
+        public ObservableObject<Brush> IconColor = new ObservableObject<Brush>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
@@ -81,12 +83,6 @@ namespace FileTreeHasher
             set { SelectedHashAlgIndex.Value = (int)value; }
         }
 
-        // Collection of Image source uris
-        public static Uri IconSourceWait;
-        public static Uri IconSourceHashed;
-        public static Uri IconSourceCheck;
-        public static Uri IconSourceFail;
-
         // Hash generation task
         private static Task m_hashGenerationTask = Task.CompletedTask;
         private static CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
@@ -94,7 +90,6 @@ namespace FileTreeHasher
         /// <summary>
         /// Cancel pending task and restart with given action
         /// </summary>
-        /// <param name="action"></param>
         public void StartHashingTask()
         {
             // Queue new process to run consecutively
@@ -104,10 +99,12 @@ namespace FileTreeHasher
                 // TODO: If hashing can be cancelled, tasks could be started in parallel again
                 // TODO: Same file could have multiple hash calculations in pipeline after changing algorithm
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
-                GeneratedHash.Value = ". . .";
+                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    markPending());
                 string hash = HashGenerator.generateHashAsync(FileOnDisk, SelectedHashAlgName).Result;
                 GeneratedHash.Value = hash;
-                compareFileHash();
+                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    compareFileHash());
             }, m_taskCancellationTokenSource.Token);
         }
 
@@ -125,7 +122,17 @@ namespace FileTreeHasher
         /// </summary>
         public void markWaiting()
         {
-            IconSource.Value = IconSourceWait;
+            IconSymbol.Value = Symbol.Clock;
+            IconColor.Value = new SolidColorBrush(Colors.Orange);
+        }
+
+        /// <summary>
+        /// Mark file as pending hash calculation
+        /// </summary>
+        public void markPending()
+        {
+            IconSymbol.Value = Symbol.Forward;
+            IconColor.Value = new SolidColorBrush(Colors.Purple);
         }
 
         /// <summary>
@@ -133,7 +140,8 @@ namespace FileTreeHasher
         /// </summary>
         public void markReady()
         {
-            IconSource.Value = IconSourceHashed;
+            IconSymbol.Value = Symbol.Accept;
+            IconColor.Value = new SolidColorBrush(Colors.Blue);
         }
 
         /// <summary>
@@ -141,7 +149,8 @@ namespace FileTreeHasher
         /// </summary>
         public void markPassed()
         {
-            IconSource.Value = IconSourceCheck;
+            IconSymbol.Value = Symbol.Accept;
+            IconColor.Value = new SolidColorBrush(Colors.Green);
         }
 
         /// <summary>
@@ -149,7 +158,8 @@ namespace FileTreeHasher
         /// </summary>
         public void markFailed()
         {
-            IconSource.Value = IconSourceFail;
+            IconSymbol.Value = Symbol.Cancel;
+            IconColor.Value = new SolidColorBrush(Colors.Red);
         }
 
         /// <summary>
