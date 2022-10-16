@@ -210,8 +210,7 @@ namespace FileTreeHasher
         /// <param name="e"></param>
         private void Click_ClearFileTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            foreach (ExplorerFile file in LoadedFileTreeItems.OfType<ExplorerFile>())
-                file.CancelHashingTask();
+            ExplorerFile.CancelAllHashingTasks();
             LoadedFileTreeItems.Clear();
             SelectedFolderPath.Value = SelectedFolderPath_default;
         }

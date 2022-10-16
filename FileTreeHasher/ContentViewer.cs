@@ -82,8 +82,8 @@ namespace FileTreeHasher
         }
 
         // Hash generation task
-        private Task m_hashGenerationTask = Task.CompletedTask;
-        private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
+        private static Task m_hashGenerationTask = Task.CompletedTask;
+        private static CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
         /// Cancel pending task and restart with given action
@@ -91,11 +91,13 @@ namespace FileTreeHasher
         /// <param name="action"></param>
         public void StartHashingTask(Action action)
         {
-            CancelHashingTask();
-            m_hashGenerationTask = Task.Run(()=>
+            // Queue new process to run consecutively
+            m_hashGenerationTask = m_hashGenerationTask.ContinueWith((m_hashGenerationTask) =>
             {
-                // TODO: Not working for parallel tasks
+                // TODO: Also cancel pending hashing process
+                // TODO: If hashing can be cancelled, tasks could be started in parallel again
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                GeneratedHash.Value = "...";
                 action();
             }, m_taskCancellationTokenSource.Token);
         }
@@ -103,7 +105,7 @@ namespace FileTreeHasher
         /// <summary>
         /// Cancel pending hash calculation task if running
         /// </summary>
-        public void CancelHashingTask()
+        public static void CancelAllHashingTasks()
         {
             if (!m_hashGenerationTask.IsCompleted)
                 m_taskCancellationTokenSource.Cancel();
