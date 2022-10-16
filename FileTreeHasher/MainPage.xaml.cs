@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
 // TODO: App crashes when starting without debugging
+//       -> Issue comes with feature "UseSystemIcons" (4ff13818cf659313522eee5cd5d6cdde3862c725)
 
 namespace FileTreeHasher
 {
