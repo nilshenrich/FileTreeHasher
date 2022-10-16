@@ -1,15 +1,14 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace FileTreeHasher
 {
@@ -71,8 +70,7 @@ namespace FileTreeHasher
     {
         // Visible UI outputs
         public StorageFile FileOnDisk;
-        public ObservableObject<Symbol> IconSymbol = new ObservableObject<Symbol>();
-        public ObservableObject<Brush> IconColor = new ObservableObject<Brush>();
+        public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
@@ -83,6 +81,12 @@ namespace FileTreeHasher
             set { SelectedHashAlgIndex.Value = (int)value; }
         }
 
+        // Collection of Image source uris
+        public static Uri IconSourceWait;
+        public static Uri IconSourceHashed;
+        public static Uri IconSourceCheck;
+        public static Uri IconSourceFail;
+
         // Hash generation task
         private static Task m_hashGenerationTask = Task.CompletedTask;
         private static CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
@@ -90,6 +94,7 @@ namespace FileTreeHasher
         /// <summary>
         /// Cancel pending task and restart with given action
         /// </summary>
+        /// <param name="action"></param>
         public void StartHashingTask()
         {
             // Queue new process to run consecutively
@@ -125,8 +130,7 @@ namespace FileTreeHasher
         /// </summary>
         public void markWaiting()
         {
-            IconSymbol.Value = Symbol.Clock;
-            IconColor.Value = new SolidColorBrush(Colors.Orange);
+            IconSource.Value = IconSourceWait;
         }
 
         /// <summary>
@@ -134,8 +138,7 @@ namespace FileTreeHasher
         /// </summary>
         public void markPending()
         {
-            IconSymbol.Value = Symbol.Forward;
-            IconColor.Value = new SolidColorBrush(Colors.Purple);
+            GeneratedHash.Value = ". . .";
         }
 
         /// <summary>
@@ -143,8 +146,7 @@ namespace FileTreeHasher
         /// </summary>
         public void markReady()
         {
-            IconSymbol.Value = Symbol.Accept;
-            IconColor.Value = new SolidColorBrush(Colors.Blue);
+            IconSource.Value = IconSourceHashed;
         }
 
         /// <summary>
@@ -152,8 +154,7 @@ namespace FileTreeHasher
         /// </summary>
         public void markPassed()
         {
-            IconSymbol.Value = Symbol.Accept;
-            IconColor.Value = new SolidColorBrush(Colors.Green);
+            IconSource.Value = IconSourceCheck;
         }
 
         /// <summary>
@@ -161,8 +162,7 @@ namespace FileTreeHasher
         /// </summary>
         public void markFailed()
         {
-            IconSymbol.Value = Symbol.Cancel;
-            IconColor.Value = new SolidColorBrush(Colors.Red);
+            IconSource.Value = IconSourceFail;
         }
 
         /// <summary>

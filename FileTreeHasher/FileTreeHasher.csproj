@@ -193,7 +193,12 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Icons\Check.png" />
+    <Content Include="Icons\Fail.png" />
+    <Content Include="Icons\Folder.png" />
+    <Content Include="Icons\Hashed.png" />
     <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Icons\Wait.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
