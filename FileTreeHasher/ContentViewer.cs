@@ -101,9 +101,6 @@ namespace FileTreeHasher
             // Queue new process to run consecutively
             m_hashGenerationTask = m_hashGenerationTask.ContinueWith((m_hashGenerationTask) =>
             {
-                // TODO: Also cancel pending hashing process
-                // TODO: If hashing can be cancelled, tasks could be started in parallel again
-
                 // Break if the task queue is cancelled
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
@@ -113,6 +110,7 @@ namespace FileTreeHasher
 
                 // Init progress calculation
                 // TODO: Doesn't stop updating UI
+                //       just setting to null won't work
                 Progress<double> proc = new Progress<double>(i => HashingProgress.Value = string.Format("{0:0.00} %", i * 100));
 
                 // Generate hash and update UI
