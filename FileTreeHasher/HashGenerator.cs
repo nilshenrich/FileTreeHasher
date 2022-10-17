@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading;
 using Windows.Storage;
 
 namespace FileTreeHasher
@@ -23,8 +24,13 @@ namespace FileTreeHasher
         /// <param name="file"></param>
         /// <param name="hashAlgirithm"></param>
         /// <param name="progress"></param>
-        public static string generateHash(StorageFile file, HashAlgirithmNames hashAlgirithm, IProgress<double> progress)
+        /// <param name="cancellation"></param>
+        public static string generateHash(StorageFile file, HashAlgirithmNames hashAlgirithm, IProgress<double> progress, CancellationToken cancellation)
         {
+            // Cancel if requested
+            if (cancellation.IsCancellationRequested)
+                return "";
+
             // Select hash generator
             HashAlgorithm hasher;
             switch (hashAlgirithm)
@@ -68,11 +74,19 @@ namespace FileTreeHasher
             byte[] buffer = new byte[blockSize];
             while (processed + blockSize <= fileSize)
             {
+                // Cancel if requested
+                if (cancellation.IsCancellationRequested)
+                    return "";
+
                 // Read next block and do partial hash
                 fileStream.Read(buffer, 0, blockSize);
                 processed += hasher.TransformBlock(buffer, 0, blockSize, buffer, 0);
                 progress.Report((double)processed / (double)fileSize);
             }
+
+            // Cancel if requested
+            if (cancellation.IsCancellationRequested)
+                return "";
 
             // Read and hash rest of file
             fileStream.Read(buffer, 0, (int)(fileSize - processed));

@@ -112,13 +112,17 @@ namespace FileTreeHasher
                     return;
 
                 // Init progress calculation
+                // TODO: Doesn't stop updating UI
                 Progress<double> proc = new Progress<double>(i => HashingProgress.Value = string.Format("{0:0.00} %", i * 100));
 
                 // Generate hash and update UI
                 markPending();
                 GeneratedHashAlgIndex = null;
                 int hashId = SelectedHashAlgIndex.Value;
-                string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId, proc);
+                string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId, proc, m_taskCancellationTokenSource.Token);
+
+                // Break if the task queue is cancelled
+                m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
                 // Generation done if hash selector didn't change
                 if (SelectedHashAlgIndex.Value == hashId)
@@ -150,6 +154,7 @@ namespace FileTreeHasher
         private void markWaiting()
         {
             IconSource.Value = IconSourceWait;
+            HashingProgress.Value = "";
         }
 
         /// <summary>
@@ -166,6 +171,7 @@ namespace FileTreeHasher
         private void markReady()
         {
             IconSource.Value = IconSourceHashed;
+            HashingProgress.Value = "";
         }
 
         /// <summary>
@@ -174,6 +180,7 @@ namespace FileTreeHasher
         private void markPassed()
         {
             IconSource.Value = IconSourceCheck;
+            HashingProgress.Value = "";
         }
 
         /// <summary>
@@ -182,6 +189,7 @@ namespace FileTreeHasher
         private void markFailed()
         {
             IconSource.Value = IconSourceFail;
+            HashingProgress.Value = "";
         }
 
         /// <summary>
