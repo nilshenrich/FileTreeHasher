@@ -54,9 +54,6 @@ namespace FileTreeHasher
             // Open file stream to generate hash from
             Stream fileStream = file.OpenStreamForReadAsync().Result;
 
-            // Generate hash block wise
-            //byte[] hashRaw = hasher.ComputeHash(fileStream);
-
             // Get file size in bytes
             long fileSize = fileStream.Length;
 
@@ -64,7 +61,7 @@ namespace FileTreeHasher
             int blockSize = 1024 * 1024;
 
             // Read and hash file block wise while a whole block fits
-            int offset = 0;
+            long offset = 0;
             byte[] buffer = new byte[blockSize];
             while (offset + blockSize <= fileSize)
             {
@@ -77,11 +74,8 @@ namespace FileTreeHasher
             fileStream.Read(buffer, 0, (int)(fileSize - offset));
             hasher.TransformFinalBlock(buffer, 0, (int)(fileSize - offset));
 
-            // Get generated hash from buffer
-            byte[] hashRaw = hasher.Hash;
-
             // Return hash as readeble string with lower case letters
-            return BitConverter.ToString(hashRaw).Replace("-", "").ToLower();
+            return BitConverter.ToString(hasher.Hash).Replace("-", "").ToLower();
         }
     }
 }
