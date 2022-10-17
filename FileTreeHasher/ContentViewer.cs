@@ -98,7 +98,7 @@ namespace FileTreeHasher
             GeneratedHashAlgIndex = null;
 
             // Queue new process to run consecutively
-            m_hashGenerationTask = m_hashGenerationTask.ContinueWith(async (m_hashGenerationTask) =>
+            m_hashGenerationTask = m_hashGenerationTask.ContinueWith((m_hashGenerationTask) =>
             {
                 // TODO: Also cancel pending hashing process
                 // TODO: If hashing can be cancelled, tasks could be started in parallel again
@@ -114,7 +114,7 @@ namespace FileTreeHasher
                 markPending();
                 GeneratedHashAlgIndex = null;
                 int hashId = SelectedHashAlgIndex.Value;
-                string hash = await HashGenerator.generateHashAsync(FileOnDisk, (HashAlgirithmNames)hashId);
+                string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId);
 
                 // Generation done if hash selector didn't change
                 if (SelectedHashAlgIndex.Value == hashId)
