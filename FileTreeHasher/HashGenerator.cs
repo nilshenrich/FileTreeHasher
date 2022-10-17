@@ -21,7 +21,9 @@ namespace FileTreeHasher
         /// Generate hash string for a file
         /// </summary>
         /// <param name="file"></param>
-        public static string generateHash(StorageFile file, HashAlgirithmNames hashAlgirithm)
+        /// <param name="hashAlgirithm"></param>
+        /// <param name="progress"></param>
+        public static string generateHash(StorageFile file, HashAlgirithmNames hashAlgirithm, IProgress<double> progress)
         {
             // Select hash generator
             HashAlgorithm hasher;
@@ -50,6 +52,7 @@ namespace FileTreeHasher
                 default:
                     return "";
             }
+            progress.Report(0);
 
             // Open file stream to generate hash from
             Stream fileStream = file.OpenStreamForReadAsync().Result;
@@ -61,18 +64,20 @@ namespace FileTreeHasher
             int blockSize = 1024 * 1024;
 
             // Read and hash file block wise while a whole block fits
-            long offset = 0;
+            long processed = 0;
             byte[] buffer = new byte[blockSize];
-            while (offset + blockSize <= fileSize)
+            while (processed + blockSize <= fileSize)
             {
                 // Read next block and do partial hash
                 fileStream.Read(buffer, 0, blockSize);
-                offset += hasher.TransformBlock(buffer, 0, blockSize, buffer, 0);
+                processed += hasher.TransformBlock(buffer, 0, blockSize, buffer, 0);
+                progress.Report((double)processed / (double)fileSize);
             }
 
             // Read and hash rest of file
-            fileStream.Read(buffer, 0, (int)(fileSize - offset));
-            hasher.TransformFinalBlock(buffer, 0, (int)(fileSize - offset));
+            fileStream.Read(buffer, 0, (int)(fileSize - processed));
+            hasher.TransformFinalBlock(buffer, 0, (int)(fileSize - processed));
+            progress.Report(1);
 
             // Return hash as readeble string with lower case letters
             return BitConverter.ToString(hasher.Hash).Replace("-", "").ToLower();

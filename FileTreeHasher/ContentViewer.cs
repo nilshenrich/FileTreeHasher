@@ -71,6 +71,7 @@ namespace FileTreeHasher
         // Visible UI outputs
         public StorageFile FileOnDisk;
         public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
+        public ObservableObject<string> HashingProgress = new ObservableObject<string>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
@@ -110,11 +111,14 @@ namespace FileTreeHasher
                 if (SelectedHashAlgIndex.Value == GeneratedHashAlgIndex)
                     return;
 
+                // Init progress calculation
+                Progress<double> proc = new Progress<double>(i => HashingProgress.Value = string.Format("{0:0.00} %", i * 100));
+
                 // Generate hash and update UI
                 markPending();
                 GeneratedHashAlgIndex = null;
                 int hashId = SelectedHashAlgIndex.Value;
-                string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId);
+                string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId, proc);
 
                 // Generation done if hash selector didn't change
                 if (SelectedHashAlgIndex.Value == hashId)
