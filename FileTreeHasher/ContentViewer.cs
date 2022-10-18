@@ -86,6 +86,7 @@ namespace FileTreeHasher
         public static Uri IconSourceFail;
 
         // Hash generation task
+        // TODO: Each file shall have its own task than can be cncelled independently
         private static Task m_hashGenerationTask = Task.CompletedTask;
         private static CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
 
