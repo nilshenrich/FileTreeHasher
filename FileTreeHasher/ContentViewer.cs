@@ -75,7 +75,6 @@ namespace FileTreeHasher
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
-        private int? GeneratedHashAlgIndex = null;
         public int OldSelectedHashAlgIndex;
 
         // Collection of Image source uris
@@ -96,7 +95,6 @@ namespace FileTreeHasher
         {
             markWaiting();
             GeneratedHash.Value = "";
-            GeneratedHashAlgIndex = null;
 
             // Before starting new task, wait for currently running task to finish
             CancelHashingTask();
@@ -115,7 +113,6 @@ namespace FileTreeHasher
 
                 // Generate hash and update UI
                 markPending();
-                GeneratedHashAlgIndex = null;
                 int hashId = SelectedHashAlgIndex.Value;
                 string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId, proc, cancellation);
 
@@ -126,7 +123,6 @@ namespace FileTreeHasher
                 if (SelectedHashAlgIndex.Value == hashId)
                 {
                     GeneratedHash.Value = hash;
-                    GeneratedHashAlgIndex = hashId;
                     compareFileHash();
                 }
                 else
@@ -139,11 +135,7 @@ namespace FileTreeHasher
             }
             catch (OperationCanceledException)
             {
-                // TODO: What to do here?
-            }
-            finally
-            {
-                // TODO: What to do here?
+                // Do nothing, just catch
             }
         }
 
@@ -161,7 +153,7 @@ namespace FileTreeHasher
             }
             catch (OperationCanceledException)
             {
-
+                // Do nothing, just catch
             }
 
             // Recreate cancellation token source as it is requested now
