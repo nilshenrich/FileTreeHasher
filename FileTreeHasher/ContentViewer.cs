@@ -107,27 +107,18 @@ namespace FileTreeHasher
                 cancellation.ThrowIfCancellationRequested();
 
                 // Init progress calculation
-                // TODO: Doesn't stop updating UI
-                //       just setting to null won't work
-                // TODO: Fast process would not recognize any change
                 Action<double> proc = new Action<double>(i => HashingProgress.Value = string.Format("{0:0.00} %", i * 100));
 
                 // Generate hash and update UI
                 markPending();
-                int hashId = SelectedHashAlgIndex.Value;
-                string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId, proc, cancellation);
+                string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)SelectedHashAlgIndex.Value, proc, cancellation);
 
                 // Break if the task queue is cancelled
                 cancellation.ThrowIfCancellationRequested();
 
-                // Generation done if hash selector didn't change
-                if (SelectedHashAlgIndex.Value == hashId)
-                {
-                    GeneratedHash.Value = hash;
-                    compareFileHash();
-                }
-                else
-                    StartHashingTask();
+                // Generation done
+                GeneratedHash.Value = hash;
+                compareFileHash();
             }, cancellation);
 
             try
