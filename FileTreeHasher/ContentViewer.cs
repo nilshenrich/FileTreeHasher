@@ -109,7 +109,11 @@ namespace FileTreeHasher
                 // Init progress calculation
                 // TODO: Doesn't stop updating UI
                 //       just setting to null won't work
-                Progress<double> proc = new Progress<double>(i => HashingProgress.Value = string.Format("{0:0.00} %", i * 100));
+                // TODO: Action not called with many files
+                Progress<double> proc = new Progress<double>(i =>
+                {
+                    HashingProgress.Value = string.Format("{0:0.00} %", i * 100);
+                });
 
                 // Generate hash and update UI
                 markPending();

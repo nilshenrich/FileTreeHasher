@@ -79,7 +79,7 @@ namespace FileTreeHasher
                 // Read next block and do partial hash
                 fileStream.Read(buffer, 0, blockSize);
                 processed += hasher.TransformBlock(buffer, 0, blockSize, buffer, 0);
-                progress.Report((double)processed / (double)fileSize);
+                progress.Report((double)processed / fileSize);
             }
 
             // Cancel if requested
