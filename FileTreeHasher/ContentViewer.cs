@@ -99,7 +99,7 @@ namespace FileTreeHasher
             GeneratedHashAlgIndex = null;
 
             // Before starting new task, wait for currently running task to finish
-            //CancelHashingTask();
+            CancelHashingTask();
 
             // Run hash generation in task
             CancellationToken cancellation = m_taskCancellationTokenSource.Token;
@@ -137,7 +137,7 @@ namespace FileTreeHasher
             {
                 await m_hashGenerationTask;
             }
-            catch (OperationCanceledException e)
+            catch (OperationCanceledException)
             {
                 // TODO: What to do here?
             }
@@ -154,9 +154,18 @@ namespace FileTreeHasher
         {
             m_taskCancellationTokenSource.Cancel();
 
-            // TODO: Wait for task to finish (.Wait causes exception)
-            // TODO: Without wait, this overrides token before task is cancelled
-            //m_taskCancellationTokenSource = new CancellationTokenSource();
+            // Wait for task to finish or cancel by token source
+            try
+            {
+                m_hashGenerationTask.Wait(m_taskCancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
+
+            // Recreate cancellation token source as it is requested now
+            m_taskCancellationTokenSource = new CancellationTokenSource();
         }
 
         /// <summary>
