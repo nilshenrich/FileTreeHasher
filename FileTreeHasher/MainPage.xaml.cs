@@ -39,6 +39,19 @@ namespace FileTreeHasher
         }
 
         /// <summary>
+        /// Cancel hashing process for all loaded files
+        /// </summary>
+        /// <param name="rootFolder"></param>
+        private void cancelAllHashingTasks(ObservableCollection<ExplorerItem> rootFolder)
+        {
+            foreach (ExplorerFolder folder in rootFolder.OfType<ExplorerFolder>())
+                cancelAllHashingTasks(folder.Children);
+
+            foreach (ExplorerFile file in rootFolder.OfType<ExplorerFile>())
+                file.CancelHashingTask();
+        }
+
+        /// <summary>
         /// Bring folder content to UI
         /// </summary>
         /// <param name="rootFolder"></param>
@@ -125,8 +138,7 @@ namespace FileTreeHasher
             SelectedFolderPath.Value = folder.Path;
 
             // Clear all old lodaded elements
-            foreach (ExplorerFile file in LoadedFileTreeItems.OfType<ExplorerFile>())
-                file.CancelHashingTask();
+            cancelAllHashingTasks(LoadedFileTreeItems);
             LoadedFileTreeItems.Clear();
 
             // Load file structure to UI
@@ -140,8 +152,7 @@ namespace FileTreeHasher
         /// <param name="e"></param>
         private void Click_ClearFileTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            foreach (ExplorerFile file in LoadedFileTreeItems.OfType<ExplorerFile>())
-                file.CancelHashingTask();
+            cancelAllHashingTasks(LoadedFileTreeItems);
             LoadedFileTreeItems.Clear();
             SelectedFolderPath.Value = SelectedFolderPath_default;
         }
