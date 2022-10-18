@@ -88,7 +88,7 @@ namespace FileTreeHasher
         // Hash generation task
         // TODO: Each file shall have its own task than can be cncelled independently
         //       -> Doesn't work with token source defined her, but works with token source defined just before task starts
-        private Task m_hashGenerationTask = Task.CompletedTask;
+        private Task m_hashGenerationTask;
         private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace FileTreeHasher
             GeneratedHashAlgIndex = null;
 
             // Queue new process to run consecutively
-            m_hashGenerationTask = m_hashGenerationTask.ContinueWith((m_hashGenerationTask) =>
+            m_hashGenerationTask = Task.Run(() =>
             {
                 // Break if the task queue is cancelled
                 m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
@@ -141,11 +141,7 @@ namespace FileTreeHasher
         /// </summary>
         public void CancelHashingTask()
         {
-            if (!m_hashGenerationTask.IsCompleted)
-            {
-                m_taskCancellationTokenSource.Cancel();
-                m_taskCancellationTokenSource = new CancellationTokenSource();
-            }
+            m_taskCancellationTokenSource.Cancel();
         }
 
         /// <summary>
