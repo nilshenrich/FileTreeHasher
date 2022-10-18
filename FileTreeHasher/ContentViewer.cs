@@ -109,8 +109,7 @@ namespace FileTreeHasher
                     return;
 
                 // Break if the correct hash is already displayed
-                if (SelectedHashAlgIndex.Value == GeneratedHashAlgIndex)
-                    return;
+                m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
                 // Init progress calculation
                 // TODO: Doesn't stop updating UI
@@ -124,8 +123,7 @@ namespace FileTreeHasher
                 string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId, proc, m_taskCancellationTokenSource.Token);
 
                 // Break if the task queue is cancelled
-                if (m_taskCancellationTokenSource.Token.IsCancellationRequested)
-                    return;
+                m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
                 // Generation done if hash selector didn't change
                 if (SelectedHashAlgIndex.Value == hashId)
@@ -145,7 +143,9 @@ namespace FileTreeHasher
         public void CancelHashingTask()
         {
             m_taskCancellationTokenSource.Cancel();
-            m_hashGenerationTask.Wait();
+
+            // TODO: Wait for task to finish (.Wait causes exception)
+            // TODO: Without wait, this overrides token before task is cancelled
             m_taskCancellationTokenSource = new CancellationTokenSource();
         }
 
