@@ -127,6 +127,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
@@ -136,10 +137,11 @@
                             <BitmapImage UriSource="{x:Bind IconSource.Value, Mode=OneWay}"/>
                         </Image.Source>
                     </Image>
-                    <TextBlock Grid.Column="1" Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
-                    <TextBlock Grid.Column="2" Text="{x:Bind GeneratedHash.Value, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind GeneratedHash.Value, Mode=OneWay}" Style="{StaticResource Txt_GenHash}"/>
-                    <TextBox Grid.Column="3" Text="{x:Bind CheckHash.Value, Mode=OneWay}" Style="{StaticResource Inp_HashCheck}" TextChanged="Type_CheckHashChanged"/>
-                    <ComboBox Grid.Column="4" SelectedIndex="{x:Bind SelectedHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_special}" SelectionChanged="Change_SpecialHashChanged">
+                    <TextBlock Grid.Column="1" Text="{x:Bind HashingProgress.Value, Mode=OneWay}" Style="{StaticResource Txt_GenHash}"/>
+                    <TextBlock Grid.Column="2" Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
+                    <TextBlock Grid.Column="3" Text="{x:Bind GeneratedHash.Value, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind GeneratedHash.Value, Mode=OneWay}" Style="{StaticResource Txt_GenHash}"/>
+                    <TextBox Grid.Column="4" Text="{x:Bind CheckHash.Value, Mode=OneWay}" Style="{StaticResource Inp_HashCheck}" TextChanged="Type_CheckHashChanged"/>
+                    <ComboBox Grid.Column="5" SelectedIndex="{x:Bind SelectedHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_special}" SelectionChanged="Change_SpecialHashChanged">
                         <ComboBoxItem Content="MD5"/>
                         <ComboBoxItem Content="SHA1"/>
                         <ComboBoxItem Content="SHA256"/>
