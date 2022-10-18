@@ -28,8 +28,7 @@ namespace FileTreeHasher
         public static string generateHash(StorageFile file, HashAlgirithmNames hashAlgirithm, IProgress<double> progress, CancellationToken cancellation)
         {
             // Cancel if requested
-            if (cancellation.IsCancellationRequested)
-                return "";
+            cancellation.ThrowIfCancellationRequested();
 
             // Select hash generator
             HashAlgorithm hasher;
@@ -75,8 +74,7 @@ namespace FileTreeHasher
             while (processed + blockSize <= fileSize)
             {
                 // Cancel if requested
-                if (cancellation.IsCancellationRequested)
-                    return "";
+                cancellation.ThrowIfCancellationRequested();
 
                 // Read next block and do partial hash
                 fileStream.Read(buffer, 0, blockSize);
@@ -85,8 +83,7 @@ namespace FileTreeHasher
             }
 
             // Cancel if requested
-            if (cancellation.IsCancellationRequested)
-                return "";
+            cancellation.ThrowIfCancellationRequested();
 
             // Read and hash rest of file
             fileStream.Read(buffer, 0, (int)(fileSize - processed));
