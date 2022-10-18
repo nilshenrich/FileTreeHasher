@@ -25,7 +25,7 @@ namespace FileTreeHasher
         /// <param name="hashAlgirithm"></param>
         /// <param name="progress"></param>
         /// <param name="cancellation"></param>
-        public static string generateHash(StorageFile file, HashAlgirithmNames hashAlgirithm, IProgress<double> progress, CancellationToken cancellation)
+        public static string generateHash(StorageFile file, HashAlgirithmNames hashAlgirithm, Action<double> progress, CancellationToken cancellation)
         {
             // Cancel if requested
             cancellation.ThrowIfCancellationRequested();
@@ -57,7 +57,7 @@ namespace FileTreeHasher
                 default:
                     return "";
             }
-            progress.Report(0);
+            progress(0);
 
             // Open file stream to generate hash from
             Stream fileStream = file.OpenStreamForReadAsync().Result;
@@ -79,7 +79,7 @@ namespace FileTreeHasher
                 // Read next block and do partial hash
                 fileStream.Read(buffer, 0, blockSize);
                 processed += hasher.TransformBlock(buffer, 0, blockSize, buffer, 0);
-                progress.Report((double)processed / fileSize);
+                progress((double)processed / fileSize);
             }
 
             // Cancel if requested
@@ -88,7 +88,7 @@ namespace FileTreeHasher
             // Read and hash rest of file
             fileStream.Read(buffer, 0, (int)(fileSize - processed));
             hasher.TransformFinalBlock(buffer, 0, (int)(fileSize - processed));
-            progress.Report(1);
+            progress(1);
 
             // Return hash as readeble string with lower case letters
             return BitConverter.ToString(hasher.Hash).Replace("-", "").ToLower();
