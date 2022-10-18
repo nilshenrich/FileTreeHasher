@@ -86,9 +86,7 @@ namespace FileTreeHasher
         public static Uri IconSourceFail;
 
         // Hash generation task
-        // TODO: Each file shall have its own task than can be cncelled independently
-        //       -> Doesn't work with token source defined her, but works with token source defined just before task starts
-        private Task m_hashGenerationTask;
+        private Task m_hashGenerationTask = Task.CompletedTask;
         private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
@@ -100,11 +98,15 @@ namespace FileTreeHasher
             GeneratedHash.Value = "";
             GeneratedHashAlgIndex = null;
 
-            // Queue new process to run consecutively
+            // Before starting new task, wait for currently running task to finish
+            CancelHashingTask();
+
+            // Run hash generation in task
             m_hashGenerationTask = Task.Run(() =>
             {
                 // Break if the task queue is cancelled
-                m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                if (m_taskCancellationTokenSource.Token.IsCancellationRequested)
+                    return;
 
                 // Break if the correct hash is already displayed
                 if (SelectedHashAlgIndex.Value == GeneratedHashAlgIndex)
@@ -122,7 +124,8 @@ namespace FileTreeHasher
                 string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)hashId, proc, m_taskCancellationTokenSource.Token);
 
                 // Break if the task queue is cancelled
-                m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                if (m_taskCancellationTokenSource.Token.IsCancellationRequested)
+                    return;
 
                 // Generation done if hash selector didn't change
                 if (SelectedHashAlgIndex.Value == hashId)
@@ -137,11 +140,13 @@ namespace FileTreeHasher
         }
 
         /// <summary>
-        /// Cancel pending hash calculation task if running
+        /// Cancel pending hash calculation task
         /// </summary>
         public void CancelHashingTask()
         {
             m_taskCancellationTokenSource.Cancel();
+            m_hashGenerationTask.Wait();
+            m_taskCancellationTokenSource = new CancellationTokenSource();
         }
 
         /// <summary>
