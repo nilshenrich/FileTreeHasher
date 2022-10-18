@@ -87,13 +87,14 @@ namespace FileTreeHasher
 
         // Hash generation task
         // TODO: Each file shall have its own task than can be cncelled independently
-        private static Task m_hashGenerationTask = Task.CompletedTask;
-        private static CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
+        //       -> Doesn't work with token source defined her, but works with token source defined just before task starts
+        private Task m_hashGenerationTask = Task.CompletedTask;
+        private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
         /// Cancel pending task and restart with given action
         /// </summary>
-        public void QueueNewHashingTask()
+        public void StartHashingTask()
         {
             markWaiting();
             GeneratedHash.Value = "";
@@ -131,14 +132,14 @@ namespace FileTreeHasher
                     compareFileHash();
                 }
                 else
-                    QueueNewHashingTask();
+                    StartHashingTask();
             }, m_taskCancellationTokenSource.Token);
         }
 
         /// <summary>
         /// Cancel pending hash calculation task if running
         /// </summary>
-        public static void CancelAllHashingTasks()
+        public void CancelHashingTask()
         {
             if (!m_hashGenerationTask.IsCompleted)
             {

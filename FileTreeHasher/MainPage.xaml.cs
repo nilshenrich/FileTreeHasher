@@ -77,7 +77,7 @@ namespace FileTreeHasher
                 rootExplorer.Add(explorerFile);
 
                 // Generate hash in task
-                explorerFile.QueueNewHashingTask();
+                explorerFile.StartHashingTask();
             }
         }
 
@@ -125,7 +125,8 @@ namespace FileTreeHasher
             SelectedFolderPath.Value = folder.Path;
 
             // Clear all old lodaded elements
-            ExplorerFile.CancelAllHashingTasks();
+            foreach (ExplorerFile file in LoadedFileTreeItems.OfType<ExplorerFile>())
+                file.CancelHashingTask();
             LoadedFileTreeItems.Clear();
 
             // Load file structure to UI
@@ -139,7 +140,8 @@ namespace FileTreeHasher
         /// <param name="e"></param>
         private void Click_ClearFileTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            ExplorerFile.CancelAllHashingTasks();
+            foreach (ExplorerFile file in LoadedFileTreeItems.OfType<ExplorerFile>())
+                file.CancelHashingTask();
             LoadedFileTreeItems.Clear();
             SelectedFolderPath.Value = SelectedFolderPath_default;
         }
@@ -188,7 +190,7 @@ namespace FileTreeHasher
             if (file.SelectedHashAlgIndex.Value != file.OldSelectedHashAlgIndex)
             {
                 file.OldSelectedHashAlgIndex = file.SelectedHashAlgIndex.Value;
-                file.QueueNewHashingTask();
+                file.StartHashingTask();
             }
         }
 
