@@ -88,7 +88,7 @@ namespace FileTreeHasher
 
         // Hash generation task
         private Task m_hashGenerationTask = Task.CompletedTask;
-        private static SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(2);
+        private static SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(2); // TODO: Can this number depend on number of cores?
         private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
@@ -150,6 +150,8 @@ namespace FileTreeHasher
             }
             catch (OperationCanceledException)
             {
+                // TODO: Can be removed as for semaphore?
+                // TODO: Or can this be finally for everything?
                 // Do nothing, just catch
             }
         }
