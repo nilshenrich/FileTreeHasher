@@ -71,7 +71,9 @@ namespace FileTreeHasher
         // Visible UI outputs
         public StorageFile FileOnDisk;
         public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
-        public ObservableObject<string> HashingProgress = new ObservableObject<string>();
+        public ObservableObject<double> HashingProgress = new ObservableObject<double>();
+        public ObservableObject<string> HashingProgress_str = new ObservableObject<string>();
+        public ObservableObject<Visibility> HashingProgress_visibility = new ObservableObject<Visibility>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
@@ -107,7 +109,11 @@ namespace FileTreeHasher
                 cancellation.ThrowIfCancellationRequested();
 
                 // Init progress calculation
-                Action<double> proc = new Action<double>(i => HashingProgress.Value = string.Format("{0:0.00} %", i * 100));
+                Action<double> proc = new Action<double>(i =>
+                {
+                    HashingProgress.Value = i;
+                    HashingProgress_str.Value = string.Format("{0:0.00} %", i * 100);
+                });
 
                 // Generate hash and update UI
                 markPending();
@@ -158,7 +164,9 @@ namespace FileTreeHasher
         private void markWaiting()
         {
             IconSource.Value = IconSourceWait;
-            HashingProgress.Value = "";
+            HashingProgress_visibility.Value = Visibility.Collapsed;
+            HashingProgress.Value = 0.0;
+            HashingProgress_str.Value = "";
         }
 
         /// <summary>
@@ -167,6 +175,9 @@ namespace FileTreeHasher
         private void markPending()
         {
             IconSource.Value = IconSourceCalc;
+            HashingProgress_visibility.Value = Visibility.Visible;
+            HashingProgress.Value = 0.0;
+            HashingProgress_str.Value = "";
         }
 
         /// <summary>
@@ -175,7 +186,9 @@ namespace FileTreeHasher
         private void markReady()
         {
             IconSource.Value = IconSourceHashed;
-            HashingProgress.Value = "";
+            HashingProgress_visibility.Value = Visibility.Collapsed;
+            HashingProgress.Value = 0.0;
+            HashingProgress_str.Value = "";
         }
 
         /// <summary>
@@ -184,7 +197,9 @@ namespace FileTreeHasher
         private void markPassed()
         {
             IconSource.Value = IconSourceCheck;
-            HashingProgress.Value = "";
+            HashingProgress_visibility.Value = Visibility.Collapsed;
+            HashingProgress.Value = 0.0;
+            HashingProgress_str.Value = "";
         }
 
         /// <summary>
@@ -193,7 +208,9 @@ namespace FileTreeHasher
         private void markFailed()
         {
             IconSource.Value = IconSourceFail;
-            HashingProgress.Value = "";
+            HashingProgress_visibility.Value = Visibility.Collapsed;
+            HashingProgress.Value = 0.0;
+            HashingProgress_str.Value = "";
         }
 
         /// <summary>
