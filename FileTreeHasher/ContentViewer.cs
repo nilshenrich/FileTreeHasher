@@ -94,10 +94,10 @@ namespace FileTreeHasher
         /// Hashing process which is executed in task
         /// </summary>
         /// <param name="cancellation"></param>
-        private void HashGenerationProcess(CancellationToken cancellation)
+        private void HashGenerationProcess()
         {
             // Break if the correct hash is already displayed
-            cancellation.ThrowIfCancellationRequested();
+            m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
             // Init progress calculation
             Action<double> proc = new Action<double>(i =>
@@ -108,10 +108,10 @@ namespace FileTreeHasher
 
             // Generate hash and update UI
             markPending();
-            string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)SelectedHashAlgIndex.Value, proc, cancellation);
+            string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)SelectedHashAlgIndex.Value, proc, m_taskCancellationTokenSource.Token);
 
             // Break if the task queue is cancelled
-            cancellation.ThrowIfCancellationRequested();
+            m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
             // Generation done
             GeneratedHash.Value = hash;
@@ -130,8 +130,7 @@ namespace FileTreeHasher
             CancelHashingTask();
 
             // Run hash generation in task
-            CancellationToken cancellation = m_taskCancellationTokenSource.Token;
-            m_hashGenerationTask = Task.Factory.StartNew(() => HashGenerationProcess(cancellation), cancellation);
+            m_hashGenerationTask = Task.Factory.StartNew(() => HashGenerationProcess(), m_taskCancellationTokenSource.Token);
 
             try
             {
