@@ -133,7 +133,8 @@ namespace FileTreeHasher
             // Run hash generation in task
             m_hashGenerationTask = Task.Run(() =>
             {
-                concurrencySemaphore.Wait();
+                // TODO: Never get over Wait
+                concurrencySemaphore.Wait(m_taskCancellationTokenSource.Token);
                 try
                 {
                     HashGenerationProcess();
