@@ -91,6 +91,34 @@ namespace FileTreeHasher
         private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
+        /// Hashing process which is executed in task
+        /// </summary>
+        /// <param name="cancellation"></param>
+        private void HashGenerationProcess(CancellationToken cancellation)
+        {
+            // Break if the correct hash is already displayed
+            cancellation.ThrowIfCancellationRequested();
+
+            // Init progress calculation
+            Action<double> proc = new Action<double>(i =>
+            {
+                HashingProgress.Value = i;
+                HashingProgress_str.Value = string.Format("{0:0.00} %", i * 100);
+            });
+
+            // Generate hash and update UI
+            markPending();
+            string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)SelectedHashAlgIndex.Value, proc, cancellation);
+
+            // Break if the task queue is cancelled
+            cancellation.ThrowIfCancellationRequested();
+
+            // Generation done
+            GeneratedHash.Value = hash;
+            compareFileHash();
+        }
+
+        /// <summary>
         /// Cancel pending task and restart with given action
         /// </summary>
         public async void StartHashingTask()
@@ -103,29 +131,7 @@ namespace FileTreeHasher
 
             // Run hash generation in task
             CancellationToken cancellation = m_taskCancellationTokenSource.Token;
-            m_hashGenerationTask = Task.Run(() =>
-            {
-                // Break if the correct hash is already displayed
-                cancellation.ThrowIfCancellationRequested();
-
-                // Init progress calculation
-                Action<double> proc = new Action<double>(i =>
-                {
-                    HashingProgress.Value = i;
-                    HashingProgress_str.Value = string.Format("{0:0.00} %", i * 100);
-                });
-
-                // Generate hash and update UI
-                markPending();
-                string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)SelectedHashAlgIndex.Value, proc, cancellation);
-
-                // Break if the task queue is cancelled
-                cancellation.ThrowIfCancellationRequested();
-
-                // Generation done
-                GeneratedHash.Value = hash;
-                compareFileHash();
-            }, cancellation);
+            m_hashGenerationTask = Task.Factory.StartNew(() => HashGenerationProcess(cancellation), cancellation);
 
             try
             {
