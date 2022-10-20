@@ -88,7 +88,7 @@ namespace FileTreeHasher
 
         // Hash generation task
         private Task m_hashGenerationTask = Task.CompletedTask;
-        private static SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(0, 2);
+        private static SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(2);
         private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
@@ -133,7 +133,6 @@ namespace FileTreeHasher
             // Run hash generation in task
             m_hashGenerationTask = Task.Run(() =>
             {
-                // TODO: Never get over Wait
                 concurrencySemaphore.Wait(m_taskCancellationTokenSource.Token);
                 try
                 {
