@@ -32,20 +32,23 @@ namespace FileTreeHasher
 
             // Set icon sources
             ExplorerFile.IconSourceWait = new Uri(BaseUri, "/Icons/Wait.png");
+            ExplorerFile.IconSourceCalc = new Uri(BaseUri, "/Icons/Calc.png");
             ExplorerFile.IconSourceHashed = new Uri(BaseUri, "/Icons/Hashed.png");
             ExplorerFile.IconSourceCheck = new Uri(BaseUri, "/Icons/Check.png");
             ExplorerFile.IconSourceFail = new Uri(BaseUri, "/Icons/Fail.png");
         }
 
         /// <summary>
-        /// Start hash generation and pasting of loaded file in background
+        /// Cancel hashing process for all loaded files
         /// </summary>
-        /// <param name="file"></param>
-        private void startHashGeneration(ExplorerFile file)
+        /// <param name="rootFolder"></param>
+        private void cancelAllHashingTasks(ObservableCollection<ExplorerItem> rootFolder)
         {
-            file.markWaiting();
-            file.GeneratedHash.Value = "";
-            file.StartHashingTask();
+            foreach (ExplorerFolder folder in rootFolder.OfType<ExplorerFolder>())
+                cancelAllHashingTasks(folder.Children);
+
+            foreach (ExplorerFile file in rootFolder.OfType<ExplorerFile>())
+                file.CancelHashingTask();
         }
 
         /// <summary>
@@ -53,11 +56,11 @@ namespace FileTreeHasher
         /// </summary>
         /// <param name="rootFolder"></param>
         /// <param name="rootExplorer"></param>
-        private async void loadFileTree(StorageFolder rootFolder, ObservableCollection<ExplorerItem> rootExplorer)
+        private void loadFileTree(StorageFolder rootFolder, ObservableCollection<ExplorerItem> rootExplorer)
         {
             // Draw all direct subdirectories
             // Load items of each subdirectory recursively
-            IReadOnlyList<StorageFolder> subfolders = await rootFolder.GetFoldersAsync();
+            IReadOnlyList<StorageFolder> subfolders = rootFolder.GetFoldersAsync().AsTask().Result;
             foreach (StorageFolder subfolder in subfolders)
             {
                 // Create new item for folder
@@ -71,7 +74,7 @@ namespace FileTreeHasher
             }
 
             // Draw all files
-            IReadOnlyList<StorageFile> files = await rootFolder.GetFilesAsync();
+            IReadOnlyList<StorageFile> files = rootFolder.GetFilesAsync().AsTask().Result;
             foreach (StorageFile file in files)
             {
                 // Create item for file
@@ -87,7 +90,7 @@ namespace FileTreeHasher
                 rootExplorer.Add(explorerFile);
 
                 // Generate hash in task
-                startHashGeneration(explorerFile);
+                explorerFile.StartHashingTask();
             }
         }
 
@@ -135,7 +138,7 @@ namespace FileTreeHasher
             SelectedFolderPath.Value = folder.Path;
 
             // Clear all old lodaded elements
-            ExplorerFile.CancelAllHashingTasks();
+            cancelAllHashingTasks(LoadedFileTreeItems);
             LoadedFileTreeItems.Clear();
 
             // Load file structure to UI
@@ -149,7 +152,7 @@ namespace FileTreeHasher
         /// <param name="e"></param>
         private void Click_ClearFileTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            ExplorerFile.CancelAllHashingTasks();
+            cancelAllHashingTasks(LoadedFileTreeItems);
             LoadedFileTreeItems.Clear();
             SelectedFolderPath.Value = SelectedFolderPath_default;
         }
@@ -198,7 +201,7 @@ namespace FileTreeHasher
             if (file.SelectedHashAlgIndex.Value != file.OldSelectedHashAlgIndex)
             {
                 file.OldSelectedHashAlgIndex = file.SelectedHashAlgIndex.Value;
-                startHashGeneration(file);
+                file.StartHashingTask();
             }
         }
 

@@ -23,7 +23,7 @@
     <PackageCertificateKeyFile>FileTreeHasher_TemporaryKey.pfx</PackageCertificateKeyFile>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
@@ -197,6 +197,7 @@
     <Content Include="Icons\Fail.png" />
     <Content Include="Icons\Folder.png" />
     <Content Include="Icons\Hashed.png" />
+    <Content Include="Icons\Calc.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Icons\Wait.png" />
   </ItemGroup>

@@ -71,85 +71,163 @@ namespace FileTreeHasher
         // Visible UI outputs
         public StorageFile FileOnDisk;
         public ObservableObject<Uri> IconSource = new ObservableObject<Uri>();
+        public ObservableObject<double> HashingProgress = new ObservableObject<double>();
+        public ObservableObject<string> HashingProgress_str = new ObservableObject<string>();
+        public ObservableObject<Visibility> HashingProgress_visibility = new ObservableObject<Visibility>();
         public ObservableObject<string> GeneratedHash = new ObservableObject<string>();
         public ObservableObject<string> CheckHash = new ObservableObject<string>();
         public ObservableObject<int> SelectedHashAlgIndex = new ObservableObject<int>();
         public int OldSelectedHashAlgIndex;
-        public HashAlgirithmNames SelectedHashAlgName
-        {
-            get { return (HashAlgirithmNames)SelectedHashAlgIndex.Value; }
-            set { SelectedHashAlgIndex.Value = (int)value; }
-        }
 
         // Collection of Image source uris
         public static Uri IconSourceWait;
+        public static Uri IconSourceCalc;
         public static Uri IconSourceHashed;
         public static Uri IconSourceCheck;
         public static Uri IconSourceFail;
 
         // Hash generation task
-        private static Task m_hashGenerationTask = Task.CompletedTask;
-        private static CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
+        private Task m_hashGenerationTask = Task.CompletedTask;
+        private static SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(Math.Max(Environment.ProcessorCount / 4, 1));
+        private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
+
+        /// <summary>
+        /// Hashing process which is executed in task
+        /// </summary>
+        /// <param name="cancellation"></param>
+        private void HashGenerationProcess()
+        {
+            // Break if the correct hash is already displayed
+            m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+            // Init progress calculation
+            Action<double> proc = new Action<double>(i =>
+            {
+                HashingProgress.Value = i;
+                HashingProgress_str.Value = string.Format("{0:0} %", i * 100);
+            });
+
+            // Generate hash and update UI
+            markPending();
+            string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)SelectedHashAlgIndex.Value, proc, m_taskCancellationTokenSource.Token);
+
+            // Break if the task queue is cancelled
+            m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+            // Generation done
+            GeneratedHash.Value = hash;
+            compareFileHash();
+        }
 
         /// <summary>
         /// Cancel pending task and restart with given action
         /// </summary>
-        /// <param name="action"></param>
-        public void StartHashingTask()
+        public async void StartHashingTask()
         {
-            // Queue new process to run consecutively
-            m_hashGenerationTask = m_hashGenerationTask.ContinueWith((m_hashGenerationTask) =>
+            markWaiting();
+            GeneratedHash.Value = "";
+
+            // Before starting new task, wait for currently running task to finish
+            CancelHashingTask();
+
+            // Run hash generation in task
+            m_hashGenerationTask = Task.Run(() =>
             {
-                // TODO: Also cancel pending hashing process
-                // TODO: If hashing can be cancelled, tasks could be started in parallel again
-                // TODO: Same file could have multiple hash calculations in pipeline after changing algorithm
-                m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
-                GeneratedHash.Value = ". . .";
-                string hash = HashGenerator.generateHashAsync(FileOnDisk, SelectedHashAlgName).Result;
-                GeneratedHash.Value = hash;
-                compareFileHash();
+                concurrencySemaphore.Wait(m_taskCancellationTokenSource.Token);
+                try
+                {
+                    HashGenerationProcess();
+                }
+                finally
+                {
+                    concurrencySemaphore.Release();
+                }
             }, m_taskCancellationTokenSource.Token);
+
+            try
+            {
+                await m_hashGenerationTask;
+            }
+            catch (OperationCanceledException)
+            {
+                // Do nothing, just catch
+            }
         }
 
         /// <summary>
-        /// Cancel pending hash calculation task if running
+        /// Cancel pending hash calculation task
         /// </summary>
-        public static void CancelAllHashingTasks()
+        public void CancelHashingTask()
         {
-            if (!m_hashGenerationTask.IsCompleted)
-                m_taskCancellationTokenSource.Cancel();
+            m_taskCancellationTokenSource.Cancel();
+
+            // Wait for task to finish or cancel by token source
+            try
+            {
+                m_hashGenerationTask.Wait(m_taskCancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                // Do nothing, just catch
+            }
+
+            // Recreate cancellation token source as it is requested now
+            m_taskCancellationTokenSource = new CancellationTokenSource();
         }
 
         /// <summary>
         /// Mark file as waiting for hash string calculation
         /// </summary>
-        public void markWaiting()
+        private void markWaiting()
         {
             IconSource.Value = IconSourceWait;
+            HashingProgress_visibility.Value = Visibility.Collapsed;
+            HashingProgress.Value = 0.0;
+            HashingProgress_str.Value = "";
+        }
+
+        /// <summary>
+        /// Mark file as pending hash calculation
+        /// </summary>
+        private void markPending()
+        {
+            IconSource.Value = IconSourceCalc;
+            HashingProgress_visibility.Value = Visibility.Visible;
+            HashingProgress.Value = 0.0;
+            HashingProgress_str.Value = "";
         }
 
         /// <summary>
         /// Mark file as ready for hash comparison (hash string calculated)
         /// </summary>
-        public void markReady()
+        private void markReady()
         {
             IconSource.Value = IconSourceHashed;
+            HashingProgress_visibility.Value = Visibility.Collapsed;
+            HashingProgress.Value = 0.0;
+            HashingProgress_str.Value = "";
         }
 
         /// <summary>
         /// Marks file as passed for hash checking
         /// </summary>
-        public void markPassed()
+        private void markPassed()
         {
             IconSource.Value = IconSourceCheck;
+            HashingProgress_visibility.Value = Visibility.Collapsed;
+            HashingProgress.Value = 0.0;
+            HashingProgress_str.Value = "";
         }
 
         /// <summary>
         /// Marks file as failed for hash checking
         /// </summary>
-        public void markFailed()
+        private void markFailed()
         {
             IconSource.Value = IconSourceFail;
+            HashingProgress_visibility.Value = Visibility.Collapsed;
+            HashingProgress.Value = 0.0;
+            HashingProgress_str.Value = "";
         }
 
         /// <summary>

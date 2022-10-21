@@ -89,6 +89,24 @@
         </Style>
         <!--Generated hash-->
 
+        <!--Progrss bar for hash generation-->
+        <Style x:Key="Prg_GenHash" TargetType="ProgressBar">
+            <Setter Property="Margin" Value="{StaticResource General_FileTreeItemMargin_px}"/>
+            <Setter Property="Minimum" Value="0"/>
+            <Setter Property="Maximum" Value="1"/>
+            <Setter Property="Foreground" Value="Green"/>
+            <Setter Property="IsIndeterminate" Value="False"/>
+            <Setter Property="Height" Value="{StaticResource General_FileTreeLineHeight_px}"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+        <!--Progrss bar for hash generation-->
+
+        <!--Progress text for hash generation-->
+        <Style x:Key="Txt_Prg_GenHash" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <!--Progress text for hash generation-->
+
         <!--Input for hash check-->
         <Style x:Key="Inp_HashCheck" TargetType="TextBox">
             <Setter Property="Margin" Value="{StaticResource General_FileTreeItemMargin_px}"/>
@@ -138,6 +156,8 @@
                     </Image>
                     <TextBlock Grid.Column="1" Text="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}" Style="{StaticResource Txt_ItemName}"/>
                     <TextBlock Grid.Column="2" Text="{x:Bind GeneratedHash.Value, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind GeneratedHash.Value, Mode=OneWay}" Style="{StaticResource Txt_GenHash}"/>
+                    <ProgressBar Grid.Column="2" Value="{x:Bind HashingProgress.Value, Mode=OneWay}" Visibility="{x:Bind HashingProgress_visibility.Value, Mode=OneWay}" Style="{StaticResource Prg_GenHash}"/>
+                    <TextBlock Grid.Column="2" Text="{x:Bind HashingProgress_str.Value, Mode=OneWay}" Visibility="{x:Bind HashingProgress_visibility.Value, Mode=OneWay}" Style="{StaticResource Txt_Prg_GenHash}"/>
                     <TextBox Grid.Column="3" Text="{x:Bind CheckHash.Value, Mode=OneWay}" Style="{StaticResource Inp_HashCheck}" TextChanged="Type_CheckHashChanged"/>
                     <ComboBox Grid.Column="4" SelectedIndex="{x:Bind SelectedHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_special}" SelectionChanged="Change_SpecialHashChanged">
                         <ComboBoxItem Content="MD5"/>
