@@ -88,7 +88,36 @@ namespace FileTreeHasher
 
         // Hash generation task
         private Task m_hashGenerationTask = Task.CompletedTask;
+        private static SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(Math.Max(Environment.ProcessorCount / 4, 1));
         private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
+
+        /// <summary>
+        /// Hashing process which is executed in task
+        /// </summary>
+        /// <param name="cancellation"></param>
+        private void HashGenerationProcess()
+        {
+            // Break if the correct hash is already displayed
+            m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+            // Init progress calculation
+            Action<double> proc = new Action<double>(i =>
+            {
+                HashingProgress.Value = i;
+                HashingProgress_str.Value = string.Format("{0:0} %", i * 100);
+            });
+
+            // Generate hash and update UI
+            markPending();
+            string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)SelectedHashAlgIndex.Value, proc, m_taskCancellationTokenSource.Token);
+
+            // Break if the task queue is cancelled
+            m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+            // Generation done
+            GeneratedHash.Value = hash;
+            compareFileHash();
+        }
 
         /// <summary>
         /// Cancel pending task and restart with given action
@@ -102,30 +131,18 @@ namespace FileTreeHasher
             CancelHashingTask();
 
             // Run hash generation in task
-            CancellationToken cancellation = m_taskCancellationTokenSource.Token;
             m_hashGenerationTask = Task.Run(() =>
             {
-                // Break if the correct hash is already displayed
-                cancellation.ThrowIfCancellationRequested();
-
-                // Init progress calculation
-                Action<double> proc = new Action<double>(i =>
+                concurrencySemaphore.Wait(m_taskCancellationTokenSource.Token);
+                try
                 {
-                    HashingProgress.Value = i;
-                    HashingProgress_str.Value = string.Format("{0:0.00} %", i * 100);
-                });
-
-                // Generate hash and update UI
-                markPending();
-                string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)SelectedHashAlgIndex.Value, proc, cancellation);
-
-                // Break if the task queue is cancelled
-                cancellation.ThrowIfCancellationRequested();
-
-                // Generation done
-                GeneratedHash.Value = hash;
-                compareFileHash();
-            }, cancellation);
+                    HashGenerationProcess();
+                }
+                finally
+                {
+                    concurrencySemaphore.Release();
+                }
+            }, m_taskCancellationTokenSource.Token);
 
             try
             {
