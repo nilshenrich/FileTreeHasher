@@ -104,7 +104,7 @@ namespace FileTreeHasher
             Action<double> proc = new Action<double>(i =>
             {
                 HashingProgress.Value = i;
-                HashingProgress_str.Value = string.Format("{0:0.00} %", i * 100);
+                HashingProgress_str.Value = string.Format("{0:0} %", i * 100);
             });
 
             // Generate hash and update UI
