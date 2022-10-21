@@ -88,7 +88,7 @@ namespace FileTreeHasher
 
         // Hash generation task
         private Task m_hashGenerationTask = Task.CompletedTask;
-        private static SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(2); // TODO: Can this number depend on number of cores?
+        private static SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(Math.Max(Environment.ProcessorCount / 4, 1));
         private CancellationTokenSource m_taskCancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
