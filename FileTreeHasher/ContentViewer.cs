@@ -150,8 +150,6 @@ namespace FileTreeHasher
             }
             catch (OperationCanceledException)
             {
-                // TODO: Can be removed as for semaphore?
-                // TODO: Or can this be finally for everything?
                 // Do nothing, just catch
             }
         }
