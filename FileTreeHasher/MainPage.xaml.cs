@@ -108,6 +108,28 @@ namespace FileTreeHasher
                 file.SelectedHashAlgIndex.Value = GlobalHashAlgIndex.Value;
         }
 
+        /// <summary>
+        /// Recursively add all files with generated hashes to string to be stored to checkfile
+        /// </summary>
+        /// <param name="checkfile"></param>
+        /// <param name="rootFolder"></param>
+        /// <param name="dirPath"></param>
+        private void appendHashesToCheckfile(ref string checkfile, ObservableCollection<ExplorerItem> rootFolder, string dirPath)
+        {
+            // Recurse for all sub-folders
+            foreach (ExplorerFolder folder in rootFolder.OfType<ExplorerFolder>())
+                appendHashesToCheckfile(ref checkfile, folder.Children, dirPath + folder.Name + "/");
+
+            // Append all files in current directory
+            foreach (ExplorerFile file in rootFolder.OfType<ExplorerFile>())
+            {
+                checkfile += string.Format("{0}\t{1}\t{2}\n",
+                    file.GeneratedHash.Value,
+                    file.SelectedHashAlgIndex.Value,    // TODO: Index shown, not name
+                    dirPath + file.Name);
+            }
+        }
+
         private void clearAllInputs(ObservableCollection<ExplorerItem> rootFolder)
         {
             // Clear all inputs for hash comparison
@@ -170,13 +192,37 @@ namespace FileTreeHasher
 
         /// <summary>
         /// Click event: Save all generated hashes to checkfile that contains hash strings
+        /// 
+        /// File format:
+        /// ; Checkfile created by File Tree Hasher
+        /// ; Get latest release from https://github.com/nilshenrich/FileTreeHasher/releases
+        /// ; Creation time stamp: 01.11.2022 16:06:01
+        /// 
+        /// CA56950A5FEAC0166994AF9225714B8DF1481AE6B32DAE538B6C21F5C5291DE2	SHA1	folder/file.txt
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Click_SaveCheckfile(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void Click_SaveCheckfile(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            var messageDialog = new MessageDialog("Button not implemented!\nClicking this button shall save all generated hashes to a checkfile");
-            _ = messageDialog.ShowAsync();
+            // Open file browsing dialog to select checkfile to save hashes to
+            // Manual: https://learn.microsoft.com/en-us/uwp/api/Windows.Storage.Pickers.FileSavePicker?view=winrt-22621
+            FileSavePicker filePicker = new FileSavePicker();
+            filePicker.FileTypeChoices.Add("Checkfile", new List<string>() { ".sha" });
+            filePicker.SuggestedFileName = "Checkfile";
+            StorageFile file = await filePicker.PickSaveFileAsync();
+
+            // Caancel if no proper file is selected
+            if (file == null)
+                return;
+
+            // Checkfile header
+            string checkfile = string.Format("; Checkfile created by File Tree Hasher\r\n; Get latest release from https://github.com/nilshenrich/FileTreeHasher/releases\r\n; Creation time stamp: {0}\r\n\r\n", DateTime.Now);
+
+            // Loop over loaded files with generated hash
+            appendHashesToCheckfile(ref checkfile, LoadedFileTreeItems, "");
+
+            // Save checkfile
+            await FileIO.WriteTextAsync(file, checkfile);
         }
 
         /// <summary>
