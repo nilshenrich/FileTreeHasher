@@ -158,13 +158,24 @@ namespace FileTreeHasher
         }
 
         /// <summary>
-        /// Click event: Load files that contain hash strings and paste hashes to inputs
+        /// Click event: Load checkfile that contains hash strings and paste hashes to inputs
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Click_LoadHashTree(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void Click_LoadCheckfile(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            var messageDialog = new MessageDialog("Button not implemented!\nClicking this button shall open another folder browsing dialog to select a folder of .md5/.sha1/.sha256/.sha384/.sha512 files that contain belonging check strings and pasting those strings into input fields of loaded files");
+            var messageDialog = new MessageDialog("Button not implemented!\nClicking this button shall open a file browsing dialog to select a checkfile that contains belonging check strings and pasting those strings into input fields of loaded files");
+            _ = messageDialog.ShowAsync();
+        }
+
+        /// <summary>
+        /// Click event: Save all generated hashes to checkfile that contains hash strings
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Click_SaveCheckfile(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var messageDialog = new MessageDialog("Button not implemented!\nClicking this button shall save all generated hashes to a checkfile");
             _ = messageDialog.ShowAsync();
         }
 
