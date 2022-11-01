@@ -17,7 +17,7 @@ namespace FileTreeHasher
     public sealed partial class MainPage : Page
     {
         // Globally selected hash algorithm
-        private ObservableObject<int> GlobalHashAlgIndex = new ObservableObject<int>((int)HashAlgirithmNames.SHA256);
+        private ObservableObject<int> GlobalHashAlgIndex = new ObservableObject<int>((int)HashAlgorithmNames.SHA256);
 
         // Path of currentliy selected folder
         private const string SelectedFolderPath_default = "<No folder selected>";
@@ -80,9 +80,9 @@ namespace FileTreeHasher
                 // Filter extension
                 string[] ignoreExtensions = new string[] { ".sha" };
                 bool ignoreThisFile = false;
-                foreach(string ext in ignoreExtensions)
+                foreach (string ext in ignoreExtensions)
                 {
-                    if(file.Name.EndsWith(ext))
+                    if (file.Name.EndsWith(ext))
                     {
                         ignoreThisFile = true;
                         break;
@@ -139,7 +139,7 @@ namespace FileTreeHasher
             {
                 checkfile += string.Format("{0}\t{1}\t{2}\n",
                     file.GeneratedHash.Value,
-                    file.SelectedHashAlgIndex.Value,    // TODO: Index shown, not name
+                    Enum.GetName(typeof(HashAlgorithmNames), file.SelectedHashAlgIndex.Value),
                     dirPath + file.Name);
             }
         }
