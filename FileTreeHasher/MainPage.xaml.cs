@@ -56,6 +56,7 @@ namespace FileTreeHasher
         /// </summary>
         /// <param name="rootFolder"></param>
         /// <param name="rootExplorer"></param>
+        /// TODO: Filter out .sha (checkfiles) files
         private void loadFileTree(StorageFolder rootFolder, ObservableCollection<ExplorerItem> rootExplorer)
         {
             // Draw all direct subdirectories
