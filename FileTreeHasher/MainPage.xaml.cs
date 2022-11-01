@@ -56,7 +56,6 @@ namespace FileTreeHasher
         /// </summary>
         /// <param name="rootFolder"></param>
         /// <param name="rootExplorer"></param>
-        /// TODO: Filter out .sha (checkfiles) files
         private void loadFileTree(StorageFolder rootFolder, ObservableCollection<ExplorerItem> rootExplorer)
         {
             // Draw all direct subdirectories
@@ -78,6 +77,20 @@ namespace FileTreeHasher
             IReadOnlyList<StorageFile> files = rootFolder.GetFilesAsync().AsTask().Result;
             foreach (StorageFile file in files)
             {
+                // Filter extension
+                string[] ignoreExtensions = new string[] { ".sha" };
+                bool ignoreThisFile = false;
+                foreach(string ext in ignoreExtensions)
+                {
+                    if(file.Name.EndsWith(ext))
+                    {
+                        ignoreThisFile = true;
+                        break;
+                    }
+                }
+                if (ignoreThisFile)
+                    continue;
+
                 // Create item for file
                 ExplorerFile explorerFile = new ExplorerFile()
                 {
