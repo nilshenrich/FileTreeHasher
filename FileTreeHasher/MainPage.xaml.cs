@@ -80,20 +80,6 @@ namespace FileTreeHasher
             IReadOnlyList<StorageFile> files = rootFolder.GetFilesAsync().AsTask().Result;
             foreach (StorageFile file in files)
             {
-                // Filter extension
-                string[] ignoreExtensions = new string[] { ".sha" };
-                bool ignoreThisFile = false;
-                foreach (string ext in ignoreExtensions)
-                {
-                    if (file.Name.EndsWith(ext))
-                    {
-                        ignoreThisFile = true;
-                        break;
-                    }
-                }
-                if (ignoreThisFile)
-                    continue;
-
                 // Create item for file
                 ExplorerFile explorerFile = new ExplorerFile()
                 {
