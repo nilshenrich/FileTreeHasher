@@ -349,7 +349,7 @@ namespace FileTreeHasher
         {
             // Get loaded file, update check hash and compare
             ExplorerFile file = (sender as TextBox).DataContext as ExplorerFile;
-            file.CheckHash.Value = (sender as TextBox).Text;  // Not updated on UI as not observable. Not not needed
+            file.CheckHash.Value = (sender as TextBox).Text;
             file.compareFileHash();
         }
     }

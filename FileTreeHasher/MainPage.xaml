@@ -92,7 +92,6 @@
             <Setter Property="Margin" Value="{StaticResource General_FileTreeItemMargin_px}"/>
             <Setter Property="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="MaxWidth" Value="250"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="ToolTipService.Placement" Value="Mouse"/>
         </Style>
