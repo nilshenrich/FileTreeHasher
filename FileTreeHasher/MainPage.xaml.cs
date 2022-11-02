@@ -301,7 +301,9 @@ namespace FileTreeHasher
             appendHashesToCheckfile(ref checkfile, LoadedFileTreeItems, "");
 
             // Save checkfile
+            CachedFileManager.DeferUpdates(file);
             await FileIO.WriteTextAsync(file, checkfile);
+            await CachedFileManager.CompleteUpdatesAsync(file);
         }
 
         /// <summary>
