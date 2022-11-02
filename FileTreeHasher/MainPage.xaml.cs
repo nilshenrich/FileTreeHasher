@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x407 dokumentiert.
@@ -123,6 +122,43 @@ namespace FileTreeHasher
         }
 
         /// <summary>
+        /// Loop over loaded files and find belonging check hash from checkfile and insert it into input
+        /// </summary>
+        /// <param name="checkfile"></param>
+        /// <param name="rootFolder"></param>
+        /// <param name="dirPath"></param>
+        private void assignFilesToCheckfile(string checkfile, ObservableCollection<ExplorerItem> rootFolder, string dirPath)
+        {
+            // Recurse for all sub-folders
+            foreach (ExplorerFolder folder in rootFolder.OfType<ExplorerFolder>())
+                assignFilesToCheckfile(checkfile, folder.Children, dirPath + folder.Name + "/");
+
+            // Update hash check inputs
+            foreach (ExplorerFile file in rootFolder.OfType<ExplorerFile>())
+            {
+                // Get path of current loaded file
+                string path = dirPath + file.Name;
+
+                // If file exists in checkfile, update check hash and hash algorithm
+                foreach (string checkline in checkfile.Split(Environment.NewLine))
+                {
+                    // Get hash, algorithm, file from checkfile line
+                    string[] items = checkline.Split("\t");
+                    if (items.Length != 3)
+                        continue;
+
+                    // If current file matches, update UI
+                    if (items[2] == path)
+                    {
+                        file.CheckHash.Value = items[0];
+                        file.SelectedHashAlgIndex.Value = (int)Enum.Parse(typeof(HashAlgorithmNames), items[1]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Recursively add all files with generated hashes to string to be stored to checkfile
         /// </summary>
         /// <param name="checkfile"></param>
@@ -137,13 +173,18 @@ namespace FileTreeHasher
             // Append all files in current directory
             foreach (ExplorerFile file in rootFolder.OfType<ExplorerFile>())
             {
-                checkfile += string.Format("{0}\t{1}\t{2}\n",
+                checkfile += string.Format("{0}\t{1}\t{2}{3}",
                     file.GeneratedHash.Value,
                     Enum.GetName(typeof(HashAlgorithmNames), file.SelectedHashAlgIndex.Value),
-                    dirPath + file.Name);
+                    dirPath + file.Name,
+                    Environment.NewLine);
             }
         }
 
+        /// <summary>
+        /// Recursively clear all text inputs for hash checking
+        /// </summary>
+        /// <param name="rootFolder"></param>
         private void clearAllInputs(ObservableCollection<ExplorerItem> rootFolder)
         {
             // Clear all inputs for hash comparison
@@ -198,10 +239,22 @@ namespace FileTreeHasher
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Click_LoadCheckfile(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void Click_LoadCheckfile(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            var messageDialog = new MessageDialog("Button not implemented!\nClicking this button shall open a file browsing dialog to select a checkfile that contains belonging check strings and pasting those strings into input fields of loaded files");
-            _ = messageDialog.ShowAsync();
+            // Open file browsing dialog to select checkfile to load from
+            // Manual: https://learn.microsoft.com/en-us/uwp/api/windows.storage.pickers.fileopenpicker?view=winrt-22621
+            FileOpenPicker filePicker = new FileOpenPicker();
+            filePicker.ViewMode = PickerViewMode.List;
+            filePicker.FileTypeFilter.Add(".sha");
+            StorageFile file = await filePicker.PickSingleFileAsync();
+
+            // Caancel if no proper file is selected
+            if (file == null)
+                return;
+
+            // Loop over loaded files and update from checkfile
+            string checkfile = await FileIO.ReadTextAsync(file);
+            assignFilesToCheckfile(checkfile, LoadedFileTreeItems, "");
         }
 
         /// <summary>
