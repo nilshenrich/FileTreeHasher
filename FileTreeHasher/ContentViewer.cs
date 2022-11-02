@@ -109,7 +109,7 @@ namespace FileTreeHasher
 
             // Generate hash and update UI
             markPending();
-            string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgirithmNames)SelectedHashAlgIndex.Value, proc, m_taskCancellationTokenSource.Token);
+            string hash = HashGenerator.generateHash(FileOnDisk, (HashAlgorithmNames)SelectedHashAlgIndex.Value, proc, m_taskCancellationTokenSource.Token);
 
             // Break if the task queue is cancelled
             m_taskCancellationTokenSource.Token.ThrowIfCancellationRequested();
