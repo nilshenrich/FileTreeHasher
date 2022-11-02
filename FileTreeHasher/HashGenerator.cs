@@ -16,6 +16,16 @@ namespace FileTreeHasher
         SHA512
     }
 
+    // Length (bytes) of hash algorithms
+    public enum HashAlgorithmBytecounts : int
+    {
+        MD5 = 16,
+        SHA1 = 20,
+        SHA256 = 32,
+        SHA384 = 48,
+        SHA512 = 64
+    }
+
     internal static class HashGenerator
     {
         /// <summary>

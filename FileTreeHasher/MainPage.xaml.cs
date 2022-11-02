@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
@@ -151,13 +152,17 @@ namespace FileTreeHasher
                     if (items.Length != 3)
                         continue;
 
+                    // Only update UI if check hash matches format
+                    if (!Regex.IsMatch(items[0], string.Format("\\A[0-9a-f]{{{0}}}\\Z", 2*(int)Enum.Parse(typeof(HashAlgorithmBytecounts), items[1]))))
+                        continue;
+
                     // If current file matches, update UI
                     if (items[2] == path)
-                    {
-                        file.CheckHash.Value = items[0];
-                        file.SelectedHashAlgIndex.Value = (int)Enum.Parse(typeof(HashAlgorithmNames), items[1]);
-                        break;
-                    }
+                        {
+                            file.CheckHash.Value = items[0];
+                            file.SelectedHashAlgIndex.Value = (int)Enum.Parse(typeof(HashAlgorithmNames), items[1]);
+                            break;
+                        }
                 }
             }
         }
@@ -273,6 +278,7 @@ namespace FileTreeHasher
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// TODO: .bak file created when overwriting old file
         private async void Click_SaveCheckfile(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             // Open file browsing dialog to select checkfile to save hashes to
