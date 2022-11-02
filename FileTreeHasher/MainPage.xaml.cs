@@ -19,8 +19,11 @@ namespace FileTreeHasher
         private ObservableObject<int> GlobalHashAlgIndex = new ObservableObject<int>((int)HashAlgorithmNames.SHA256);
 
         // Path of currentliy selected folder
-        private const string SelectedFolderPath_default = "<No folder selected>";
+        private const string SelectedFolderPath_default = "<no folder selected>";
         private ObservableObject<string> SelectedFolderPath = new ObservableObject<string>(SelectedFolderPath_default);
+
+        // Placeholder for "not generated hash"
+        private const string HashNotGenerated_placeholder = "<hash not generated>";
 
         // Tree view content
         private ObservableCollection<ExplorerItem> LoadedFileTreeItems = new ObservableCollection<ExplorerItem>();
@@ -140,6 +143,7 @@ namespace FileTreeHasher
                 string path = dirPath + file.Name;
 
                 // If file exists in checkfile, update check hash and hash algorithm
+                // TODO: Only add if hash string format matches
                 foreach (string checkline in checkfile.Split(Environment.NewLine))
                 {
                     // Get hash, algorithm, file from checkfile line
@@ -174,7 +178,7 @@ namespace FileTreeHasher
             foreach (ExplorerFile file in rootFolder.OfType<ExplorerFile>())
             {
                 checkfile += string.Format("{0}\t{1}\t{2}{3}",
-                    file.GeneratedHash.Value,
+                    string.IsNullOrEmpty(file.GeneratedHash.Value) ? HashNotGenerated_placeholder : file.GeneratedHash.Value,
                     Enum.GetName(typeof(HashAlgorithmNames), file.SelectedHashAlgIndex.Value),
                     dirPath + file.Name,
                     Environment.NewLine);
