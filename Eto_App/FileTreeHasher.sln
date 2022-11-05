@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTreeHasher", "FileTreeHasher\FileTreeHasher.csproj", "{46E4468E-CD3F-4879-A8B0-0BFE1404082F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTreeHasher", "FileTreeHasher\FileTreeHasher\FileTreeHasher.csproj", "{606D80FD-F056-4AF2-90EC-5900BFDC3B96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTreeHasher.Linux", "FileTreeHasher\FileTreeHasher.Gtk\FileTreeHasher.Linux.csproj", "{3F2EC39C-3BBF-465B-AEC8-82821FD1B073}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTreeHasher.Mac", "FileTreeHasher\FileTreeHasher.Mac\FileTreeHasher.Mac.csproj", "{77579484-443F-45D6-A332-A2767BEBB511}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTreeHasher.Windows", "FileTreeHasher\FileTreeHasher.Wpf\FileTreeHasher.Windows.csproj", "{AA284D8E-BE52-489A-964B-03CEF104F058}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +17,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{46E4468E-CD3F-4879-A8B0-0BFE1404082F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46E4468E-CD3F-4879-A8B0-0BFE1404082F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46E4468E-CD3F-4879-A8B0-0BFE1404082F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46E4468E-CD3F-4879-A8B0-0BFE1404082F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{606D80FD-F056-4AF2-90EC-5900BFDC3B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{606D80FD-F056-4AF2-90EC-5900BFDC3B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{606D80FD-F056-4AF2-90EC-5900BFDC3B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{606D80FD-F056-4AF2-90EC-5900BFDC3B96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F2EC39C-3BBF-465B-AEC8-82821FD1B073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F2EC39C-3BBF-465B-AEC8-82821FD1B073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F2EC39C-3BBF-465B-AEC8-82821FD1B073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2EC39C-3BBF-465B-AEC8-82821FD1B073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77579484-443F-45D6-A332-A2767BEBB511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77579484-443F-45D6-A332-A2767BEBB511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77579484-443F-45D6-A332-A2767BEBB511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77579484-443F-45D6-A332-A2767BEBB511}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA284D8E-BE52-489A-964B-03CEF104F058}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA284D8E-BE52-489A-964B-03CEF104F058}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA284D8E-BE52-489A-964B-03CEF104F058}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA284D8E-BE52-489A-964B-03CEF104F058}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {709BF2D7-792A-4BC6-BF18-F817E5607B4F}
+		SolutionGuid = {90D6FBD0-F7D2-48C0-898A-CF1194A24491}
 	EndGlobalSection
 EndGlobal
