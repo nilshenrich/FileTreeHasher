@@ -25,19 +25,28 @@
         </Style>
         <!--Header bar-->
 
+        <!--Button group header for global control button groups-->
+        <Style x:Key="Txt_GroupHeader_global" TargetType="TextBlock" BasedOn="{StaticResource FlyoutPickerTitleTextBlockStyle}">
+            <Setter Property="Margin" Value="10,10,10,0"/>
+        </Style>
+        <!--Button group header for global control button groups-->
+
         <!--Dropdown menu for global hash selection-->
         <Style x:Key="Cmb_HashSel_global" TargetType="ComboBox">
             <Setter Property="Background" Value="{ThemeResource AppBarItemBackgroundThemeBrush}"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Width" Value="{StaticResource General_HashSelSpaceWidth_px}"/>
+            <Setter Property="ToolTipService.Placement" Value="Mouse"/>
         </Style>
         <!--Dropdown menu for global hash selection-->
 
         <!--Refresh global hash selection-->
-        <Style x:Key="Btn_HashSelRefresh_global" TargetType="ContentControl" BasedOn="{StaticResource PivotTitleContentControlStyle}">
+        <Style x:Key="Btn_HeaderControlIcon" TargetType="ContentControl" BasedOn="{StaticResource PivotTitleContentControlStyle}">
             <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
             <Setter Property="Foreground" Value="{ThemeResource ButtonForegroundThemeBrush}"/>
+            <Setter Property="ToolTipService.Placement" Value="Mouse"/>
         </Style>
         <!--Refresh global hash selection-->
 
@@ -83,7 +92,6 @@
             <Setter Property="Margin" Value="{StaticResource General_FileTreeItemMargin_px}"/>
             <Setter Property="Foreground" Value="{ThemeResource SystemColorDisabledTextBrush}"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="MaxWidth" Value="250"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="ToolTipService.Placement" Value="Mouse"/>
         </Style>
@@ -196,13 +204,30 @@
 
             <!--Load/Clear file tree-->
             <Grid Grid.Column="0" HorizontalAlignment="Left">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="Load File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" Margin="12" Click="Click_LoadFileTree"/>
-                <Button Grid.Column="1" Content="Clear File Tree" Style="{ThemeResource PivotTitleContentControlStyle}" Margin="0,12,12,12" Click="Click_ClearFileTree"/>
+                <!--Folder selection sub-header-->
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Folder selection" Style="{StaticResource Txt_GroupHeader_global}"/>
+                <!--Folder selection sub-header-->
+
+                <!--Buttons: Load, clear-->
+                <Button Grid.Row="1" Grid.Column="0" ToolTipService.ToolTip="Load folder or replace loaded folder to hash containing files" Style="{ThemeResource Btn_HeaderControlIcon}" Click="Click_LoadFileTree">
+                    <SymbolIcon Symbol="MoveToFolder"/>
+                </Button>
+                <Button Grid.Row="1" Grid.Column="1" ToolTipService.ToolTip="Clear loaded folder" Style="{ThemeResource Btn_HeaderControlIcon}" Click="Click_ClearFileTree">
+                    <SymbolIcon Symbol="Delete"/>
+                </Button>
+                <!--Buttons: Load, clear-->
 
             </Grid>
             <!--Load/Clear file tree-->
@@ -210,22 +235,33 @@
             <!--Global hash algorithm selector-->
             <Grid Grid.Column="1">
 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="1" SelectedIndex="{x:Bind GlobalHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}" SelectionChanged="Change_GlobalHashChanged">
+                <!--Hash algorithm selector sub-header-->
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Hash algorithm" HorizontalAlignment="Center" Style="{StaticResource Txt_GroupHeader_global}"/>
+                <!--Hash algorithm selector sub-header-->
+
+                <!--Select hash algorithm-->
+                <ComboBox Grid.Row="1" Grid.Column="1" ToolTipService.ToolTip="Select hash algorithm for all loaded files" SelectedIndex="{x:Bind GlobalHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}" SelectionChanged="Change_GlobalHashChanged">
                     <ComboBoxItem Content="MD5"/>
                     <ComboBoxItem Content="SHA1"/>
                     <ComboBoxItem Content="SHA256"/>
                     <ComboBoxItem Content="SHA384"/>
                     <ComboBoxItem Content="SHA512"/>
                 </ComboBox>
-                <Button Grid.Column="2" HorizontalAlignment="Left" Style="{StaticResource Btn_HashSelRefresh_global}" Click="Click_RefreshAllHashSelectors">
+                <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" ToolTipService.ToolTip="Reset hash algorithm for all loaded files to globally selected algorithm" Style="{StaticResource Btn_HeaderControlIcon}" Click="Click_RefreshAllHashSelectors">
                     <SymbolIcon Symbol="Refresh"/>
                 </Button>
+                <!--Select hash algorithm-->
 
             </Grid>
             <!--Global hash algorithm selector-->
@@ -233,13 +269,33 @@
             <!--Load/Clear hash files from system-->
             <Grid Grid.Column="2" HorizontalAlignment="Right">
 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="Load Check Files" Style="{ThemeResource PivotTitleContentControlStyle}" Margin="12,12,0,12" Click="Click_LoadHashTree"/>
-                <Button Grid.Column="1" Content="Clear all Inputs" Style="{ThemeResource PivotTitleContentControlStyle}" Margin="12" Click="Click_ClearCheckinputs"/>
+                <!--Checkfile sub-header-->
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Right" Text="Checkfile" Style="{StaticResource Txt_GroupHeader_global}"/>
+                <!--Checkfile sub-header-->
+
+                <!--Buttons: Load, save, clear-->
+                <Button Grid.Row="1" Grid.Column="1" ToolTipService.ToolTip="Load checkfile from drive" Style="{StaticResource Btn_HeaderControlIcon}" Click="Click_LoadCheckfile">
+                    <SymbolIcon Symbol="OpenFile"/>
+                </Button>
+                <Button Grid.Row="1" Grid.Column="2" ToolTipService.ToolTip="Store generated hashes as checkfile" Style="{StaticResource Btn_HeaderControlIcon}" Click="Click_SaveCheckfile">
+                    <SymbolIcon Symbol="SaveLocal"/>
+                </Button>
+                <Button Grid.Row="1" Grid.Column="3" ToolTipService.ToolTip="Clear all check inputs" Style="{StaticResource Btn_HeaderControlIcon}" Click="Click_ClearCheckinputs">
+                    <SymbolIcon Symbol="Delete"/>
+                </Button>
+                <!--Buttons: Load, save, clear-->
 
             </Grid>
             <!--Load/Clear hash files from system-->

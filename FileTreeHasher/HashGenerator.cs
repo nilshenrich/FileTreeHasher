@@ -7,13 +7,23 @@ using Windows.Storage;
 namespace FileTreeHasher
 {
     // Hash algorithms
-    public enum HashAlgirithmNames : int
+    public enum HashAlgorithmNames : int
     {
         MD5 = 0,
         SHA1,
         SHA256,
         SHA384,
         SHA512
+    }
+
+    // Length (bytes) of hash algorithms
+    public enum HashAlgorithmBytecounts : int
+    {
+        MD5 = 16,
+        SHA1 = 20,
+        SHA256 = 32,
+        SHA384 = 48,
+        SHA512 = 64
     }
 
     internal static class HashGenerator
@@ -25,7 +35,7 @@ namespace FileTreeHasher
         /// <param name="hashAlgirithm"></param>
         /// <param name="progress"></param>
         /// <param name="cancellation"></param>
-        public static string generateHash(StorageFile file, HashAlgirithmNames hashAlgirithm, Action<double> progress, CancellationToken cancellation)
+        public static string generateHash(StorageFile file, HashAlgorithmNames hashAlgirithm, Action<double> progress, CancellationToken cancellation)
         {
             // Cancel if requested
             cancellation.ThrowIfCancellationRequested();
@@ -34,23 +44,23 @@ namespace FileTreeHasher
             HashAlgorithm hasher;
             switch (hashAlgirithm)
             {
-                case HashAlgirithmNames.MD5:
+                case HashAlgorithmNames.MD5:
                     hasher = MD5.Create();
                     break;
 
-                case HashAlgirithmNames.SHA1:
+                case HashAlgorithmNames.SHA1:
                     hasher = SHA1.Create();
                     break;
 
-                case HashAlgirithmNames.SHA256:
+                case HashAlgorithmNames.SHA256:
                     hasher = SHA256.Create();
                     break;
 
-                case HashAlgirithmNames.SHA384:
+                case HashAlgorithmNames.SHA384:
                     hasher = SHA384.Create();
                     break;
 
-                case HashAlgirithmNames.SHA512:
+                case HashAlgorithmNames.SHA512:
                     hasher = SHA512.Create();
                     break;
 
