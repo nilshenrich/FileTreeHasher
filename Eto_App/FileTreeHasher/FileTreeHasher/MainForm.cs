@@ -11,7 +11,7 @@ namespace FileTreeHasher
             // ========== General Elements / Styles ==========
             // ===============================================
             Title = "File Tree Hasher";
-            MinimumSize = new Eto.Drawing.Size(500, 200);
+            MinimumSize = new Size(500, 200);
 
             // ===============================================
             // ================== Menu bar ===================
@@ -24,9 +24,9 @@ namespace FileTreeHasher
             {
                 // Help:
                 // - http://pages.picoe.ca/docs/api/html/T_Eto_Forms_TreeGridView.htm
-                // - https://stackoverflow.com/questions/49348488/how-to-use-eto-forms-treegridview
+                // - https://10tec.com/articles/treegridview-c-sharp-vb-net.aspx
 
-                BackgroundColor = Colors.Transparent,
+                BackgroundColor = Colors.Transparent
             };
 
             // Show content
