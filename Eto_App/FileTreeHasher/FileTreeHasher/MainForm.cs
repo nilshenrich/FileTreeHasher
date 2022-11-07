@@ -35,20 +35,26 @@ namespace FileTreeHasher
                     new GridColumn(){HeaderText="Left column",DataCell=new TextBoxCell(0)},
                     new GridColumn(){HeaderText="Middle column",DataCell=new TextBoxCell(1)},
                     new GridColumn(){HeaderText="Right column",DataCell=new TextBoxCell(2)}
-                },
-
-                // Items
-                DataStore = new TreeGridItemCollection()
-                {
-                    new TreeGridItem()
-                    {
-                        Values=new string[]{ "Left item", "Middle item", "Right item" },
-                        Tag="Item_tag"
-                    }
                 }
             };
 
+            // Sample folder
+            var sampleFolder = new TreeGridItem()
+            {
+                Values = new string[] { "Left item", "Middle item", "Right item" },
+                Tag = "SampleFolder_tag"
+            };
+
+            // Sample file
+            var sampleNestedFile = new TreeGridItem()
+            {
+                Values = new string[] { "Left item", "Middle item", "Right item" },
+                Tag = "SampleNestedFile"
+            };
+
             // Show content
+            sampleFolder.Children.Add(sampleNestedFile);
+            fileTree.DataStore = new TreeGridItemCollection() { sampleFolder };
             Content = fileTree;
         }
     }
