@@ -5,6 +5,8 @@
     <TargetFramework>net48</TargetFramework>
 
     <RuntimeIdentifiers>osx-x64;osx-arm64</RuntimeIdentifiers>
+
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 	
   <ItemGroup>
