@@ -35,26 +35,38 @@ namespace FileTreeHasher
                     new GridColumn(){HeaderText="Left column",DataCell=new TextBoxCell(0)},
                     new GridColumn(){HeaderText="Middle column",DataCell=new TextBoxCell(1)},
                     new GridColumn(){HeaderText="Right column",DataCell=new TextBoxCell(2)}
-                }
+                },
+                DataStore = new TreeGridItemCollection()
             };
 
             // Sample folder
             var sampleFolder = new TreeGridItem()
             {
-                Values = new string[] { "Left item", "Middle item", "Right item" },
+                Values = new string[] { "Sample folder", "Hash algorithm", "Check" },
                 Tag = "SampleFolder_tag"
             };
 
             // Sample file
+            var sampleFile = new TreeGridItem()
+            {
+                Values = new string[] { "Sample file", "Hash algorithm", "Check" },
+                Tag = "SampleFile"
+            };
+
+            // Sample nested file
             var sampleNestedFile = new TreeGridItem()
             {
-                Values = new string[] { "Left item", "Middle item", "Right item" },
+                Values = new string[] { "Sample nested file", "Hash algorithm", "Check" },
                 Tag = "SampleNestedFile"
             };
 
             // Show content
             sampleFolder.Children.Add(sampleNestedFile);
-            fileTree.DataStore = new TreeGridItemCollection() { sampleFolder };
+            fileTree.DataStore = new TreeGridItemCollection() { sampleFolder, sampleFile };
+
+            // TODO: Adding this way doesn't work
+            //(fileTree.DataStore as TreeGridItemCollection).Add(sampleFolder);
+            //(fileTree.DataStore as TreeGridItemCollection).Add(sampleNestedFile);
             Content = fileTree;
         }
     }
