@@ -32,9 +32,19 @@ namespace FileTreeHasher
                 // 3 columns
                 Columns =
                 {
-                    new GridColumn(){HeaderText="Left column"},
-                    new GridColumn(){HeaderText="Middle column"},
-                    new GridColumn(){HeaderText="Right column"}
+                    new GridColumn(){HeaderText="Left column",DataCell=new TextBoxCell(0)},
+                    new GridColumn(){HeaderText="Middle column",DataCell=new TextBoxCell(1)},
+                    new GridColumn(){HeaderText="Right column",DataCell=new TextBoxCell(2)}
+                },
+
+                // Items
+                DataStore = new TreeGridItemCollection()
+                {
+                    new TreeGridItem()
+                    {
+                        Values=new string[]{ "Left item", "Middle item", "Right item" },
+                        Tag="Item_tag"
+                    }
                 }
             };
 
