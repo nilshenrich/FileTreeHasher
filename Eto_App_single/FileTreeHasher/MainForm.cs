@@ -1,6 +1,5 @@
 using Eto.Drawing;
 using Eto.Forms;
-using System;
 
 namespace FileTreeHasher
 {
@@ -8,50 +7,67 @@ namespace FileTreeHasher
     {
         public MainForm()
         {
-            Title = "My Eto Form";
-            MinimumSize = new Size(200, 200);
+            // ===============================================
+            // ========== General Elements / Styles ==========
+            // ===============================================
+            Title = "File Tree Hasher";
+            MinimumSize = new Size(500, 200);
 
-            Content = new StackLayout
+            // ===============================================
+            // ================== Menu bar ===================
+            // ===============================================
+
+            // ===============================================
+            // =================== Content ===================
+            // ===============================================
+            var fileTree = new TreeGridView()
             {
-                Padding = 10,
-                Items =
+                // Help:
+                // - http://pages.picoe.ca/docs/api/html/T_Eto_Forms_TreeGridView.htm
+                // - https://stackoverflow.com/questions/49348488/how-to-use-eto-forms-treegridview
+                // - https://10tec.com/articles/treegridview-c-sharp-vb-net.aspx
+
+                BackgroundColor = Colors.Transparent,
+
+                // 3 columns
+                Columns =
                 {
-                    "Hello World!",
-					// add more controls here
-				}
-            };
-
-            // create a few commands that can be used for the menu and toolbar
-            var clickMe = new Command { MenuText = "Click Me!", ToolBarText = "Click Me!" };
-            clickMe.Executed += (sender, e) => MessageBox.Show(this, "I was clicked!");
-
-            var quitCommand = new Command { MenuText = "Quit", Shortcut = Application.Instance.CommonModifier | Keys.Q };
-            quitCommand.Executed += (sender, e) => Application.Instance.Quit();
-
-            var aboutCommand = new Command { MenuText = "About..." };
-            aboutCommand.Executed += (sender, e) => new AboutDialog().ShowDialog(this);
-
-            // create menu
-            Menu = new MenuBar
-            {
-                Items =
-                {
-					// File submenu
-					new SubMenuItem { Text = "&File", Items = { clickMe } },
-					// new SubMenuItem { Text = "&Edit", Items = { /* commands/items */ } },
-					// new SubMenuItem { Text = "&View", Items = { /* commands/items */ } },
-				},
-                ApplicationItems =
-                {
-					// application (OS X) or file menu (others)
-					new ButtonMenuItem { Text = "&Preferences..." },
+                    new GridColumn(){HeaderText="Left column",DataCell=new TextBoxCell(0)},
+                    new GridColumn(){HeaderText="Middle column",DataCell=new TextBoxCell(1)},
+                    new GridColumn(){HeaderText="Right column",DataCell=new TextBoxCell(2)}
                 },
-                QuitItem = quitCommand,
-                AboutItem = aboutCommand
+                DataStore = new TreeGridItemCollection()
             };
 
-            // create toolbar			
-            ToolBar = new ToolBar { Items = { clickMe } };
+            // Sample folder
+            var sampleFolder = new TreeGridItem()
+            {
+                Values = new string[] { "Sample folder", "Hash algorithm", "Check" },
+                Tag = "SampleFolder_tag"
+            };
+
+            // Sample file
+            var sampleFile = new TreeGridItem()
+            {
+                Values = new string[] { "Sample file", "Hash algorithm", "Check" },
+                Tag = "SampleFile"
+            };
+
+            // Sample nested file
+            var sampleNestedFile = new TreeGridItem()
+            {
+                Values = new string[] { "Sample nested file", "Hash algorithm", "Check" },
+                Tag = "SampleNestedFile"
+            };
+
+            // Show content
+            sampleFolder.Children.Add(sampleNestedFile);
+            fileTree.DataStore = new TreeGridItemCollection() { sampleFolder, sampleFile };
+
+            // TODO: Adding this way doesn't work
+            //(fileTree.DataStore as TreeGridItemCollection).Add(sampleFolder);
+            //(fileTree.DataStore as TreeGridItemCollection).Add(sampleNestedFile);
+            Content = fileTree;
         }
     }
 }

@@ -11,4 +11,10 @@
 
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Icons\orig\**" />
+    <EmbeddedResource Remove="Icons\orig\**" />
+    <None Remove="Icons\orig\**" />
+  </ItemGroup>
+
 </Project>
