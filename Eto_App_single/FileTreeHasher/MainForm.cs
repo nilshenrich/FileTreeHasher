@@ -43,7 +43,8 @@ namespace FileTreeHasher
             var sampleFolder = new TreeGridItem()
             {
                 Values = new string[] { "Sample folder", "Hash algorithm", "Check" },
-                Tag = "SampleFolder_tag"
+                Tag = "SampleFolder_tag",
+                Expanded = true
             };
 
             // Sample file
@@ -60,13 +61,14 @@ namespace FileTreeHasher
                 Tag = "SampleNestedFile"
             };
 
-            // Show content
+            // Stack tree
+            TreeGridItemCollection mainFolder = new();
             sampleFolder.Children.Add(sampleNestedFile);
-            fileTree.DataStore = new TreeGridItemCollection() { sampleFolder, sampleFile };
+            mainFolder.Add(sampleFolder);
+            mainFolder.Add(sampleFile);
+            fileTree.DataStore = mainFolder;
 
-            // TODO: Adding this way doesn't work
-            //(fileTree.DataStore as TreeGridItemCollection).Add(sampleFolder);
-            //(fileTree.DataStore as TreeGridItemCollection).Add(sampleNestedFile);
+            // Show content
             Content = fileTree;
         }
     }
