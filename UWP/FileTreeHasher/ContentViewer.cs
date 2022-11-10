@@ -32,8 +32,7 @@ namespace FileTreeHasher
             get { return m_value; }
             set
             {
-                bool equal = Equals(value, m_value);
-                if (!equal)
+                if (!Equals(value, m_value))
                 {
                     m_value = value;
                     OnPropertyChanged();
