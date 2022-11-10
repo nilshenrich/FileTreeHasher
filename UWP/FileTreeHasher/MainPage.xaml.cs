@@ -239,6 +239,17 @@ namespace FileTreeHasher
         }
 
         /// <summary>
+        /// Change event: Selected global file filter changed
+        /// -> Reload all file tree
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Change_FileLoadFilter(object sender, SelectionChangedEventArgs e)
+        {
+            // TODO: Reload file tree
+        }
+
+        /// <summary>
         /// Click event: Load checkfile that contains hash strings and paste hashes to inputs
         /// </summary>
         /// <param name="sender"></param>

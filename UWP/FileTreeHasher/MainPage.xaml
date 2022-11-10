@@ -228,7 +228,7 @@
                 <Button Grid.Row="1" Grid.Column="1" ToolTipService.ToolTip="Clear loaded folder" Style="{ThemeResource Btn_HeaderControlIcon}" Click="Click_ClearFileTree">
                     <SymbolIcon Symbol="Delete"/>
                 </Button>
-                <ComboBox Grid.Row="1" Grid.Column="2" IsEditable="True" Text="{x:Bind GlobalFileFilter.Value, Mode=TwoWay}" ToolTipService.ToolTip="Set file filter using regular expressions" Style="{StaticResource Cmb_Header_global}">
+                <ComboBox Grid.Row="1" Grid.Column="2" IsEditable="True" Text="{x:Bind GlobalFileFilter.Value, Mode=TwoWay}" ToolTipService.ToolTip="Set file filter using regular expressions" Style="{StaticResource Cmb_Header_global}" SelectionChanged="Change_FileLoadFilter">
                     <ComboBoxItem Content=".*" IsSelected="True"/>
                 </ComboBox>
                 <!--Buttons: Load, clear, filter-->
