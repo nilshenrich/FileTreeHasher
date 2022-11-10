@@ -32,7 +32,7 @@
         <!--Button group header for global control button groups-->
 
         <!--Dropdown menu for global hash selection-->
-        <Style x:Key="Cmb_HashSel_global" TargetType="ComboBox">
+        <Style x:Key="Cmb_Header_global" TargetType="ComboBox">
             <Setter Property="Background" Value="{ThemeResource AppBarItemBackgroundThemeBrush}"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -213,21 +213,25 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <!--Folder selection sub-header-->
-                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Folder selection" Style="{StaticResource Txt_GroupHeader_global}"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="Folder selection" Style="{StaticResource Txt_GroupHeader_global}"/>
                 <!--Folder selection sub-header-->
 
-                <!--Buttons: Load, clear-->
+                <!--Buttons: Load, clear, filter-->
                 <Button Grid.Row="1" Grid.Column="0" ToolTipService.ToolTip="Load folder or replace loaded folder to hash containing files" Style="{ThemeResource Btn_HeaderControlIcon}" Click="Click_LoadFileTree">
                     <SymbolIcon Symbol="MoveToFolder"/>
                 </Button>
                 <Button Grid.Row="1" Grid.Column="1" ToolTipService.ToolTip="Clear loaded folder" Style="{ThemeResource Btn_HeaderControlIcon}" Click="Click_ClearFileTree">
                     <SymbolIcon Symbol="Delete"/>
                 </Button>
-                <!--Buttons: Load, clear-->
+                <ComboBox Grid.Row="1" Grid.Column="2" IsEditable="True" Text="{x:Bind GlobalFileFilter.Value, Mode=TwoWay}" Style="{StaticResource Cmb_Header_global}">
+                    <ComboBoxItem Content="*" IsSelected="True"/>
+                </ComboBox>
+                <!--Buttons: Load, clear, filter-->
 
             </Grid>
             <!--Load/Clear file tree-->
@@ -251,7 +255,7 @@
                 <!--Hash algorithm selector sub-header-->
 
                 <!--Select hash algorithm-->
-                <ComboBox Grid.Row="1" Grid.Column="1" ToolTipService.ToolTip="Select hash algorithm for all loaded files" SelectedIndex="{x:Bind GlobalHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_HashSel_global}" SelectionChanged="Change_GlobalHashChanged">
+                <ComboBox Grid.Row="1" Grid.Column="1" ToolTipService.ToolTip="Select hash algorithm for all loaded files" SelectedIndex="{x:Bind GlobalHashAlgIndex.Value, Mode=TwoWay}" Style="{StaticResource Cmb_Header_global}" SelectionChanged="Change_GlobalHashChanged">
                     <ComboBoxItem Content="MD5"/>
                     <ComboBoxItem Content="SHA1"/>
                     <ComboBoxItem Content="SHA256"/>

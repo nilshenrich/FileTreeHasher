@@ -16,8 +16,9 @@ namespace FileTreeHasher
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        // Globally selected hash algorithm
+        // Global selections
         private ObservableObject<int> GlobalHashAlgIndex = new ObservableObject<int>((int)HashAlgorithmNames.SHA256);
+        private ObservableObject<string> GlobalFileFilter = new ObservableObject<string>();
 
         // Path of currentliy selected folder
         private const string SelectedFolderPath_default = "<no folder selected>";
