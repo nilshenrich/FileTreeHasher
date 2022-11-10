@@ -32,10 +32,12 @@ namespace FileTreeHasher
             get { return m_value; }
             set
             {
-                bool equal = value.Equals(m_value);
-                m_value = value;
+                bool equal = Equals(value, m_value);
                 if (!equal)
+                {
+                    m_value = value;
                     OnPropertyChanged();
+                }
             }
         }
     }
