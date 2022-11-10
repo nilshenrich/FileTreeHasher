@@ -130,7 +130,6 @@ namespace FileTreeHasher
                 string path = dirPath + file.Name;
 
                 // If file exists in checkfile, update check hash and hash algorithm
-                // TODO: Only add if hash string format matches
                 foreach (string checkline in checkfile.Split(Environment.NewLine))
                 {
                     // Get hash, algorithm, file from checkfile line
