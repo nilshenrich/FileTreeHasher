@@ -7,7 +7,7 @@ on:
       - "v*"
 
 jobs:
-  release:
+  Windows-bundle:
     runs-on: windows-latest
 
     env:
