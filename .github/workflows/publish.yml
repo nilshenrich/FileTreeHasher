@@ -15,7 +15,7 @@ jobs:
       Bundle_Name: FileTreeHasher                           # Name of bundle
       SigningCertificate: FileTreeHasher_TemporaryKey.pfx   # Name of temporary generated key file (Get key from secrets.Base64_Encoded_Pfx)
       Solution_Path: FileTreeHasher.sln                     # Path to solution file (From repos root)
-      Uwp_Project_Directory: FileTreeHasher                 # Directory of UWP to build (From repos root)
+      Uwp_Project_Directory: UWP/FileTreeHasher             # Directory of UWP to build (From repos root)
       Bundle_Architectures: x64|x86|arm|arm64               # Architectures to build bundle for
       Target_Architecture: x64                              # Architeccture of machine to build bundles at
     
