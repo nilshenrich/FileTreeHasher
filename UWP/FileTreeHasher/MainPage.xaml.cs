@@ -81,6 +81,11 @@ namespace FileTreeHasher
             IReadOnlyList<StorageFile> files = rootFolder.GetFilesAsync().AsTask().Result;
             foreach (StorageFile file in files)
             {
+                // Apply filter
+                // TODO: Simpler that Regex?
+                if (!Regex.IsMatch(file.Name, GlobalFileFilter.Value))
+                    continue;
+
                 // Create item for file
                 ExplorerFile explorerFile = new ExplorerFile()
                 {
