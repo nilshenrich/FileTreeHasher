@@ -246,7 +246,6 @@ namespace FileTreeHasher
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        /// TODO: Keep loaded items if new filter fits (No rehashing)
         private void Change_FileLoadFilter(object sender, SelectionChangedEventArgs e)
         {
             // Reload current folder if loaded
