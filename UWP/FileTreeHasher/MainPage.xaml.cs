@@ -23,6 +23,7 @@ namespace FileTreeHasher
         // Path of currentliy selected folder
         private const string SelectedFolderPath_default = "<no folder selected>";
         private ObservableObject<string> SelectedFolderPath = new ObservableObject<string>(SelectedFolderPath_default);
+        private StorageFolder PickedFolder;
 
         // Placeholder for "not generated hash"
         private const string HashNotGenerated_placeholder = "<hash not generated>";
@@ -209,21 +210,21 @@ namespace FileTreeHasher
             // Open file explorer to select a folder
             FolderPicker folderPicker = new FolderPicker();
             folderPicker.FileTypeFilter.Add("*");
-            StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+            PickedFolder = await folderPicker.PickSingleFolderAsync();
 
             // Cancel if no folder was selected
-            if (folder == null)
+            if (PickedFolder == null)
                 return;
 
             // Set selected folder path
-            SelectedFolderPath.Value = folder.Path;
+            SelectedFolderPath.Value = PickedFolder.Path;
 
             // Clear all old lodaded elements
             cancelAllHashingTasks(LoadedFileTreeItems);
             LoadedFileTreeItems.Clear();
 
             // Load file structure to UI
-            loadFileTree(folder, LoadedFileTreeItems);
+            loadFileTree(PickedFolder, LoadedFileTreeItems);
         }
 
         /// <summary>
@@ -235,6 +236,7 @@ namespace FileTreeHasher
         {
             cancelAllHashingTasks(LoadedFileTreeItems);
             LoadedFileTreeItems.Clear();
+            PickedFolder = null;
             SelectedFolderPath.Value = SelectedFolderPath_default;
         }
 
@@ -244,9 +246,19 @@ namespace FileTreeHasher
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// TODO: Keep loaded items if new filter fits (No rehashing)
         private void Change_FileLoadFilter(object sender, SelectionChangedEventArgs e)
         {
-            // TODO: Reload file tree
+            // Reload current folder if loaded
+            if (PickedFolder == null)
+                return;
+
+            // Clear all old lodaded elements
+            cancelAllHashingTasks(LoadedFileTreeItems);
+            LoadedFileTreeItems.Clear();
+
+            // Load file structure to UI
+            loadFileTree(PickedFolder, LoadedFileTreeItems);
         }
 
         /// <summary>
