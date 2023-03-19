@@ -10,6 +10,29 @@ class FileTreeHasher extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'File Tree Hasher', theme: ThemeData());
+    return const MaterialApp(
+      title: 'File Tree Hasher',
+      home: ControlHeader(),
+    );
+  }
+}
+
+class ControlHeader extends StatelessWidget {
+  const ControlHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("General controls"),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.input),
+            alignment: Alignment.centerLeft,
+            onPressed: () {},
+          )
+        ],
+      ),
+    );
   }
 }
