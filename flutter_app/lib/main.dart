@@ -22,16 +22,26 @@ class ControlHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("General controls"),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.input),
-            alignment: Alignment.centerLeft,
-            onPressed: () {},
-          )
-        ],
-      ),
-    );
+        appBar: AppBar(
+            title: Row(children: [
+      // Row: File tree
+      DecoratedBox(
+          decoration: const BoxDecoration(color: Colors.red),
+          child: Row(children: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.drive_folder_upload),
+              tooltip: "Load file tree",
+            )
+          ])),
+      // Row: Hash algorithm
+      DecoratedBox(
+          decoration: const BoxDecoration(color: Colors.yellow),
+          child: Row(children: const [Text("<Hash alg>")])),
+      // Row: Comparison
+      DecoratedBox(
+          decoration: const BoxDecoration(color: Colors.green),
+          child: Row(children: const [Text("<comparison>")]))
+    ])));
   }
 }
