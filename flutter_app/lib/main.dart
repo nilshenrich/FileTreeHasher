@@ -7,9 +7,14 @@ void main() {
 class FileTreeHasher extends StatelessWidget {
   const FileTreeHasher({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'File Tree Hasher', theme: ThemeData());
+    return const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Hello World!'),
+        ),
+      ),
+    );
   }
 }
