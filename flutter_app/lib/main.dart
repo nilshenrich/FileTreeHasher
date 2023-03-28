@@ -24,33 +24,42 @@ class ControlHeader extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
             flexibleSpace: Row(children: <Widget>[
-      // Row: File tree
+      // -------------------- Row: File tree --------------------
       Expanded(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        DecoratedBox(
-            decoration: const BoxDecoration(color: Colors.red),
-            child: Row(children: [
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+            // ---------- Section heading ----------
+            Row(children: []),
+            // ---------- Section buttons ----------
+            Row(children: <Widget>[
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.drive_folder_upload),
                 tooltip: "Load file tree",
               )
-            ]))
-      ])),
-      // Row: Hash algorithm
+            ])
+          ])),
+      // -------------------- Row: Hash algorithm --------------------
       Expanded(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        DecoratedBox(
-            decoration: const BoxDecoration(color: Colors.yellow),
-            child: Row(children: const [Text("<Hash alg>")]))
-      ])),
-      // Row: Comparison
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+            // ---------- Section heading ----------
+            Row(children: []),
+            // ---------- Section buttons ----------
+            Row(children: <Widget>[])
+          ])),
+      // -------------------- Row: Comparison --------------------
       Expanded(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        DecoratedBox(
-            decoration: const BoxDecoration(color: Colors.green),
-            child: Row(children: const [Text("<comparison>")]))
-      ]))
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+            // ---------- Section heading ----------
+            Row(children: []),
+            // ---------- Section buttons ----------
+            Row(children: <Widget>[])
+          ]))
     ])));
   }
 }
