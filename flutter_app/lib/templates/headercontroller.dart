@@ -32,10 +32,13 @@ class T_HeaderControlSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           // ---------- Section heading ----------
-          Text(headingText),
+          Text(
+            headingText,
+            textScaleFactor: 1.5,
+          ),
           const Divider(
               thickness: 1.0,
               color: Colors.black,
@@ -43,6 +46,7 @@ class T_HeaderControlSection extends StatelessWidget {
               endIndent: 10.0),
           // ---------- Section buttons ----------
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: items,
           ),
         ],

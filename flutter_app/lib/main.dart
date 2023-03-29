@@ -45,7 +45,7 @@ class ControlHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            toolbarHeight: 73, // TODO: Set auto height
+            toolbarHeight: 89, // TODO: Set auto height
             flexibleSpace: Row(children: <Widget>[
               // -------------------- Row: File tree --------------------
               T_HeaderControlSection(headingText: "File tree control", items: [
