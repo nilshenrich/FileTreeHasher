@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/header_controller.dart';
+import 'package:file_tree_hasher/definies/defines_global.dart';
 
 void main() {
   runApp(const FileTreeHasher());
@@ -41,7 +42,16 @@ class ControlHeader extends StatelessWidget {
                     tooltip: "Clear loaded file tree")
               ]),
               // -------------------- Row: Hash algorithm --------------------
-              const T_HeaderControlSection(headingText: "Algorithm selection"),
+              T_HeaderControlSection(
+                  headingText: "Algorithm selection",
+                  items: [
+                    DropdownButton(
+                        items: getHashAlgorithmNames()
+                            .map((e) =>
+                                DropdownMenuItem(value: e, child: Text(e)))
+                            .toList(),
+                        onChanged: (selected) {})
+                  ]),
               // -------------------- Row: Comparison --------------------
               const T_HeaderControlSection(headingText: "Comparison")
             ])));
