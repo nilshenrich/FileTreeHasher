@@ -1,6 +1,17 @@
+// ####################################################################################################
+// # @file main.dart
+// # @author Nils Henrich
+// # @brief App entry point
+// # @version 0.0.0+1
+// # @date 2023-03-19
+// #
+// # @copyright Copyright (c) 2023
+// #
+// ####################################################################################################
+
 import 'package:flutter/material.dart';
-import 'package:file_tree_hasher/templates/header_controller.dart';
-import 'package:file_tree_hasher/definies/defines_global.dart';
+import 'package:file_tree_hasher/templates/headercontroller.dart';
+import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 
 void main() {
   runApp(const FileTreeHasher());
@@ -75,13 +86,13 @@ class GlobalHashSelector extends StatefulWidget {
 // State for hash selector dropdown
 class _GlobalHashSelector extends State<GlobalHashSelector> {
   // Currently selected hash algorithm
-  String? _selected = E_HashAlgorithms.MD5.value;
+  String? _selected = DefaultHashAlgorithm.name;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
         value: _selected,
-        items: getHashAlgorithmNames()
+        items: getAllHashAlgorithmNames()
             .map((e) => DropdownMenuItem(value: e, child: Text(e)))
             .toList(),
         onChanged: (selected) {

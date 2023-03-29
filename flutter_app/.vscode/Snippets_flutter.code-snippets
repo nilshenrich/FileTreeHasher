@@ -15,6 +15,23 @@
 	// 	],
 	// 	"description": "Log output to console"
 	// }
+	"Comment file header": {
+		"scope": "dart",
+		"prefix": "comment_file_header",
+		"body": [
+			"// ####################################################################################################",
+			"// # @file ${1:file name}",
+			"// # @author ${2:author name}",
+			"// # @brief ${3:description}",
+			"// # @version ${4:app version}",
+			"// # @date ${5:date of creation (yyyy-mm-dd)}",
+			"// #",
+			"// # @copyright Copyright (c) 2023",
+			"// #",
+			"// ####################################################################################################"
+		],
+		"description": "header comment for a whole file"
+	},
 	"Comment block": {
 		"scope": "dart",
 		"prefix": "comment_block",

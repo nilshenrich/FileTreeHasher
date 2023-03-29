@@ -1,3 +1,14 @@
+// ####################################################################################################
+// # @file headercontroller.dart
+// # @author Nils Henrich
+// # @brief Template for general control section sitting in the header bar
+// # @version 0.0.0+1
+// # @date 2023-03-19
+// #
+// # @copyright Copyright (c) 2023
+// #
+// ####################################################################################################
+
 import 'package:flutter/material.dart';
 
 // ##################################################
