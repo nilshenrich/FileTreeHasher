@@ -23,48 +23,49 @@ class ControlHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            toolbarHeight: 73, // TODO: Set auto height
             flexibleSpace: Row(children: <Widget>[
-      // -------------------- Row: File tree --------------------
-      Expanded(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-            // ---------- Section heading ----------
-            const Text("File tree control"),
-            const Divider(
-                thickness: 1.0,
-                color: Colors.black,
-                indent: 10.0,
-                endIndent: 10.0),
-            // ---------- Section buttons ----------
-            Row(children: <Widget>[
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.drive_folder_upload),
-                tooltip: "Load file tree",
-              )
-            ])
-          ])),
-      // -------------------- Row: Hash algorithm --------------------
-      Expanded(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-            // ---------- Section heading ----------
-            Row(children: []),
-            // ---------- Section buttons ----------
-            Row(children: <Widget>[])
-          ])),
-      // -------------------- Row: Comparison --------------------
-      Expanded(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-            // ---------- Section heading ----------
-            Row(children: []),
-            // ---------- Section buttons ----------
-            Row(children: <Widget>[])
-          ]))
-    ])));
+              // -------------------- Row: File tree --------------------
+              Expanded(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                    // ---------- Section heading ----------
+                    const Text("File tree control"),
+                    const Divider(
+                        thickness: 1.0,
+                        color: Colors.black,
+                        indent: 10.0,
+                        endIndent: 10.0),
+                    // ---------- Section buttons ----------
+                    Row(children: <Widget>[
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.drive_folder_upload),
+                        tooltip: "Load file tree",
+                      )
+                    ])
+                  ])),
+              // -------------------- Row: Hash algorithm --------------------
+              Expanded(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                    // ---------- Section heading ----------
+                    Row(children: []),
+                    // ---------- Section buttons ----------
+                    Row(children: <Widget>[])
+                  ])),
+              // -------------------- Row: Comparison --------------------
+              Expanded(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                    // ---------- Section heading ----------
+                    Row(children: []),
+                    // ---------- Section buttons ----------
+                    Row(children: <Widget>[])
+                  ]))
+            ])));
   }
 }
