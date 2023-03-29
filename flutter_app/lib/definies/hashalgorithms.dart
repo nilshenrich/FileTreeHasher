@@ -3,15 +3,11 @@
 // # @author Nils Henrich
 // # @brief Global definitions about hash algorithms that are used
 // # @version 0.0.0+1
-// # @date 2023-03-19
+// # @date 2023-03-29
 // #
 // # @copyright Copyright (c) 2023
 // #
 // ####################################################################################################
-
-// Default hash algorithm
-// This algorithm is selected on startup
-const E_HashAlgorithms DefaultHashAlgorithm = E_HashAlgorithms.MD5;
 
 // ##################################################
 // # ENUM

@@ -12,6 +12,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
+import 'package:file_tree_hasher/definies/defaults.dart';
 
 void main() {
   runApp(const FileTreeHasher());
