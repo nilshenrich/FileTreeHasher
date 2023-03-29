@@ -30,7 +30,12 @@ class ControlHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
             // ---------- Section heading ----------
-            Row(children: []),
+            const Text("File tree control"),
+            const Divider(
+                thickness: 1.0,
+                color: Colors.black,
+                indent: 10.0,
+                endIndent: 10.0),
             // ---------- Section buttons ----------
             Row(children: <Widget>[
               IconButton(
