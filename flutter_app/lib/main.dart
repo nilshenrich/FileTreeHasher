@@ -11,8 +11,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
-import 'package:file_tree_hasher/definies/hashalgorithms.dart';
-import 'package:file_tree_hasher/definies/defaults.dart';
 
 void main() {
   runApp(const FileTreeHasher());
@@ -70,36 +68,5 @@ class ControlHeader extends StatelessWidget {
               // -------------------- Row: Comparison --------------------
               const T_HeaderControlSection(headingText: "Comparison")
             ])));
-  }
-}
-
-// ##################################################
-// # Global hash algorithm selector
-// # This widget is defined seperately as it requires a state
-// ##################################################
-class GlobalHashSelector extends StatefulWidget {
-  const GlobalHashSelector({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _GlobalHashSelector();
-}
-
-// State for hash selector dropdown
-class _GlobalHashSelector extends State<GlobalHashSelector> {
-  // Currently selected hash algorithm
-  String? _selected = DefaultHashAlgorithm.name;
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton(
-        value: _selected,
-        items: getAllHashAlgorithmNames()
-            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-            .toList(),
-        onChanged: (selected) {
-          setState(() {
-            _selected = selected;
-          });
-        });
   }
 }

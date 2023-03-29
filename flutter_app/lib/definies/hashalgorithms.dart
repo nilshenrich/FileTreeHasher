@@ -20,9 +20,14 @@ enum E_HashAlgorithms {
   SHA384("SHA384"),
   SHA512("SHA512");
 
+  // Constructor and value to hold
   const E_HashAlgorithms(this.value);
   final String value;
 
+// ##################################################
+// @brief: Getter: name
+// @return: String
+// ##################################################
   String get name {
     return value;
   }
@@ -34,7 +39,7 @@ enum E_HashAlgorithms {
 // ##################################################
 List<String> getAllHashAlgorithmNames() {
   List<String> returnList = [];
-  for (var alg in E_HashAlgorithms.values) {
+  for (E_HashAlgorithms alg in E_HashAlgorithms.values) {
     returnList.add(alg.name);
   }
   return returnList;
