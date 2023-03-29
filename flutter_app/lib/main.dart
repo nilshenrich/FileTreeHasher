@@ -42,18 +42,37 @@ class ControlHeader extends StatelessWidget {
                     tooltip: "Clear loaded file tree")
               ]),
               // -------------------- Row: Hash algorithm --------------------
-              T_HeaderControlSection(
+              const T_HeaderControlSection(
                   headingText: "Algorithm selection",
-                  items: [
-                    DropdownButton(
-                        items: getHashAlgorithmNames()
-                            .map((e) =>
-                                DropdownMenuItem(value: e, child: Text(e)))
-                            .toList(),
-                        onChanged: (selected) {})
-                  ]),
+                  items: [GlobalHashSelector()]),
               // -------------------- Row: Comparison --------------------
               const T_HeaderControlSection(headingText: "Comparison")
             ])));
+  }
+}
+
+class GlobalHashSelector extends StatefulWidget {
+  const GlobalHashSelector({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _GlobalHashSelector();
+}
+
+class _GlobalHashSelector extends State<GlobalHashSelector> {
+  // Currently selected hash algorithm
+  String? _selected = E_HashAlgorithms.MD5.value;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton(
+        value: _selected,
+        items: getHashAlgorithmNames()
+            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+            .toList(),
+        onChanged: (selected) {
+          setState(() {
+            _selected = selected;
+          });
+        });
   }
 }
