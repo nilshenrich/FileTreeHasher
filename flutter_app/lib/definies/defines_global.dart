@@ -1,3 +1,7 @@
+// ##################################################
+// # ENUM
+// # All hash algorithms the tool can handle
+// ##################################################
 enum E_HashAlgorithms {
   MD5("MD5"),
   SHA1("SHA1"),
@@ -9,6 +13,10 @@ enum E_HashAlgorithms {
   final String value;
 }
 
+// ##################################################
+// @brief: Get list of all known hash algorithm names
+// @return: List<String>
+// ##################################################
 List<String> getHashAlgorithmNames() {
   List<String> returnList = [];
   for (var alg in E_HashAlgorithms.values) {

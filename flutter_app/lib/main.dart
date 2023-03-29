@@ -6,6 +6,9 @@ void main() {
   runApp(const FileTreeHasher());
 }
 
+// ##################################################
+// # Actual entry point to app
+// ##################################################
 class FileTreeHasher extends StatelessWidget {
   const FileTreeHasher({super.key});
 
@@ -18,6 +21,13 @@ class FileTreeHasher extends StatelessWidget {
   }
 }
 
+// ##################################################
+// # App bar
+// # A header bar with global controls:
+// #  1. Load/clear file tree
+// #  2. Select global hash algorithm
+// #  3. Compare generated hashes, create/load checksum file
+// ##################################################
 class ControlHeader extends StatelessWidget {
   const ControlHeader({super.key});
 
@@ -51,6 +61,10 @@ class ControlHeader extends StatelessWidget {
   }
 }
 
+// ##################################################
+// # Global hash algorithm selector
+// # This widget is defined seperately as it requires a state
+// ##################################################
 class GlobalHashSelector extends StatefulWidget {
   const GlobalHashSelector({super.key});
 
@@ -58,6 +72,7 @@ class GlobalHashSelector extends StatefulWidget {
   State<StatefulWidget> createState() => _GlobalHashSelector();
 }
 
+// State for hash selector dropdown
 class _GlobalHashSelector extends State<GlobalHashSelector> {
   // Currently selected hash algorithm
   String? _selected = E_HashAlgorithms.MD5.value;
