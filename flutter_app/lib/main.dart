@@ -47,7 +47,7 @@ class ControlHeader extends StatelessWidget {
         appBar: AppBar(
             toolbarHeight: 89, // TODO: Set auto height
             flexibleSpace: Row(children: <Widget>[
-              // -------------------- Row: File tree --------------------
+              // -------------------- Section: File tree --------------------
               T_HeaderControlSection(headingText: "File tree control", items: [
                 // ---------- Button: load file tree ----------
                 IconButton(
@@ -55,17 +55,22 @@ class ControlHeader extends StatelessWidget {
                   icon: const Icon(Icons.drive_folder_upload),
                   tooltip: "Load file tree",
                 ),
-                // ---------- Button: clear file tree ----------
+                // ---------- Button: Load single file ----------
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.upload_file),
+                    tooltip: "Load single file"),
+                // ---------- Button: clear all ----------
                 IconButton(
                     onPressed: () {},
                     icon: const Icon(Icons.delete_forever_outlined),
-                    tooltip: "Clear loaded file tree")
+                    tooltip: "Clear all loaded files")
               ]),
-              // -------------------- Row: Hash algorithm --------------------
+              // -------------------- Section: Hash algorithm --------------------
               const T_HeaderControlSection(
                   headingText: "Algorithm selection",
                   items: [GlobalHashSelector()]),
-              // -------------------- Row: Comparison --------------------
+              // -------------------- Section: Comparison --------------------
               const T_HeaderControlSection(headingText: "Comparison")
             ])));
   }
