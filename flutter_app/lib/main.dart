@@ -71,7 +71,20 @@ class ControlHeader extends StatelessWidget {
                   headingText: "Algorithm selection",
                   items: [GlobalHashSelector()]),
               // -------------------- Section: Comparison --------------------
-              const T_HeaderControlSection(headingText: "Comparison")
+              T_HeaderControlSection(headingText: "Comparison", items: [
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.upload_outlined),
+                    tooltip: "Load checksum file"),
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.download_outlined),
+                    tooltip: "Safe checksum file"),
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.delete_forever_outlined),
+                    tooltip: "Clear comparison strings")
+              ])
             ])));
   }
 }
