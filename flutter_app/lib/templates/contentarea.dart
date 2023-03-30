@@ -11,9 +11,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
+import 'package:flutter_treeview/flutter_treeview.dart';
 
 // ##################################################
-// # TEMPLATE
+// # CONTENT
 // # Header bar containing general control elements
 // ##################################################
 AppBar T_HeaderBar = AppBar(
@@ -57,3 +58,10 @@ AppBar T_HeaderBar = AppBar(
             tooltip: "Clear comparison strings")
       ])
     ]));
+
+// ##################################################
+// # CONTENT
+// # Body containing loaded files and comparisons
+// ##################################################
+// TODO: Fill content
+Container T_BodyContent = Container();
