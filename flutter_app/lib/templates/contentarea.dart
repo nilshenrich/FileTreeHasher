@@ -9,6 +9,7 @@
 // #
 // ####################################################################################################
 
+import 'package:file_tree_hasher/templates/filetree.dart';
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:flutter_treeview/flutter_treeview.dart';
@@ -94,10 +95,5 @@ class _T_BodyContent extends State<T_BodyContent> {
 
 // DEV: Example file tree
 const List<Node> _exampleFileTree = [
-  Node(key: "f1", label: "Folder", expanded: true, children: [
-    Node(
-      key: "f2",
-      label: "Inner file",
-    )
-  ])
+  T_FolderView("f1", "Folder", content: [T_FileView("f1", "Inner file")])
 ];
