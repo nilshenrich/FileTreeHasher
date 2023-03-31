@@ -17,9 +17,13 @@ import 'package:flutter_treeview/flutter_treeview.dart';
 // # CONTENT
 // # Header bar containing general control elements
 // ##################################################
-AppBar T_HeaderBar = AppBar(
-    toolbarHeight: 89, // TODO: Set auto height
-    flexibleSpace: Row(children: <Widget>[
+class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
+  const T_HeaderBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+        flexibleSpace: Row(children: <Widget>[
       // -------------------- Section: File tree --------------------
       T_HeaderControlSection(headingText: "File tree control", items: [
         // ---------- Button: load file tree ----------
@@ -58,10 +62,20 @@ AppBar T_HeaderBar = AppBar(
             tooltip: "Clear comparison strings")
       ])
     ]));
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(89); // TODO: Set auto height
+}
 
 // ##################################################
 // # CONTENT
 // # Body containing loaded files and comparisons
 // ##################################################
 // TODO: Fill content
-Container T_BodyContent = Container();
+class T_BodyContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
