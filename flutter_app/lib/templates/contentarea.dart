@@ -65,7 +65,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(89); // TODO: Set auto height
+  Size get preferredSize => const Size.fromHeight(89); // TODO: Set auto height
 }
 
 // ##################################################
@@ -73,9 +73,31 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
 // # Body containing loaded files and comparisons
 // ##################################################
 // TODO: Fill content
-class T_BodyContent extends StatelessWidget {
+class T_BodyContent extends StatefulWidget {
+  const T_BodyContent({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _T_BodyContent();
+}
+
+// Body state
+class _T_BodyContent extends State<T_BodyContent> {
+// Tree view controller
+  final TreeViewController _controller =
+      TreeViewController(children: _exampleFileTree);
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return TreeView(controller: _controller);
   }
 }
+
+// DEV: Example file tree
+const List<Node> _exampleFileTree = [
+  Node(key: "f1", label: "Folder", expanded: true, children: [
+    Node(
+      key: "f2",
+      label: "Inner file",
+    )
+  ])
+];
