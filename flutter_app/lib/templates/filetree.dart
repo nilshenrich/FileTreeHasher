@@ -24,6 +24,12 @@ abstract class T_FileTreeItem extends Node {
       required IconData icon,
       List<T_FileTreeItem> content = const []})
       : super(key: path, label: name, icon: icon, children: content);
+
+  // ##################################################
+  // @brief: Get item path
+  // @return: String
+  // ##################################################
+  String get path => super.key;
 }
 
 // ##################################################

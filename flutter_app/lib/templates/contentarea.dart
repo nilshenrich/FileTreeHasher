@@ -95,5 +95,8 @@ class _T_BodyContent extends State<T_BodyContent> {
 
 // DEV: Example file tree
 const List<Node> _exampleFileTree = [
-  T_FolderView("f1", "Folder", content: [T_FileView("f1", "Inner file")])
+  T_FolderView(
+      path: "<some folder path>",
+      name: "Top folder",
+      content: [T_FileView(path: "<some file path>", name: "Inner file")])
 ];
