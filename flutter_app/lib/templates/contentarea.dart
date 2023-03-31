@@ -73,7 +73,6 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
 // # CONTENT
 // # Body containing loaded files and comparisons
 // ##################################################
-// TODO: Fill content
 class T_BodyContent extends StatefulWidget {
   const T_BodyContent({super.key});
 
