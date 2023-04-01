@@ -97,5 +97,6 @@ const List<Node> _exampleFileTree = [
   T_FolderView(
       path: "<some folder path>",
       name: "Top folder",
+      expanded: true,
       content: [T_FileView(path: "<some file path>", name: "Inner file")])
 ];

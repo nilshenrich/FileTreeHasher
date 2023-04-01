@@ -22,8 +22,14 @@ abstract class T_FileTreeItem extends Node {
       {required String path,
       required String name,
       required IconData icon,
+      required bool expanded,
       List<T_FileTreeItem> content = const []})
-      : super(key: path, label: name, icon: icon, children: content);
+      : super(
+            key: path,
+            label: name,
+            icon: icon,
+            children: content,
+            expanded: expanded);
 
   // ##################################################
   // @brief: Get item path
@@ -41,8 +47,14 @@ class T_FolderView extends T_FileTreeItem {
   const T_FolderView(
       {required String path,
       required String name,
+      bool expanded = false,
       List<T_FileTreeItem> content = const []})
-      : super(path: path, name: name, icon: Icons.folder, content: content);
+      : super(
+            path: path,
+            name: name,
+            icon: Icons.folder,
+            expanded: expanded,
+            content: content);
 }
 
 // ##################################################
@@ -56,5 +68,5 @@ class T_FileView extends T_FileTreeItem {
       required String name,
       String hashGen = "",
       String hashComp = ""})
-      : super(path: path, name: name, icon: Icons.description);
+      : super(path: path, name: name, icon: Icons.description, expanded: false);
 }
