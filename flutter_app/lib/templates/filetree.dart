@@ -34,19 +34,26 @@ abstract class T_FileTreeItem extends StatelessWidget {
 // # Single folder view
 // ##################################################
 class T_FolderView extends T_FileTreeItem {
+  // Parameter
+  final List<T_FileTreeItem> subitems;
+
   // Constructor
   T_FolderView(
-      {required String path,
-      required String name,
-      List<T_FileTreeItem> subitems = const []})
+      {required String path, required String name, this.subitems = const []})
       : super(name: name, path: path);
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [Icon(Icons.folder), Text(name)]);
+    return Column(children: [
+      Row(children: [Icon(Icons.folder), Text(name)]),
+      buildSubitems()
+    ]);
   }
 
   // Sub-items
+  Column buildSubitems() {
+    return Column(children: subitems);
+  }
 }
 
 // ##################################################
