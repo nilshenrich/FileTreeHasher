@@ -17,14 +17,22 @@ import 'package:flutter/material.dart';
 // ##################################################
 abstract class T_FileTreeItem extends StatelessWidget {
 // Parameter
+  final IconData icon;
+  final String name;
+  final String path;
   final List<Widget> elements;
 
   // Constructor
-  const T_FileTreeItem({super.key, required this.elements});
+  const T_FileTreeItem(
+      {super.key,
+      required this.icon,
+      required this.name,
+      required this.path,
+      required this.elements});
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: elements);
+    return Row(children: [Icon(icon), Text(name)]);
   }
 
   // ##################################################
@@ -43,12 +51,7 @@ class T_FolderView extends T_FileTreeItem {
       {required String path,
       required String name,
       List<T_FileTreeItem> subitems = const []})
-      : super(elements: [
-          Icon(Icons.expand_more),
-          Icon(Icons.folder),
-          Text(name),
-          Text("<hash dropdown>")
-        ]);
+      : super(icon: Icons.folder, name: name, path: path, elements: []);
 }
 
 // ##################################################
@@ -62,13 +65,7 @@ class T_FileView extends T_FileTreeItem {
       required String name,
       String hashGen = "",
       String hashComp = ""})
-      : super(elements: [
-          Icon(Icons.description),
-          Text(name),
-          Text(hashGen),
-          Text(hashComp),
-          Text("<hash dropdown>")
-        ]);
+      : super(icon: Icons.description, name: name, path: path, elements: []);
 }
 
 // ##################################################
