@@ -84,10 +84,15 @@ class T_BodyContent extends StatelessWidget {
 // DEV: Example file tree
 T_FileTreeView _exampleFileTree = T_FileTreeView(
   items: [
-    T_FolderView(
-        path: "/root/folder",
-        name: "top-folder",
-        subitems: [T_FileView(path: "/root/folder/file", name: "sub-file")]),
-    T_FileView(path: "</root/file>", name: "top-file")
+    T_FolderView(path: "/root/folder", name: "top-folder", subitems: [
+      T_FolderView(path: "/root/folder/folder", name: "sub-folder"),
+      T_FolderView(
+          path: "/root/folder/folder-long", name: "sub-folder-with-long-name"),
+      T_FileView(path: "/root/folder/file", name: "sub-file"),
+      T_FileView(
+          path: "/root/folder/file-long", name: "sub-file-with-long-name")
+    ]),
+    T_FolderView(path: "/root/folder-long", name: "folder-with-long-name"),
+    T_FileView(path: "/root/file", name: "top-file")
   ],
 );
