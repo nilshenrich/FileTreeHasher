@@ -16,24 +16,12 @@ import 'package:flutter/material.dart';
 // # Single file tree element (folder or file)
 // ##################################################
 abstract class T_FileTreeItem extends StatelessWidget {
-// Parameter
-  final IconData icon;
+  // Parameter
   final String name;
   final String path;
-  final List<Widget> elements;
 
   // Constructor
-  const T_FileTreeItem(
-      {super.key,
-      required this.icon,
-      required this.name,
-      required this.path,
-      required this.elements});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: [Icon(icon), Text(name)]);
-  }
+  const T_FileTreeItem({super.key, required this.name, required this.path});
 
   // ##################################################
   // @brief: Get item path
@@ -51,7 +39,14 @@ class T_FolderView extends T_FileTreeItem {
       {required String path,
       required String name,
       List<T_FileTreeItem> subitems = const []})
-      : super(icon: Icons.folder, name: name, path: path, elements: []);
+      : super(name: name, path: path);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [Icon(Icons.folder), Text(name)]);
+  }
+
+  // Sub-items
 }
 
 // ##################################################
@@ -65,7 +60,12 @@ class T_FileView extends T_FileTreeItem {
       required String name,
       String hashGen = "",
       String hashComp = ""})
-      : super(icon: Icons.description, name: name, path: path, elements: []);
+      : super(name: name, path: path);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [Icon(Icons.description), Text(name)]);
+  }
 }
 
 // ##################################################
