@@ -51,8 +51,8 @@ class T_FolderView extends T_FileTreeItem {
   }
 
   // Sub-items
-  Column buildSubitems() {
-    return Column(children: subitems);
+  Row buildSubitems() {
+    return Row(children: [SizedBox(width: 20), Column(children: subitems)]);
   }
 }
 
