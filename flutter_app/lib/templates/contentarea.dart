@@ -10,7 +10,6 @@
 // ####################################################################################################
 
 import 'package:flutter/material.dart';
-import 'package:flutter_treeview/flutter_treeview.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
 
@@ -82,21 +81,13 @@ class T_BodyContent extends StatefulWidget {
 
 // Body state
 class _T_BodyContent extends State<T_BodyContent> {
-// Tree view controller
-  final TreeViewController _controller =
-      TreeViewController(children: _exampleFileTree);
-
   @override
   Widget build(BuildContext context) {
-    return TreeView(controller: _controller);
+    return _exampleFileTree;
   }
 }
 
 // DEV: Example file tree
-const List<Node> _exampleFileTree = [
-  T_FolderView(
-      path: "<some folder path>",
-      name: "Top folder",
-      expanded: true,
-      content: [T_FileView(path: "<some file path>", name: "Inner file")])
-];
+T_FileTreeView _exampleFileTree = T_FileTreeView(
+  items: [T_FolderView(path: "<path to folder>", name: "Folder")],
+);
