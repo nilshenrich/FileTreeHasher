@@ -52,13 +52,23 @@ class T_FolderView extends T_FileTreeItem {
 // ##################################################
 class _T_FolderView extends State<T_FolderView> {
   // States
-  bool extended = true; // Is folder extended?
+  bool expanded = true; // Is folder extended?
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       Row(children: [
-        Icon(Icons.chevron_right),
+        SizedBox(
+            width: 24,
+            height: 24,
+            child: IconButton(
+              icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              padding: EdgeInsets.zero,
+              onPressed: click_expander,
+            )),
         Icon(Icons.folder),
         Text(widget.name)
       ]),
@@ -67,11 +77,21 @@ class _T_FolderView extends State<T_FolderView> {
   }
 
   // Sub-items
-  Row buildSubitems() {
-    return Row(children: [
-      SizedBox(width: 20),
-      Expanded(child: Column(children: widget.subitems))
-    ]);
+  Visibility buildSubitems() {
+    return Visibility(
+        visible: expanded,
+        child: Row(children: [
+          SizedBox(width: 20),
+          Expanded(child: Column(children: widget.subitems))
+        ]));
+  }
+
+  // Expand or collapse content
+  // TODO: If top folder expands, all sub folders are expanded too even if they were not expanded before
+  void click_expander() {
+    setState(() {
+      expanded = !expanded;
+    });
   }
 }
 
