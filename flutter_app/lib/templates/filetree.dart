@@ -72,7 +72,8 @@ class _T_FolderView extends State<T_FolderView> {
             )),
         const Icon(Icons.folder),
         Expanded(child: Text(widget.name)),
-        const T_FileHashSelector(height: 25, fontSize: 14)
+        const T_FileHashSelector(height: 25, fontSize: 14),
+        const SizedBox(width: 200)
       ]),
       buildSubitems()
     ]);
@@ -126,7 +127,13 @@ class _T_FileView extends State<T_FileView> {
       const SizedBox(width: 24),
       const Icon(Icons.description),
       Expanded(child: Text(widget.name)),
-      const T_FileHashSelector(height: 25, fontSize: 14)
+      const T_FileHashSelector(height: 25, fontSize: 14),
+      const SizedBox(
+          width: 200,
+          height: 25,
+          child: TextField(
+              style: TextStyle(fontSize: 14),
+              decoration: InputDecoration(border: OutlineInputBorder())))
     ]);
   }
 }
