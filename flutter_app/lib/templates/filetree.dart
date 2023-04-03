@@ -10,32 +10,23 @@
 // ####################################################################################################
 
 import 'package:flutter/material.dart';
-import 'package:flutter_treeview/flutter_treeview.dart';
 
 // ##################################################
 // # TEMPLATE
 // # Single file tree element (folder or file)
 // ##################################################
-abstract class T_FileTreeItem extends Node {
+abstract class T_FileTreeItem extends StatefulWidget {
+  // Parameter
+  final String name;
+  final String path;
+
   // Constructor
-  const T_FileTreeItem(
-      {required String path,
-      required String name,
-      required IconData icon,
-      required bool expanded,
-      List<T_FileTreeItem> content = const []})
-      : super(
-            key: path,
-            label: name,
-            icon: icon,
-            children: content,
-            expanded: expanded);
+  const T_FileTreeItem({super.key, required this.name, required this.path});
 
   // ##################################################
   // @brief: Get item path
   // @return: String
   // ##################################################
-  String get path => super.key;
 }
 
 // ##################################################
@@ -43,18 +34,65 @@ abstract class T_FileTreeItem extends Node {
 // # Single folder view
 // ##################################################
 class T_FolderView extends T_FileTreeItem {
+  // Parameter
+  final List<T_FileTreeItem> subitems;
+
   // Constructor
-  const T_FolderView(
-      {required String path,
-      required String name,
-      bool expanded = false,
-      List<T_FileTreeItem> content = const []})
-      : super(
-            path: path,
-            name: name,
-            icon: Icons.folder,
-            expanded: expanded,
-            content: content);
+  T_FolderView(
+      {required String path, required String name, this.subitems = const []})
+      : super(name: name, path: path);
+
+  @override
+  State<StatefulWidget> createState() => _T_FolderView();
+}
+
+// ##################################################
+// # STATE
+// # Single folder view state
+// ##################################################
+class _T_FolderView extends State<T_FolderView> {
+  // States
+  bool expanded = true; // Is folder extended?
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Row(children: [
+        SizedBox(
+            width: 24,
+            height: 24,
+            child: IconButton(
+              icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              padding: EdgeInsets.zero,
+              onPressed: click_expander,
+            )),
+        Icon(Icons.folder),
+        Text(widget.name)
+      ]),
+      buildSubitems()
+    ]);
+  }
+
+  // Sub-items
+  Visibility buildSubitems() {
+    return Visibility(
+        visible: expanded,
+        child: Row(children: [
+          SizedBox(width: 20),
+          Expanded(child: Column(children: widget.subitems))
+        ]));
+  }
+
+  // Expand or collapse content
+  // TODO: If top folder expands, all sub folders are expanded too even if they were not expanded before
+  void click_expander() {
+    setState(() {
+      expanded = !expanded;
+    });
+  }
 }
 
 // ##################################################
@@ -63,10 +101,43 @@ class T_FolderView extends T_FileTreeItem {
 // ##################################################
 class T_FileView extends T_FileTreeItem {
   // Constructor
-  const T_FileView(
+  T_FileView(
       {required String path,
       required String name,
       String hashGen = "",
       String hashComp = ""})
-      : super(path: path, name: name, icon: Icons.description, expanded: false);
+      : super(name: name, path: path);
+
+  @override
+  State<StatefulWidget> createState() => _T_FileView();
+}
+
+// ##################################################
+// # STATE
+// # Single file view state
+// ##################################################
+class _T_FileView extends State<T_FileView> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      SizedBox(width: 24),
+      Icon(Icons.description),
+      Text(widget.name)
+    ]);
+  }
+}
+
+// ##################################################
+// # TEMPLATE
+// # File tree view area
+// ##################################################
+class T_FileTreeView extends StatelessWidget {
+  final List<T_FileTreeItem> items;
+
+  const T_FileTreeView({super.key, required this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: items);
+  }
 }

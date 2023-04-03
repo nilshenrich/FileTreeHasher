@@ -43,6 +43,6 @@ class ControlHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(appBar: T_HeaderBar(), body: T_BodyContent());
+    return Scaffold(appBar: T_HeaderBar(), body: T_BodyContent());
   }
 }

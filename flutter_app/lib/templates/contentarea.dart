@@ -10,7 +10,6 @@
 // ####################################################################################################
 
 import 'package:flutter/material.dart';
-import 'package:flutter_treeview/flutter_treeview.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
 
@@ -73,30 +72,31 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
 // # CONTENT
 // # Body containing loaded files and comparisons
 // ##################################################
-class T_BodyContent extends StatefulWidget {
+class T_BodyContent extends StatelessWidget {
   const T_BodyContent({super.key});
 
   @override
-  State<StatefulWidget> createState() => _T_BodyContent();
-}
-
-// Body state
-class _T_BodyContent extends State<T_BodyContent> {
-// Tree view controller
-  final TreeViewController _controller =
-      TreeViewController(children: _exampleFileTree);
-
-  @override
   Widget build(BuildContext context) {
-    return TreeView(controller: _controller);
+    return _exampleFileTree;
   }
 }
 
 // DEV: Example file tree
-const List<Node> _exampleFileTree = [
-  T_FolderView(
-      path: "<some folder path>",
-      name: "Top folder",
-      expanded: true,
-      content: [T_FileView(path: "<some file path>", name: "Inner file")])
-];
+T_FileTreeView _exampleFileTree = T_FileTreeView(
+  items: [
+    T_FolderView(path: "/root/folder", name: "top-folder", subitems: [
+      T_FolderView(path: "/root/folder/folder", name: "sub-folder", subitems: [
+        T_FolderView(
+            path: "/root/folder/folder/folder", name: "sub-sub-folder"),
+        T_FileView(path: "/root/folder/folder/file", name: "sub-sub-file")
+      ]),
+      T_FolderView(
+          path: "/root/folder/folder-long", name: "sub-folder-with-long-name"),
+      T_FileView(path: "/root/folder/file", name: "sub-file"),
+      T_FileView(
+          path: "/root/folder/file-long", name: "sub-file-with-long-name")
+    ]),
+    T_FolderView(path: "/root/folder-long", name: "folder-with-long-name"),
+    T_FileView(path: "/root/file", name: "top-file")
+  ],
+);

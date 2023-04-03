@@ -69,6 +69,7 @@ class GlobalHashSelector extends StatefulWidget {
 // State for hash selector dropdown
 class _GlobalHashSelector extends State<GlobalHashSelector> {
   // Currently selected hash algorithm
+  // TODO: Must be null safe?
   String? _selected = DefaultHashAlgorithm.name;
 
   @override
