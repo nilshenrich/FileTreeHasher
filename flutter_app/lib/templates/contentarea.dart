@@ -96,7 +96,11 @@ T_FileTreeView _exampleFileTree = const T_FileTreeView(
       T_FolderView(path: "/root/folder/folder", name: "sub-folder", subitems: [
         T_FolderView(
             path: "/root/folder/folder/folder", name: "sub-sub-folder"),
-        T_FileView(path: "/root/folder/folder/file", name: "sub-sub-file")
+        T_FileView(
+          path: "/root/folder/folder/file",
+          name: "sub-sub-file",
+          hashComp: "abcd5ff",
+        )
       ]),
       T_FolderView(
           path: "/root/folder/folder-long", name: "sub-folder-with-long-name"),

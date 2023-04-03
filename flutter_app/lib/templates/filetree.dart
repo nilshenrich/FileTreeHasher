@@ -103,13 +103,17 @@ class _T_FolderView extends State<T_FolderView> {
 // # Single file view
 // ##################################################
 class T_FileView extends T_FileTreeItem {
+  // Parameter
+  final String hashGen;
+  final String hashComp;
+
   // Constructor
   const T_FileView(
       {super.key,
       required String path,
       required String name,
-      String hashGen = "",
-      String hashComp = ""})
+      this.hashGen = "",
+      this.hashComp = ""})
       : super(name: name, path: path);
 
   @override
@@ -128,12 +132,14 @@ class _T_FileView extends State<T_FileView> {
       const Icon(Icons.description),
       Expanded(child: Text(widget.name)),
       const T_FileHashSelector(height: 25, fontSize: 14),
-      const SizedBox(
+      SizedBox(
           width: 200,
           height: 25,
           child: TextField(
-              style: TextStyle(fontSize: 14),
-              decoration: InputDecoration(border: OutlineInputBorder())))
+            style: const TextStyle(fontSize: 14),
+            decoration: const InputDecoration(border: OutlineInputBorder()),
+            controller: TextEditingController(text: widget.hashComp),
+          ))
     ]);
   }
 }
