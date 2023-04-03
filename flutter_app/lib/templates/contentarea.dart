@@ -17,6 +17,11 @@ import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
 
 // ##################################################
+// # Global hash selector
+// ##################################################
+T_GlobalHashSelector GlobalHashSelector = const T_GlobalHashSelector();
+
+// ##################################################
 // # CONTENT
 // # Header bar containing general control elements
 // ##################################################
@@ -47,8 +52,8 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
             tooltip: "Clear all loaded files")
       ]),
       // -------------------- Section: Hash algorithm --------------------
-      const T_HeaderControlSection(
-          headingText: "Algorithm selection", items: [T_GlobalHashSelector()]),
+      T_HeaderControlSection(
+          headingText: "Algorithm selection", items: [GlobalHashSelector]),
       // -------------------- Section: Comparison --------------------
       T_HeaderControlSection(headingText: "Comparison", items: [
         IconButton(

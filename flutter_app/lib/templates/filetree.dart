@@ -11,6 +11,7 @@
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names
 
+import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
 
 // ##################################################
@@ -70,7 +71,8 @@ class _T_FolderView extends State<T_FolderView> {
               onPressed: click_expander,
             )),
         const Icon(Icons.folder),
-        Text(widget.name)
+        Expanded(child: Text(widget.name)),
+        T_FileHashSelector()
       ]),
       buildSubitems()
     ]);
@@ -123,7 +125,8 @@ class _T_FileView extends State<T_FileView> {
     return Row(children: [
       const SizedBox(width: 24),
       const Icon(Icons.description),
-      Text(widget.name)
+      Expanded(child: Text(widget.name)),
+      T_FileHashSelector()
     ]);
   }
 }
