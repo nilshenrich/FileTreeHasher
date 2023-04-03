@@ -36,16 +36,18 @@ class _T_HashSelector extends State<T_HashSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton(
-        value: _selected,
-        items: getAllHashAlgorithmNames()
-            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-            .toList(),
-        onChanged: (selected) {
-          setState(() {
-            _selected = selected;
-          });
-        });
+    return SizedBox(
+        height: 48, // TODO: Shall be accessable from derived classes
+        child: DropdownButton(
+            value: _selected,
+            items: getAllHashAlgorithmNames()
+                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                .toList(),
+            onChanged: (selected) {
+              setState(() {
+                _selected = selected;
+              });
+            }));
   }
 }
 
