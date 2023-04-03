@@ -29,3 +29,6 @@ const double Style_FileTree_ComparisonInput_FontSize_px = 14;
 
 // Sub-item
 const double Style_FileTree_SubItem_ShiftRight_px = 20;
+
+// Item spacing
+const double Style_FileTree_Item_ElementSpaces_px = 10;
