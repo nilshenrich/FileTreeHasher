@@ -26,7 +26,7 @@ T_GlobalHashSelector GlobalHashSelector = const T_GlobalHashSelector();
 // # Header bar containing general control elements
 // ##################################################
 class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
-  const T_HeaderBar({Key? key}) : super(key: key);
+  const T_HeaderBar({super.key});
 
   @override
   Widget build(BuildContext context) {

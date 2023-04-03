@@ -23,10 +23,10 @@ class T_HeaderControlSection extends StatelessWidget {
   final List<Widget> items;
 
   const T_HeaderControlSection({
-    Key? key,
+    super.key,
     required this.headingText,
     this.items = const [],
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

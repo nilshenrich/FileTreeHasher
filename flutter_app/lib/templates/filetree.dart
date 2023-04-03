@@ -38,10 +38,9 @@ class T_FolderView extends T_FileTreeItem {
   // Constructor
   const T_FolderView(
       {super.key,
-      required String path,
-      required String name,
-      this.subitems = const []})
-      : super(name: name, path: path);
+      required super.path,
+      required super.name,
+      this.subitems = const []});
 
   @override
   State<StatefulWidget> createState() => _T_FolderView();
@@ -110,11 +109,10 @@ class T_FileView extends T_FileTreeItem {
   // Constructor
   const T_FileView(
       {super.key,
-      required String path,
-      required String name,
+      required super.path,
+      required super.name,
       this.hashGen = "",
-      this.hashComp = ""})
-      : super(name: name, path: path);
+      this.hashComp = ""});
 
   @override
   State<StatefulWidget> createState() => _T_FileView();
