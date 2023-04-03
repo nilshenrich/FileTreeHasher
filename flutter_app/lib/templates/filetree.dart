@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 // # TEMPLATE
 // # Single file tree element (folder or file)
 // ##################################################
-abstract class T_FileTreeItem extends StatelessWidget {
+abstract class T_FileTreeItem extends StatefulWidget {
   // Parameter
   final String name;
   final String path;
@@ -43,9 +43,18 @@ class T_FolderView extends T_FileTreeItem {
       : super(name: name, path: path);
 
   @override
+  State<StatefulWidget> createState() => _T_FolderView();
+}
+
+// ##################################################
+// # STATE
+// # Single folder view state
+// ##################################################
+class _T_FolderView extends State<T_FolderView> {
+  @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Row(children: [Icon(Icons.folder), Text(name)]),
+      Row(children: [Icon(Icons.folder), Text(widget.name)]),
       buildSubitems()
     ]);
   }
@@ -54,7 +63,7 @@ class T_FolderView extends T_FileTreeItem {
   Row buildSubitems() {
     return Row(children: [
       SizedBox(width: 20),
-      Expanded(child: Column(children: subitems))
+      Expanded(child: Column(children: widget.subitems))
     ]);
   }
 }
@@ -73,8 +82,17 @@ class T_FileView extends T_FileTreeItem {
       : super(name: name, path: path);
 
   @override
+  State<StatefulWidget> createState() => _T_FileView();
+}
+
+// ##################################################
+// # STATE
+// # Single file view state
+// ##################################################
+class _T_FileView extends State<T_FileView> {
+  @override
   Widget build(BuildContext context) {
-    return Row(children: [Icon(Icons.description), Text(name)]);
+    return Row(children: [Icon(Icons.description), Text(widget.name)]);
   }
 }
 
