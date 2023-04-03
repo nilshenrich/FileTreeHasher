@@ -1,7 +1,8 @@
 // ####################################################################################################
 // # @file hashselector.dart
 // # @author Nils Henrich
-// # @brief Template for hash selection drop-down menu. Globally in header bar or special in file tree
+// # @brief Template for hash selection drop-down menu.
+// #        Globally in header bar or special in file tree
 // # @version 0.0.0+1
 // # @date 2023-04-03
 // #
@@ -20,7 +21,10 @@ import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:flutter/material.dart';
 
 abstract class T_HashSelector extends StatefulWidget {
-  const T_HashSelector({super.key});
+  final double? height;
+  final double? fontSize;
+
+  const T_HashSelector({super.key, this.height, this.fontSize});
 
   @override
   State<StatefulWidget> createState() => _T_HashSelector();
@@ -37,9 +41,12 @@ class _T_HashSelector extends State<T_HashSelector> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 48, // TODO: Shall be accessable from derived classes
+        height: widget.height ?? 48,
         child: DropdownButton(
             value: _selected,
+            style: TextStyle(
+                fontSize: widget.fontSize ?? 16,
+                color: Colors.black), // Schriftfarbe auf schwarz setzen
             items: getAllHashAlgorithmNames()
                 .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                 .toList(),
@@ -56,7 +63,7 @@ class _T_HashSelector extends State<T_HashSelector> {
 // # Global hash selector
 // ##################################################
 class T_GlobalHashSelector extends T_HashSelector {
-  const T_GlobalHashSelector({super.key});
+  const T_GlobalHashSelector({super.key, super.height, super.fontSize});
 }
 
 // ##################################################
@@ -64,5 +71,5 @@ class T_GlobalHashSelector extends T_HashSelector {
 // # File tree item hash selector
 // ##################################################
 class T_FileHashSelector extends T_HashSelector {
-  const T_FileHashSelector({super.key});
+  const T_FileHashSelector({super.key, super.height, super.fontSize});
 }
