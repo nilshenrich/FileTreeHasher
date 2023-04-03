@@ -9,6 +9,8 @@
 // #
 // ####################################################################################################
 
+// ignore_for_file: camel_case_types, non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 // ##################################################
@@ -22,11 +24,6 @@ abstract class T_FileTreeItem extends StatefulWidget {
 
   // Constructor
   const T_FileTreeItem({super.key, required this.name, required this.path});
-
-  // ##################################################
-  // @brief: Get item path
-  // @return: String
-  // ##################################################
 }
 
 // ##################################################
@@ -38,8 +35,11 @@ class T_FolderView extends T_FileTreeItem {
   final List<T_FileTreeItem> subitems;
 
   // Constructor
-  T_FolderView(
-      {required String path, required String name, this.subitems = const []})
+  const T_FolderView(
+      {super.key,
+      required String path,
+      required String name,
+      this.subitems = const []})
       : super(name: name, path: path);
 
   @override
@@ -69,7 +69,7 @@ class _T_FolderView extends State<T_FolderView> {
               padding: EdgeInsets.zero,
               onPressed: click_expander,
             )),
-        Icon(Icons.folder),
+        const Icon(Icons.folder),
         Text(widget.name)
       ]),
       buildSubitems()
@@ -81,7 +81,7 @@ class _T_FolderView extends State<T_FolderView> {
     return Visibility(
         visible: expanded,
         child: Row(children: [
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Expanded(child: Column(children: widget.subitems))
         ]));
   }
@@ -101,8 +101,9 @@ class _T_FolderView extends State<T_FolderView> {
 // ##################################################
 class T_FileView extends T_FileTreeItem {
   // Constructor
-  T_FileView(
-      {required String path,
+  const T_FileView(
+      {super.key,
+      required String path,
       required String name,
       String hashGen = "",
       String hashComp = ""})
@@ -120,8 +121,8 @@ class _T_FileView extends State<T_FileView> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      SizedBox(width: 24),
-      Icon(Icons.description),
+      const SizedBox(width: 24),
+      const Icon(Icons.description),
       Text(widget.name)
     ]);
   }

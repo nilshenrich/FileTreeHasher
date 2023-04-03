@@ -9,6 +9,8 @@
 // #
 // ####################################################################################################
 
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';

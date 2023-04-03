@@ -9,6 +9,8 @@
 // #
 // ####################################################################################################
 
+// ignore_for_file: camel_case_types, constant_identifier_names
+
 // ##################################################
 // # ENUM
 // # All hash algorithms the tool can handle

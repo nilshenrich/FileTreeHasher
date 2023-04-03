@@ -9,6 +9,8 @@
 // #
 // ####################################################################################################
 
+// ignore_for_file: constant_identifier_names
+
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 
 // Default hash algorithm

@@ -9,6 +9,8 @@
 // #
 // ####################################################################################################
 
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
@@ -82,7 +84,7 @@ class T_BodyContent extends StatelessWidget {
 }
 
 // DEV: Example file tree
-T_FileTreeView _exampleFileTree = T_FileTreeView(
+T_FileTreeView _exampleFileTree = const T_FileTreeView(
   items: [
     T_FolderView(path: "/root/folder", name: "top-folder", subitems: [
       T_FolderView(path: "/root/folder/folder", name: "sub-folder", subitems: [
