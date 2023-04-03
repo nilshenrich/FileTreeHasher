@@ -99,6 +99,7 @@ T_FileTreeView _exampleFileTree = const T_FileTreeView(
         T_FileView(
           path: "/root/folder/folder/file",
           name: "sub-sub-file",
+          hashGen: "abcd5ff",
           hashComp: "abcd5ff",
         )
       ]),

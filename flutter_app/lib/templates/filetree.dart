@@ -11,6 +11,7 @@
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names
 
+import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
 
@@ -59,8 +60,8 @@ class _T_FolderView extends State<T_FolderView> {
     return Column(children: [
       Row(children: [
         SizedBox(
-            width: 24,
-            height: 24,
+            width: Style_FileTree_Icon_Width_px,
+            height: Style_FileTree_Icon_Height_px,
             child: IconButton(
               icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
               hoverColor: Colors.transparent,
@@ -71,8 +72,10 @@ class _T_FolderView extends State<T_FolderView> {
             )),
         const Icon(Icons.folder),
         Expanded(child: Text(widget.name)),
-        const T_FileHashSelector(height: 25, fontSize: 14),
-        const SizedBox(width: 200)
+        const T_FileHashSelector(
+            height: Style_FileTree_HashSelector_Height_px,
+            fontSize: Style_FileTree_HashSelector_FontSize_px),
+        const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
       ]),
       buildSubitems()
     ]);
@@ -83,7 +86,7 @@ class _T_FolderView extends State<T_FolderView> {
     return Visibility(
         visible: expanded,
         child: Row(children: [
-          const SizedBox(width: 20),
+          const SizedBox(width: Style_FileTree_SubItem_ShiftRight_px),
           Expanded(child: Column(children: widget.subitems))
         ]));
   }
@@ -126,15 +129,19 @@ class _T_FileView extends State<T_FileView> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      const SizedBox(width: 24),
+      const SizedBox(width: Style_FileTree_Icon_Width_px),
       const Icon(Icons.description),
-      Expanded(child: Text(widget.name)),
-      const T_FileHashSelector(height: 25, fontSize: 14),
+      Text(widget.name),
+      Expanded(child: Text(widget.hashGen)),
+      const T_FileHashSelector(
+          height: Style_FileTree_HashSelector_Height_px,
+          fontSize: Style_FileTree_HashSelector_FontSize_px),
       SizedBox(
-          width: 200,
-          height: 25,
+          width: Style_FileTree_ComparisonInput_Width_px,
+          height: Style_FileTree_ComparisonInput_Height_px,
           child: TextField(
-            style: const TextStyle(fontSize: 14),
+            style: const TextStyle(
+                fontSize: Style_FileTree_ComparisonInput_FontSize_px),
             decoration: const InputDecoration(border: OutlineInputBorder()),
             controller: TextEditingController(text: widget.hashComp),
           ))
