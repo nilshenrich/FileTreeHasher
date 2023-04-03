@@ -51,10 +51,17 @@ class T_FolderView extends T_FileTreeItem {
 // # Single folder view state
 // ##################################################
 class _T_FolderView extends State<T_FolderView> {
+  // States
+  bool extended = true; // Is folder extended?
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Row(children: [Icon(Icons.folder), Text(widget.name)]),
+      Row(children: [
+        Icon(Icons.chevron_right),
+        Icon(Icons.folder),
+        Text(widget.name)
+      ]),
       buildSubitems()
     ]);
   }
@@ -92,7 +99,11 @@ class T_FileView extends T_FileTreeItem {
 class _T_FileView extends State<T_FileView> {
   @override
   Widget build(BuildContext context) {
-    return Row(children: [Icon(Icons.description), Text(widget.name)]);
+    return Row(children: [
+      SizedBox(width: 24),
+      Icon(Icons.description),
+      Text(widget.name)
+    ]);
   }
 }
 
