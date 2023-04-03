@@ -21,9 +21,11 @@ import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:flutter/material.dart';
 
 abstract class T_HashSelector extends StatefulWidget {
+  // Sizing
   final double height;
   final double fontSize;
 
+  // Constructor
   const T_HashSelector({super.key, this.height = 48, this.fontSize = 16});
 
   @override
@@ -44,9 +46,7 @@ class _T_HashSelector extends State<T_HashSelector> {
         height: widget.height,
         child: DropdownButton(
             value: _selected,
-            style: TextStyle(
-                fontSize: widget.fontSize,
-                color: Colors.black), // Schriftfarbe auf schwarz setzen
+            style: TextStyle(fontSize: widget.fontSize, color: Colors.black),
             items: getAllHashAlgorithmNames()
                 .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                 .toList(),
