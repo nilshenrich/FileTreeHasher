@@ -12,6 +12,7 @@
 // ignore_for_file: camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
 
@@ -47,7 +48,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       ]),
       // -------------------- Section: Hash algorithm --------------------
       const T_HeaderControlSection(
-          headingText: "Algorithm selection", items: [GlobalHashSelector()]),
+          headingText: "Algorithm selection", items: [T_GlobalHashSelector()]),
       // -------------------- Section: Comparison --------------------
       T_HeaderControlSection(headingText: "Comparison", items: [
         IconButton(
