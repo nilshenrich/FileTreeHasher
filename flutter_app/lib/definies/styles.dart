@@ -15,6 +15,8 @@
 // ##################################################
 
 // Icons
+import 'package:flutter/material.dart';
+
 const double Style_FileTree_Icon_Width_px = 24;
 const double Style_FileTree_Icon_Height_px = 24;
 
@@ -32,3 +34,6 @@ const double Style_FileTree_SubItem_ShiftRight_px = 20;
 
 // Item spacing
 const double Style_FileTree_Item_ElementSpaces_px = 10;
+
+// Text style for generated hash
+const TextStyle Style_FileTree_HashGen = TextStyle(color: Colors.grey);

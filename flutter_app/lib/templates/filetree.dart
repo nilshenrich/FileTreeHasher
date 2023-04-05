@@ -95,6 +95,7 @@ class _T_FolderView extends State<T_FolderView> {
 
   // Expand or collapse content
   // TODO: If top folder expands, all sub folders are expanded too even if they were not expanded before
+  //       -> This item and all children are recreated on setState
   void click_expander() {
     setState(() {
       expanded = !expanded;
@@ -135,7 +136,7 @@ class _T_FileView extends State<T_FileView> {
       const Icon(Icons.description),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      Expanded(child: Text(widget.hashGen)),
+      Expanded(child: Text(widget.hashGen, style: Style_FileTree_HashGen)),
       const T_FileHashSelector(
           height: Style_FileTree_HashSelector_Height_px,
           fontSize: Style_FileTree_HashSelector_FontSize_px),
@@ -164,6 +165,12 @@ class T_FileTreeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: items);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SizedBox(height: 10),
+      const Text("<Root folder name>",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      SizedBox(height: 10),
+      Column(children: items)
+    ]);
   }
 }
