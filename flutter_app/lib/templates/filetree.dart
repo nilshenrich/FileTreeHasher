@@ -165,12 +165,17 @@ class T_FileTreeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SizedBox(height: 10),
-      const Text("<Root folder name>",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-      SizedBox(height: 10),
-      Column(children: items)
-    ]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 10),
+        ExpansionTile(
+          leading: const Icon(Icons.folder), // benutzerdefiniertes Icon
+          title: const Text("<Root folder name>",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          children: [const SizedBox(height: 10), Column(children: items)],
+        ),
+      ],
+    );
   }
 }
