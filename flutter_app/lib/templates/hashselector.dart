@@ -25,10 +25,6 @@ abstract class T_HashSelector extends StatefulWidget {
   final double height;
   final double fontSize;
 
-  List<String> GetAllAlgNames() {
-    return [];
-  }
-
   // Constructor
   const T_HashSelector({super.key, this.height = 48, this.fontSize = 16});
 
@@ -51,7 +47,7 @@ class _T_HashSelector extends State<T_HashSelector> {
         child: DropdownButton(
             value: _selected,
             style: TextStyle(fontSize: widget.fontSize, color: Colors.black),
-            items: widget.GetAllAlgNames()
+            items: getAllHashAlgorithmNames()
                 .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                 .toList(),
             onChanged: (selected) {
@@ -66,24 +62,14 @@ class _T_HashSelector extends State<T_HashSelector> {
 // # TEMPLATE
 // # Global hash selector
 // ##################################################
-class T_SoftHashSelector extends T_HashSelector {
-  const T_SoftHashSelector({super.key, super.height, super.fontSize});
-
-  @override
-  List<String> GetAllAlgNames() {
-    return getSoftHashAlgorithmNames();
-  }
+class T_GlobalHashSelector extends T_HashSelector {
+  const T_GlobalHashSelector({super.key, super.height, super.fontSize});
 }
 
 // ##################################################
 // # TEMPLATE
 // # File tree item hash selector
 // ##################################################
-class T_HardHashSelector extends T_HashSelector {
-  const T_HardHashSelector({super.key, super.height, super.fontSize});
-
-  @override
-  List<String> GetAllAlgNames() {
-    return getHardHashAlgorithmNames();
-  }
+class T_FileHashSelector extends T_HashSelector {
+  const T_FileHashSelector({super.key, super.height, super.fontSize});
 }

@@ -19,7 +19,7 @@ import 'package:file_tree_hasher/templates/filetree.dart';
 // ##################################################
 // # Global hash selector
 // ##################################################
-T_SoftHashSelector GlobalHashSelector = const T_SoftHashSelector();
+T_GlobalHashSelector GlobalHashSelector = const T_GlobalHashSelector();
 
 // ##################################################
 // # CONTENT
