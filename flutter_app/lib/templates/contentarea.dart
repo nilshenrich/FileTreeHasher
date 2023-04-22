@@ -13,6 +13,7 @@
 
 import 'dart:io';
 
+import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
@@ -103,7 +104,13 @@ class _T_BodyContent extends State<T_BodyContent> {
     return Column(children: _loadedTrees);
   }
 
-  void loadNew() {
+  void loadNew() async {
+    String? filetreePath = await FilesystemPicker.openDialog(
+        title: "Select folder",
+        context: context,
+        rootDirectory: getHomeDir(),
+        fsType: FilesystemType.folder,
+        pickText: "Select folder to load file tree from");
     setState(() {
       _loadedTrees.add(_exampleFileTree);
     });
