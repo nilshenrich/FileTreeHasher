@@ -91,6 +91,7 @@ class T_BodyContent extends StatelessWidget {
 
 // DEV: Example file tree
 T_FileTreeView _exampleFileTree = const T_FileTreeView(
+  title: "<First loaded file tree>",
   items: [
     T_FolderView(path: "/root/folder", name: "top-folder", subitems: [
       T_FolderView(path: "/root/folder/folder", name: "sub-folder", subitems: [

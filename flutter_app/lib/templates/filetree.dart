@@ -159,9 +159,10 @@ class _T_FileView extends State<T_FileView> {
 // # File tree view area
 // ##################################################
 class T_FileTreeView extends StatelessWidget {
+  final String title;
   final List<T_FileTreeItem> items;
 
-  const T_FileTreeView({super.key, required this.items});
+  const T_FileTreeView({super.key, required this.items, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -171,8 +172,9 @@ class T_FileTreeView extends StatelessWidget {
         const SizedBox(height: 10),
         ExpansionTile(
           leading: const Icon(Icons.folder), // benutzerdefiniertes Icon
-          title: const Text("<Root folder name>",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          title: Text(title,
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           children: [const SizedBox(height: 10), Column(children: items)],
         ),
       ],
