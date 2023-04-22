@@ -80,12 +80,24 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
 // # CONTENT
 // # Body containing loaded files and comparisons
 // ##################################################
-class T_BodyContent extends StatelessWidget {
+class T_BodyContent extends StatefulWidget {
   const T_BodyContent({super.key});
 
   @override
+  State<StatefulWidget> createState() => _T_BodyContent();
+}
+
+// ##################################################
+// # STATE
+// # Body containing loaded files and comparisons
+// ##################################################
+class _T_BodyContent extends State<T_BodyContent> {
+  // Currently loaded file trees
+  final List<T_FileTreeView> _loadedTrees = [];
+
+  @override
   Widget build(BuildContext context) {
-    return _exampleFileTree;
+    return Column(children: _loadedTrees);
   }
 }
 
