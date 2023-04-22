@@ -9,9 +9,12 @@
 // #
 // ####################################################################################################
 
-// ignore_for_file: camel_case_types, non_constant_identifier_names
+// ignore_for_file: camel_case_types, non_constant_identifier_names, library_private_types_in_public_api
+
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
@@ -36,7 +39,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       T_HeaderControlSection(headingText: "File tree control", items: [
         // ---------- Button: load file tree ----------
         IconButton(
-          onPressed: () {},
+          onPressed: BodyContent.currentState?.loadNew,
           icon: const Icon(Icons.drive_folder_upload),
           tooltip: "Load file tree",
         ),
@@ -99,7 +102,15 @@ class _T_BodyContent extends State<T_BodyContent> {
   Widget build(BuildContext context) {
     return Column(children: _loadedTrees);
   }
+
+  void loadNew() {
+    setState(() {
+      _loadedTrees.add(_exampleFileTree);
+    });
+  }
 }
+
+GlobalKey<_T_BodyContent> BodyContent = GlobalKey<_T_BodyContent>();
 
 // DEV: Example file tree
 T_FileTreeView _exampleFileTree = const T_FileTreeView(
