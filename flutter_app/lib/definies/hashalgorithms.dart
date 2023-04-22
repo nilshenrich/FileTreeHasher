@@ -20,7 +20,8 @@ enum E_HashAlgorithms {
   SHA1("SHA1"),
   SHA256("SHA256"),
   SHA384("SHA384"),
-  SHA512("SHA512");
+  SHA512("SHA512"),
+  USERDEFINED("user defined");
 
   // Constructor and value to hold
   const E_HashAlgorithms(this.value);
@@ -37,12 +38,28 @@ enum E_HashAlgorithms {
 
 // ##################################################
 // @brief: Get list of all known hash algorithm names
+//         Not including the user defined selection
 // @return: List<String>
 // ##################################################
-List<String> getAllHashAlgorithmNames() {
+List<String> getSoftHashAlgorithmNames() {
   List<String> returnList = [];
   for (E_HashAlgorithms alg in E_HashAlgorithms.values) {
     returnList.add(alg.name);
+  }
+  return returnList;
+}
+
+// ##################################################
+// @brief: Get list of all known hash algorithm names
+//         Not including the user defined selection
+// @return: List<String>
+// ##################################################
+List<String> getHardHashAlgorithmNames() {
+  List<String> returnList = [];
+  for (E_HashAlgorithms alg in E_HashAlgorithms.values) {
+    if (alg != E_HashAlgorithms.USERDEFINED) {
+      returnList.add(alg.name);
+    }
   }
   return returnList;
 }
