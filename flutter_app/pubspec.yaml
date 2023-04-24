@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   filesystem_picker: ^3.0.0
+  path: ^1.8.0
 
 dev_dependencies:
   flutter_test:
