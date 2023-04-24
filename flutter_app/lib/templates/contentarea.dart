@@ -13,6 +13,8 @@
 
 import 'dart:io';
 
+import 'package:path/path.dart' as path;
+import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
@@ -39,7 +41,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       T_HeaderControlSection(headingText: "File tree control", items: [
         // ---------- Button: load file tree ----------
         IconButton(
-          onPressed: BodyContent.currentState?.loadNew,
+          onPressed: BodyContent.currentState?.selectNew,
           icon: const Icon(Icons.drive_folder_upload),
           tooltip: "Load file tree",
         ),
@@ -103,10 +105,64 @@ class _T_BodyContent extends State<T_BodyContent> {
     return Column(children: _loadedTrees);
   }
 
-  void loadNew() {
+  // ##################################################
+  // @brief: Let user select a folder to show file tree of.
+  //         The new tree view is added to the view under new expandable
+  // ##################################################
+  void selectNew() async {
+    String? filetreePath = await FilesystemPicker.openDialog(
+        title: "Select folder",
+        context: context,
+        rootDirectory: getHomeDir(),
+        fsType: FilesystemType.folder,
+        pickText: "Select folder to load file tree from");
+    if (filetreePath == null) {
+      throw Exception("No folder path selected");
+    }
+    _showNew(filetreePath);
+  }
+
+  // ##################################################
+  // @brief: Show file tree from a given path
+  // @param: path
+  // ##################################################
+  void _showNew(String path) {
     setState(() {
-      _loadedTrees.add(_exampleFileTree);
+      _loadedTrees.add(
+          T_FileTreeView(items: _loadFolder(Directory(path)), title: path));
     });
+  }
+
+  // ##################################################
+  // @brief: Load folders and files and add to given list
+  // @param: rootFolder
+  // @return list of items
+  // ##################################################
+  List<T_FileTreeItem> _loadFolder(Directory rootFolder) {
+    List<T_FileTreeItem> itemsList = [];
+    List<FileSystemEntity> items = rootFolder.listSync();
+
+    // Loop over all files and subdirectories
+    for (FileSystemEntity item in items) {
+      // For subfolders
+      if (item is Directory) {
+        // Load all sub items of this subfolder and add to list
+        T_FolderView subfolder = T_FolderView(
+            path: item.path,
+            name: path.basename(item.path),
+            subitems: _loadFolder(item));
+        itemsList.add(subfolder);
+      }
+
+      // For files
+      else if (item is File) {
+        // Add file element to list
+        T_FileView file =
+            T_FileView(path: item.path, name: path.basename(item.path));
+        itemsList.add(file);
+      }
+    }
+    return itemsList;
   }
 }
 
