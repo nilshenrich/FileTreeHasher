@@ -139,7 +139,7 @@ class _T_BodyContent extends State<T_BodyContent> {
   // @return list of items
   // ##################################################
   List<T_FileTreeItem> _loadFolder(Directory rootFolder) {
-    List<T_FileTreeItem> itemsList = List.empty();
+    List<T_FileTreeItem> itemsList = [];
     List<FileSystemEntity> items = rootFolder.listSync();
 
     // Loop over all files and subdirectories
