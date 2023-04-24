@@ -13,7 +13,7 @@
 
 import 'dart:io';
 
-import 'package:path/path.dart';
+import 'package:path/path.dart' as path;
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
@@ -149,7 +149,7 @@ class _T_BodyContent extends State<T_BodyContent> {
         // Load all sub items of this subfolder and add to list
         T_FolderView subfolder = T_FolderView(
             path: item.path,
-            name: basename(item.path),
+            name: path.basename(item.path),
             subitems: _loadFolder(item));
         itemsList.add(subfolder);
       }
@@ -158,7 +158,7 @@ class _T_BodyContent extends State<T_BodyContent> {
       else if (item is File) {
         // Add file element to list
         T_FileView file =
-            T_FileView(path: item.path, name: basename(item.path));
+            T_FileView(path: item.path, name: path.basename(item.path));
         itemsList.add(file);
       }
     }
