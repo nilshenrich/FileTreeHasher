@@ -171,6 +171,7 @@ class T_FileTreeView extends StatefulWidget {
 
 class _T_FileTreeView extends State<T_FileTreeView> {
   // Is file tree visible
+  // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
   bool _visible = true;
 
   @override
@@ -183,7 +184,7 @@ class _T_FileTreeView extends State<T_FileTreeView> {
                 initiallyExpanded: true,
                 leading: const Icon(Icons.folder), // benutzerdefiniertes Icon
                 trailing: IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: const Icon(Icons.delete),
                     onPressed: () {
                       setState(() {
                         _visible = false;
@@ -194,7 +195,8 @@ class _T_FileTreeView extends State<T_FileTreeView> {
                         fontSize: 18, fontWeight: FontWeight.bold)),
                 children: [
                   const SizedBox(height: 10),
-                  Column(children: widget.items)
+                  Column(children: widget.items),
+                  const SizedBox(height: 10)
                 ])
           ])
         : const SizedBox.shrink();
