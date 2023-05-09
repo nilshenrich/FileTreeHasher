@@ -84,9 +84,9 @@ class _T_FolderView extends State<T_FolderView> {
   }
 
   // Sub-items
-  Visibility buildSubitems() {
-    return Visibility(
-        visible: expanded,
+  Offstage buildSubitems() {
+    return Offstage(
+        offstage: !expanded,
         child: Row(children: [
           const SizedBox(width: Style_FileTree_SubItem_ShiftRight_px),
           Expanded(child: Column(children: widget.subitems))
