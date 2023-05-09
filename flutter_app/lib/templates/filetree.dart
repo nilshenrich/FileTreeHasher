@@ -158,28 +158,45 @@ class _T_FileView extends State<T_FileView> {
 // # TEMPLATE
 // # File tree view area
 // ##################################################
-class T_FileTreeView extends StatelessWidget {
+class T_FileTreeView extends StatefulWidget {
   final String title;
   final List<T_FileTreeItem> items;
 
+  // Constructor
   const T_FileTreeView({super.key, required this.items, required this.title});
 
   @override
+  State<StatefulWidget> createState() => _T_FileTreeView();
+}
+
+class _T_FileTreeView extends State<T_FileTreeView> {
+  // Is file tree visible
+  bool _visible = true;
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 10),
-        ExpansionTile(
-          maintainState: true,
-          initiallyExpanded: true,
-          leading: const Icon(Icons.folder), // benutzerdefiniertes Icon
-          title: Text(title,
-              style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          children: [const SizedBox(height: 10), Column(children: items)],
-        ),
-      ],
-    );
+    return _visible
+        ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(height: 10),
+            ExpansionTile(
+                maintainState: true,
+                initiallyExpanded: true,
+                leading: const Icon(Icons.folder), // benutzerdefiniertes Icon
+                trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      setState(() {
+                        _visible = false;
+                      });
+                    }),
+                title: Text(widget.title,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+                children: [
+                  const SizedBox(height: 10),
+                  Column(children: widget.items)
+                ])
+          ])
+        : const SizedBox.shrink();
   }
 }

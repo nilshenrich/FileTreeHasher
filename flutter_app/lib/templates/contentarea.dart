@@ -111,12 +111,14 @@ class _T_BodyContent extends State<T_BodyContent> {
   // ##################################################
   void selectNew() async {
     // -------------------- Select folder from system --------------------
+    // TODO: Don't show hidden folders
     String? filetreePath = await FilesystemPicker.openDialog(
         title: "Select folder",
         context: context,
         rootDirectory: getHomeDir(),
         fsType: FilesystemType.folder,
-        pickText: "Select folder to load file tree from");
+        pickText: "Select folder to load file tree from",
+        showGoUp: false);
     if (filetreePath == null) {
       return;
     }
