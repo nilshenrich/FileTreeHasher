@@ -171,6 +171,7 @@ class T_FileTreeView extends StatelessWidget {
       children: [
         const SizedBox(height: 10),
         ExpansionTile(
+          maintainState: true,
           initiallyExpanded: true,
           leading: const Icon(Icons.folder), // benutzerdefiniertes Icon
           title: Text(title,
