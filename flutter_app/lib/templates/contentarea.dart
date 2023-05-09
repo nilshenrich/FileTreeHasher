@@ -110,6 +110,7 @@ class _T_BodyContent extends State<T_BodyContent> {
   //         The new tree view is added to the view under new expandable
   // ##################################################
   void selectNew() async {
+    // -------------------- Select folder from system --------------------
     String? filetreePath = await FilesystemPicker.openDialog(
         title: "Select folder",
         context: context,
@@ -117,8 +118,10 @@ class _T_BodyContent extends State<T_BodyContent> {
         fsType: FilesystemType.folder,
         pickText: "Select folder to load file tree from");
     if (filetreePath == null) {
-      throw Exception("No folder path selected");
+      return;
     }
+
+    // -------------------- Show selected folder as tree view --------------------
     _showNew(filetreePath);
   }
 
