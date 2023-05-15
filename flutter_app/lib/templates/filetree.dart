@@ -78,11 +78,7 @@ class _T_FolderView_state extends State<T_FolderView> {
         Expanded(child: Text(widget.name)),
         const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         T_FileHashSelector(
-          key: widget.globKey_HashAlg,
-          height: Style_FileTree_HashSelector_Height_px,
-          fontSize: Style_FileTree_HashSelector_FontSize_px,
-          onChanged: change_hashAlgorithm,
-        ),
+            key: widget.globKey_HashAlg, onChanged: change_hashAlgorithm),
         const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
       ]),
@@ -161,10 +157,7 @@ class _T_FileView_state extends State<T_FileView> {
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       Expanded(child: Text(widget.hashGen, style: Style_FileTree_HashGen)),
-      T_FileHashSelector(
-          key: widget.globKey_HashAlg,
-          height: Style_FileTree_HashSelector_Height_px,
-          fontSize: Style_FileTree_HashSelector_FontSize_px),
+      T_FileHashSelector(key: widget.globKey_HashAlg),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
           width: Style_FileTree_ComparisonInput_Width_px,

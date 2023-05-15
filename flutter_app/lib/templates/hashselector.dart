@@ -18,6 +18,7 @@
 // ##################################################
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
+import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:flutter/material.dart';
 
 abstract class T_HashSelector extends StatefulWidget {
@@ -30,7 +31,10 @@ abstract class T_HashSelector extends StatefulWidget {
 
   // Constructor
   const T_HashSelector(
-      {super.key, this.height = 48, this.fontSize = 16, this.onChanged});
+      {super.key,
+      required this.height,
+      required this.fontSize,
+      this.onChanged});
 
   @override
   State<StatefulWidget> createState() => T_HashSelector_state();
@@ -72,8 +76,8 @@ class T_HashSelector_state extends State<T_HashSelector> {
 // # Global hash selector
 // ##################################################
 class T_GlobalHashSelector extends T_HashSelector {
-  const T_GlobalHashSelector(
-      {super.key, super.height, super.fontSize, super.onChanged});
+  const T_GlobalHashSelector({super.key, super.onChanged})
+      : super(height: 48, fontSize: 16);
 }
 
 // ##################################################
@@ -81,6 +85,8 @@ class T_GlobalHashSelector extends T_HashSelector {
 // # File tree item hash selector
 // ##################################################
 class T_FileHashSelector extends T_HashSelector {
-  const T_FileHashSelector(
-      {super.key, super.height, super.fontSize, super.onChanged});
+  const T_FileHashSelector({super.key, super.onChanged})
+      : super(
+            height: Style_FileTree_HashSelector_Height_px,
+            fontSize: Style_FileTree_HashSelector_FontSize_px);
 }
