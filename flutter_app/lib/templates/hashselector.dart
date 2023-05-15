@@ -28,13 +28,9 @@ abstract class T_HashSelector extends StatefulWidget {
   // Function call on changed
   final Function(String?)? onChanged;
 
-  // Global key to access state
-  final GlobalKey<T_HashSelector_state> key;
-
   // Constructor
   const T_HashSelector(
-      {required this.key, this.height = 48, this.fontSize = 16, this.onChanged})
-      : super(key: key);
+      {super.key, this.height = 48, this.fontSize = 16, this.onChanged});
 
   @override
   State<StatefulWidget> createState() => T_HashSelector_state();
@@ -77,7 +73,7 @@ class T_HashSelector_state extends State<T_HashSelector> {
 // ##################################################
 class T_GlobalHashSelector extends T_HashSelector {
   const T_GlobalHashSelector(
-      {required super.key, super.height, super.fontSize, super.onChanged});
+      {super.key, super.height, super.fontSize, super.onChanged});
 }
 
 // ##################################################
@@ -86,5 +82,5 @@ class T_GlobalHashSelector extends T_HashSelector {
 // ##################################################
 class T_FileHashSelector extends T_HashSelector {
   const T_FileHashSelector(
-      {required super.key, super.height, super.fontSize, super.onChanged});
+      {super.key, super.height, super.fontSize, super.onChanged});
 }
