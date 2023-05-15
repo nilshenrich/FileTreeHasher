@@ -11,6 +11,7 @@
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names
 
+import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
@@ -128,17 +129,8 @@ class _T_FolderView_state extends State<T_FolderView> {
 // # Single file view
 // ##################################################
 class T_FileView extends T_FileTreeItem {
-  // Parameter
-  final String hashGen;
-  final String hashComp;
-
   // Constructor
-  T_FileView(
-      {super.key,
-      required super.path,
-      required super.name,
-      this.hashGen = "",
-      this.hashComp = ""});
+  T_FileView({super.key, required super.path, required super.name});
 
   @override
   State<StatefulWidget> createState() => _T_FileView_state();
@@ -149,6 +141,10 @@ class T_FileView extends T_FileTreeItem {
 // # Single file view state
 // ##################################################
 class _T_FileView_state extends State<T_FileView> {
+  // State attributes
+  String _hashGen = "";
+  String _hashComp = "";
+
   @override
   Widget build(BuildContext context) {
     return Row(children: [
@@ -156,19 +152,57 @@ class _T_FileView_state extends State<T_FileView> {
       const Icon(Icons.description),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      Expanded(child: Text(widget.hashGen, style: Style_FileTree_HashGen)),
+      Expanded(child: Text(_hashGen, style: Style_FileTree_HashGen)),
       T_FileHashSelector(key: widget.globKey_HashAlg),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
           width: Style_FileTree_ComparisonInput_Width_px,
           height: Style_FileTree_ComparisonInput_Height_px,
           child: TextField(
-            style: const TextStyle(
-                fontSize: Style_FileTree_ComparisonInput_FontSize_px),
-            decoration: const InputDecoration(border: OutlineInputBorder()),
-            controller: TextEditingController(text: widget.hashComp),
-          ))
+              style: const TextStyle(
+                  fontSize: Style_FileTree_ComparisonInput_FontSize_px),
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              controller: TextEditingController(text: _hashComp),
+              onChanged: (value) {
+                _hashComp = value;
+              }))
     ]);
+  }
+
+  // ##################################################
+  // @brief: Compare generated hash with text input
+  // @param: hashGen
+  // @param: hashComp
+  // @return: bool (null means "no comparison")
+  // ##################################################
+  // E_HashComparisonResult _compareHashes(String? hashGen, String? hashComp) {
+  //   // Get hashes if not passed
+  //   String hash_generated = hashGen ?? getHashGen();
+  //   String hash_comparison = hashComp ?? getHashComp();
+  // }
+
+  // ##################################################
+  // @brief: Getter/Setter for hash strings
+  // @return: String
+  // ##################################################
+  String getHashGen() {
+    return _hashGen;
+  }
+
+  String getHashComp() {
+    return _hashComp;
+  }
+
+  void setHashGen(String s) {
+    setState(() {
+      _hashGen = s;
+    });
+  }
+
+  void setHashComp(String s) {
+    setState(() {
+      _hashComp = s;
+    });
   }
 }
 
