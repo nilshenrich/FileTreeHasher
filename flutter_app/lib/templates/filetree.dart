@@ -25,7 +25,7 @@ abstract class T_FileTreeItem extends StatefulWidget {
   final String path;
 
   // Hash algorithm selector key
-  GlobalKey<T_HashSelector_state> globKey_HashAlg =
+  final GlobalKey<T_HashSelector_state> globKey_HashAlg =
       GlobalKey<T_HashSelector_state>();
 
   // Constructor
