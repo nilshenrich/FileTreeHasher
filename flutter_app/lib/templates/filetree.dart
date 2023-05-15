@@ -144,6 +144,7 @@ class _T_FileView_state extends State<T_FileView> {
   // State attributes
   String _hashGen = "";
   String _hashComp = "";
+  E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +153,10 @@ class _T_FileView_state extends State<T_FileView> {
       const Icon(Icons.description),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      Expanded(child: Text(_hashGen, style: Style_FileTree_HashGen)),
+      Expanded(
+          child: Container(
+              color: Style_FileTree_HashComp_Colors[_comparisonResult],
+              child: Text(_hashGen, style: Style_FileTree_HashGen))),
       T_FileHashSelector(key: widget.globKey_HashAlg),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
@@ -165,6 +169,7 @@ class _T_FileView_state extends State<T_FileView> {
               controller: TextEditingController(text: _hashComp),
               onChanged: (value) {
                 _hashComp = value;
+                _compareHashes(hashComp: value);
               }))
     ]);
   }
@@ -173,21 +178,25 @@ class _T_FileView_state extends State<T_FileView> {
   // @brief: Compare generated hash with text input
   // @param: hashGen
   // @param: hashComp
-  // @return: E_HashComparisonResult
   // ##################################################
-  E_HashComparisonResult _compareHashes(String? hashGen, String? hashComp) {
+  // TODO: Whole line is recreated but only hash background color changes
+  void _compareHashes({String? hashGen, String? hashComp}) {
     // Get hashes if not passed
     String hash_generated = hashGen ?? getHashGen();
     String hash_comparison = hashComp ?? getHashComp();
 
-    // If any of both hashes is empty, no comparison is done
-    if (hash_generated.isEmpty || hash_comparison.isEmpty) {
-      return E_HashComparisonResult.none;
-    }
+    setState(() {
+      // If any of both hashes is empty, no comparison is done
+      if (hash_generated.isEmpty || hash_comparison.isEmpty) {
+        _comparisonResult = E_HashComparisonResult.none;
+        return;
+      }
 
-    return hash_generated == hash_comparison
-        ? E_HashComparisonResult.equal
-        : E_HashComparisonResult.notEqual;
+      // For 2 valid inputs, the result is equal or not equal
+      _comparisonResult = hash_generated == hash_comparison
+          ? E_HashComparisonResult.equal
+          : E_HashComparisonResult.notEqual;
+    });
   }
 
   // ##################################################

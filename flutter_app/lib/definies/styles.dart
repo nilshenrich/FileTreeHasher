@@ -15,6 +15,7 @@
 // ##################################################
 
 // Icons
+import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:flutter/material.dart';
 
 const double Style_FileTree_Icon_Width_px = 24;
@@ -37,3 +38,8 @@ const double Style_FileTree_Item_ElementSpaces_px = 10;
 
 // Text style for generated hash
 const TextStyle Style_FileTree_HashGen = TextStyle(color: Colors.grey);
+const Map<E_HashComparisonResult, Color> Style_FileTree_HashComp_Colors = {
+  E_HashComparisonResult.none: Colors.transparent,
+  E_HashComparisonResult.equal: Colors.green,
+  E_HashComparisonResult.notEqual: Colors.red
+};
