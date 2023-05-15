@@ -173,13 +173,22 @@ class _T_FileView_state extends State<T_FileView> {
   // @brief: Compare generated hash with text input
   // @param: hashGen
   // @param: hashComp
-  // @return: bool (null means "no comparison")
+  // @return: E_HashComparisonResult
   // ##################################################
-  // E_HashComparisonResult _compareHashes(String? hashGen, String? hashComp) {
-  //   // Get hashes if not passed
-  //   String hash_generated = hashGen ?? getHashGen();
-  //   String hash_comparison = hashComp ?? getHashComp();
-  // }
+  E_HashComparisonResult _compareHashes(String? hashGen, String? hashComp) {
+    // Get hashes if not passed
+    String hash_generated = hashGen ?? getHashGen();
+    String hash_comparison = hashComp ?? getHashComp();
+
+    // If any of both hashes is empty, no comparison is done
+    if (hash_generated.isEmpty || hash_comparison.isEmpty) {
+      return E_HashComparisonResult.none;
+    }
+
+    return hash_generated == hash_comparison
+        ? E_HashComparisonResult.equal
+        : E_HashComparisonResult.notEqual;
+  }
 
   // ##################################################
   // @brief: Getter/Setter for hash strings
