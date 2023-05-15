@@ -218,6 +218,7 @@ class _T_FileTreeView_state extends State<T_FileTreeView> {
                 title: Text(widget.title,
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold)),
+                childrenPadding: const EdgeInsets.symmetric(horizontal: 10),
                 children: [
                   const SizedBox(height: 10),
                   Column(children: widget.items),

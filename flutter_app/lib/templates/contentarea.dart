@@ -57,7 +57,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
             onPressed: () {},
             icon: const Icon(Icons.delete_forever_outlined),
-            tooltip: "Clear all loaded files")
+            tooltip: "Clear all loaded files and file trees")
       ]),
       // -------------------- Section: Hash algorithm --------------------
       T_HeaderControlSection(
