@@ -93,13 +93,30 @@ class _T_FolderView extends State<T_FolderView> {
         ]));
   }
 
-  // Expand or collapse content
-  // TODO: If top folder expands, all sub folders are expanded too even if they were not expanded before
-  //       -> This item and all children are recreated on setState
+  // ##################################################
+  // # Event handlers
+  // ##################################################
+
+  // ##################################################
+  // @brief: Click handler: Expander button
+  //         Expand or collapse this folder and rotate expasion icon respectively
+  // ##################################################
   void click_expander() {
     setState(() {
       expanded = !expanded;
     });
+  }
+
+  // ##################################################
+  // @brief: Change handler: Selected hash algorithm has changed
+  //         Also change selected hash algorithm for all sub-items
+  // @param: selected
+  // ##################################################
+  void change_hashAlgorithm(String? selected) {
+    // For all sub-elements change hash algorithm to same vale (Sub-folders will automatically do for their sub-elements)
+    for (T_FileTreeItem subitem in widget.subitems) {
+      // TODO: Change for all sub-items
+    }
   }
 }
 

@@ -25,8 +25,12 @@ abstract class T_HashSelector extends StatefulWidget {
   final double height;
   final double fontSize;
 
+  // Function call on changed
+  final Function(String?)? onChanged;
+
   // Constructor
-  const T_HashSelector({super.key, this.height = 48, this.fontSize = 16});
+  const T_HashSelector(
+      {super.key, this.height = 48, this.fontSize = 16, this.onChanged});
 
   @override
   State<StatefulWidget> createState() => _T_HashSelector();
@@ -54,6 +58,9 @@ class _T_HashSelector extends State<T_HashSelector> {
               setState(() {
                 _selected = selected;
               });
+              if (widget.onChanged != null) {
+                widget.onChanged!(selected);
+              }
             }));
   }
 }
@@ -63,7 +70,8 @@ class _T_HashSelector extends State<T_HashSelector> {
 // # Global hash selector
 // ##################################################
 class T_GlobalHashSelector extends T_HashSelector {
-  const T_GlobalHashSelector({super.key, super.height, super.fontSize});
+  const T_GlobalHashSelector(
+      {super.key, super.height, super.fontSize, super.onChanged});
 }
 
 // ##################################################
@@ -71,5 +79,6 @@ class T_GlobalHashSelector extends T_HashSelector {
 // # File tree item hash selector
 // ##################################################
 class T_FileHashSelector extends T_HashSelector {
-  const T_FileHashSelector({super.key, super.height, super.fontSize});
+  const T_FileHashSelector(
+      {super.key, super.height, super.fontSize, super.onChanged});
 }
