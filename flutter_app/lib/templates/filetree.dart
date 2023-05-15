@@ -24,8 +24,12 @@ abstract class T_FileTreeItem extends StatefulWidget {
   final String name;
   final String path;
 
+  // Hash algorithm selector key
+  GlobalKey<T_HashSelector_state> globKey_HashAlg =
+      GlobalKey<T_HashSelector_state>();
+
   // Constructor
-  const T_FileTreeItem({super.key, required this.name, required this.path});
+  T_FileTreeItem({super.key, required this.name, required this.path});
 }
 
 // ##################################################
@@ -37,7 +41,7 @@ class T_FolderView extends T_FileTreeItem {
   final List<T_FileTreeItem> subitems;
 
   // Constructor
-  const T_FolderView(
+  T_FolderView(
       {super.key,
       required super.path,
       required super.name,
@@ -73,9 +77,12 @@ class _T_FolderView extends State<T_FolderView> {
         const Icon(Icons.folder),
         Expanded(child: Text(widget.name)),
         const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-        const T_FileHashSelector(
-            height: Style_FileTree_HashSelector_Height_px,
-            fontSize: Style_FileTree_HashSelector_FontSize_px),
+        T_FileHashSelector(
+          key: widget.globKey_HashAlg,
+          height: Style_FileTree_HashSelector_Height_px,
+          fontSize: Style_FileTree_HashSelector_FontSize_px,
+          onChanged: change_hashAlgorithm,
+        ),
         const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
       ]),
@@ -115,7 +122,7 @@ class _T_FolderView extends State<T_FolderView> {
   void change_hashAlgorithm(String? selected) {
     // For all sub-elements change hash algorithm to same vale (Sub-folders will automatically do for their sub-elements)
     for (T_FileTreeItem subitem in widget.subitems) {
-      // TODO: Change for all sub-items
+      subitem.globKey_HashAlg.currentState?.updateSelected(selected);
     }
   }
 }
@@ -130,7 +137,7 @@ class T_FileView extends T_FileTreeItem {
   final String hashComp;
 
   // Constructor
-  const T_FileView(
+  T_FileView(
       {super.key,
       required super.path,
       required super.name,
@@ -154,7 +161,8 @@ class _T_FileView extends State<T_FileView> {
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       Expanded(child: Text(widget.hashGen, style: Style_FileTree_HashGen)),
-      const T_FileHashSelector(
+      T_FileHashSelector(
+          key: widget.globKey_HashAlg,
           height: Style_FileTree_HashSelector_Height_px,
           fontSize: Style_FileTree_HashSelector_FontSize_px),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),

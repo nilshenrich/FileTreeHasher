@@ -24,7 +24,10 @@ import 'package:file_tree_hasher/templates/filetree.dart';
 // ##################################################
 // # Global hash selector
 // ##################################################
-T_GlobalHashSelector GlobalHashSelector = const T_GlobalHashSelector();
+GlobalKey<T_HashSelector_state> GlobKey_GlobalHashSelector =
+    GlobalKey<T_HashSelector_state>();
+T_GlobalHashSelector GlobalHashSelector =
+    T_GlobalHashSelector(key: GlobKey_GlobalHashSelector);
 
 // ##################################################
 // # CONTENT
@@ -174,7 +177,7 @@ class _T_BodyContent extends State<T_BodyContent> {
 GlobalKey<_T_BodyContent> BodyContent = GlobalKey<_T_BodyContent>();
 
 // DEV: Example file tree
-T_FileTreeView _exampleFileTree = const T_FileTreeView(
+T_FileTreeView _exampleFileTree = T_FileTreeView(
   title: "<First loaded file tree>",
   items: [
     T_FolderView(path: "/root/folder", name: "top-folder", subitems: [

@@ -28,19 +28,23 @@ abstract class T_HashSelector extends StatefulWidget {
   // Function call on changed
   final Function(String?)? onChanged;
 
+  // Global key to access state
+  final GlobalKey<T_HashSelector_state> key;
+
   // Constructor
   const T_HashSelector(
-      {super.key, this.height = 48, this.fontSize = 16, this.onChanged});
+      {required this.key, this.height = 48, this.fontSize = 16, this.onChanged})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _T_HashSelector();
+  State<StatefulWidget> createState() => T_HashSelector_state();
 }
 
 // ##################################################
 // # STATE
 // # Overall hash selector state
 // ##################################################
-class _T_HashSelector extends State<T_HashSelector> {
+class T_HashSelector_state extends State<T_HashSelector> {
   // Currently selected hash algorithm
   String? _selected = DefaultHashAlgorithm.name;
 
@@ -54,14 +58,16 @@ class _T_HashSelector extends State<T_HashSelector> {
             items: getAllHashAlgorithmNames()
                 .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                 .toList(),
-            onChanged: (selected) {
-              setState(() {
-                _selected = selected;
-              });
-              if (widget.onChanged != null) {
-                widget.onChanged!(selected);
-              }
-            }));
+            onChanged: updateSelected));
+  }
+
+  void updateSelected(String? selected) {
+    setState(() {
+      _selected = selected;
+    });
+    if (widget.onChanged != null) {
+      widget.onChanged!(selected);
+    }
   }
 }
 
@@ -71,7 +77,7 @@ class _T_HashSelector extends State<T_HashSelector> {
 // ##################################################
 class T_GlobalHashSelector extends T_HashSelector {
   const T_GlobalHashSelector(
-      {super.key, super.height, super.fontSize, super.onChanged});
+      {required super.key, super.height, super.fontSize, super.onChanged});
 }
 
 // ##################################################
@@ -80,5 +86,5 @@ class T_GlobalHashSelector extends T_HashSelector {
 // ##################################################
 class T_FileHashSelector extends T_HashSelector {
   const T_FileHashSelector(
-      {super.key, super.height, super.fontSize, super.onChanged});
+      {required super.key, super.height, super.fontSize, super.onChanged});
 }
