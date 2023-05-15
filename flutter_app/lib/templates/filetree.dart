@@ -48,14 +48,14 @@ class T_FolderView extends T_FileTreeItem {
       this.subitems = const []});
 
   @override
-  State<StatefulWidget> createState() => _T_FolderView();
+  State<StatefulWidget> createState() => _T_FolderView_state();
 }
 
 // ##################################################
 // # STATE
 // # Single folder view state
 // ##################################################
-class _T_FolderView extends State<T_FolderView> {
+class _T_FolderView_state extends State<T_FolderView> {
   // States
   bool expanded = true; // Is folder extended?
 
@@ -145,14 +145,14 @@ class T_FileView extends T_FileTreeItem {
       this.hashComp = ""});
 
   @override
-  State<StatefulWidget> createState() => _T_FileView();
+  State<StatefulWidget> createState() => _T_FileView_state();
 }
 
 // ##################################################
 // # STATE
 // # Single file view state
 // ##################################################
-class _T_FileView extends State<T_FileView> {
+class _T_FileView_state extends State<T_FileView> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
@@ -191,10 +191,10 @@ class T_FileTreeView extends StatefulWidget {
   const T_FileTreeView({super.key, required this.items, required this.title});
 
   @override
-  State<StatefulWidget> createState() => _T_FileTreeView();
+  State<StatefulWidget> createState() => _T_FileTreeView_state();
 }
 
-class _T_FileTreeView extends State<T_FileTreeView> {
+class _T_FileTreeView_state extends State<T_FileTreeView> {
   // Is file tree visible
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
   bool _visible = true;
