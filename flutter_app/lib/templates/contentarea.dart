@@ -24,10 +24,10 @@ import 'package:file_tree_hasher/templates/filetree.dart';
 // ##################################################
 // # Global hash selector
 // ##################################################
-GlobalKey<T_HashSelector_state> GlobKey_GlobalHashSelector =
-    GlobalKey<T_HashSelector_state>();
 T_GlobalHashSelector GlobalHashSelector =
-    T_GlobalHashSelector(key: GlobKey_GlobalHashSelector);
+    T_GlobalHashSelector(onChanged: (selected) {
+  BodyContent.currentState!.updateHashAlg(selected);
+});
 
 // ##################################################
 // # CONTENT
@@ -171,6 +171,18 @@ class _T_BodyContent_state extends State<T_BodyContent> {
       }
     }
     return itemsList;
+  }
+
+  // ##################################################
+  // @brief: Update all hash algorithms recursively
+  // @param: selected
+  // ##################################################
+  void updateHashAlg(String? selected) {
+    for (T_FileTreeView view in _loadedTrees) {
+      for (T_FileTreeItem item in view.items) {
+        item.globKey_HashAlg.currentState?.updateSelected(selected);
+      }
+    }
   }
 }
 
