@@ -12,6 +12,8 @@ dependencies:
   filesystem_picker: ^3.0.0
   path: ^1.8.0
   percent_indicator: ^4.0.1
+  crypto: ^3.0.3
+  convert: ^3.1.1
 
 dev_dependencies:
   flutter_test:

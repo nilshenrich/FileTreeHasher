@@ -11,6 +11,11 @@
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:convert/convert.dart';
+import 'package:crypto/crypto.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
@@ -154,7 +159,9 @@ class _T_FileView_state extends State<T_FileView> {
       const Icon(Icons.description),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      Expanded(child: T_HashGenerationView(key: hashGenerationView)),
+      Expanded(
+          child: T_HashGenerationView(
+              key: hashGenerationView, filepath: widget.path)),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       T_FileHashSelector(key: widget.globKey_HashAlg),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
@@ -234,8 +241,11 @@ class _T_FileTreeView_state extends State<T_FileTreeView> {
 // # This widget can be inserted into file view to show hash calculation progress or generated hash comparison
 // ##################################################
 class T_HashGenerationView extends StatefulWidget {
+  // Attributes
+  final String filepath;
+
   // Constructor
-  T_HashGenerationView({super.key});
+  T_HashGenerationView({super.key, required this.filepath});
 
   // Hash generation view key
   final GlobalKey<T_HashGenerationView_state> globKey_HashGenView =
@@ -302,16 +312,44 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // @brief: Calculate hash and update GUI
   // ##################################################
   void _generateHash() async {
-    // TODO: Use real hash algorithm with progress
-    for (var element in Iterable.generate(27)) {
-      setState(() {
-        _genProgress = element / 27;
-      });
-      // sleep(Duration(milliseconds: 100));
-      await Future.delayed(Duration(milliseconds: 100));
+    // -------------------- Read file --------------------
+    File file = File(widget.filepath);
+    if (!await file.exists()) {
+      throw FileSystemException("File ${widget.filepath} does not exist");
     }
+
+    // -------------------- Generate hash --------------------
+
+    // File size and processed size for progress calculation
+    int totalBytes = await file.length();
+    int bytesRead = 0;
+
+    // Select hash algorithm
+    var hashOut = AccumulatorSink<Digest>();
+    ByteConversionSink hasher;
+    hasher = sha256.startChunkedConversion(
+        hashOut); // TODO: Select algorithm based on selection
+
+    // Read file step by step and generate hash
+    await for (var chunk in file.openRead()) {
+      // Generate hash for next file part
+      bytesRead += chunk.length;
+      hasher.add(chunk);
+
+      // Update progress bar
+      setState(() {
+        _genProgress = bytesRead / totalBytes;
+      });
+    }
+
+    // -------------------- Done --------------------
+
+    // Extract hash string
+    hasher.close();
+    String hashString = hashOut.events.single.toString();
+
     setState(() {
-      _hashGen = "test";
+      _hashGen = hashString;
     });
   }
 }
