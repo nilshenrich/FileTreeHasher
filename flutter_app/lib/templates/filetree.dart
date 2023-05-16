@@ -154,7 +154,7 @@ class _T_FileView_state extends State<T_FileView> {
       const Icon(Icons.description),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_HashGenerationView(key: hashGenerationView),
+      Expanded(child: T_HashGenerationView(key: hashGenerationView)),
       T_FileHashSelector(key: widget.globKey_HashAlg),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
@@ -279,10 +279,9 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Container(
-            color: Style_FileTree_HashComp_Colors[_comparisonResult],
-            child: Text("", style: Style_FileTree_HashGen)));
+    return Container(
+        color: Style_FileTree_HashComp_Colors[_comparisonResult],
+        child: Text("", style: Style_FileTree_HashGen));
   }
 
   // ##################################################
