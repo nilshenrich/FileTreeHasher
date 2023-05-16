@@ -144,16 +144,17 @@ class _T_FileView_state extends State<T_FileView> {
   // State attributes
   String _hashGen = "";
   String _hashComp = "";
-  E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<T_HashGenerationView_state> hashGenerationView =
+        GlobalKey<T_HashGenerationView_state>();
     return Row(children: [
       const SizedBox(width: Style_FileTree_Icon_Width_px),
       const Icon(Icons.description),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_HashGenerationView(),
+      T_HashGenerationView(key: hashGenerationView),
       T_FileHashSelector(key: widget.globKey_HashAlg),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
@@ -166,34 +167,10 @@ class _T_FileView_state extends State<T_FileView> {
               controller: TextEditingController(text: _hashComp),
               onChanged: (value) {
                 _hashComp = value;
-                _compareHashes(hashComp: value);
+                hashGenerationView.currentState!
+                    .compareHashes(getHashGen(), value);
               }))
     ]);
-  }
-
-  // ##################################################
-  // @brief: Compare generated hash with text input
-  // @param: hashGen
-  // @param: hashComp
-  // ##################################################
-  // TODO: Whole line is recreated but only hash background color changes
-  void _compareHashes({String? hashGen, String? hashComp}) {
-    // Get hashes if not passed
-    String hash_generated = hashGen ?? getHashGen();
-    String hash_comparison = hashComp ?? getHashComp();
-
-    setState(() {
-      // If any of both hashes is empty, no comparison is done
-      if (hash_generated.isEmpty || hash_comparison.isEmpty) {
-        _comparisonResult = E_HashComparisonResult.none;
-        return;
-      }
-
-      // For 2 valid inputs, the result is equal or not equal
-      _comparisonResult = hash_generated == hash_comparison
-          ? E_HashComparisonResult.equal
-          : E_HashComparisonResult.notEqual;
-    });
   }
 
   // ##################################################
@@ -236,6 +213,10 @@ class T_FileTreeView extends StatefulWidget {
   State<StatefulWidget> createState() => _T_FileTreeView_state();
 }
 
+// ##################################################
+// # STATE
+// # File tree view area
+// ##################################################
 class _T_FileTreeView_state extends State<T_FileTreeView> {
   // Is file tree visible
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
@@ -278,22 +259,50 @@ class _T_FileTreeView_state extends State<T_FileTreeView> {
 // ##################################################
 class T_HashGenerationView extends StatefulWidget {
   // Constructor
-  const T_HashGenerationView({super.key});
+  T_HashGenerationView({super.key});
+
+  // Hash generation view key
+  final GlobalKey<T_HashGenerationView_state> globKey_HashGenView =
+      GlobalKey<T_HashGenerationView_state>();
 
   @override
-  State<StatefulWidget> createState() => _T_HashGenerationView_state();
+  State<StatefulWidget> createState() => T_HashGenerationView_state();
 }
 
 // ##################################################
 // # STATE
 // # Hash generation view state
 // ##################################################
-class _T_HashGenerationView_state extends State<T_HashGenerationView> {
+class T_HashGenerationView_state extends State<T_HashGenerationView> {
+  // State attributes
+  E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
         child: Container(
-            color: Style_FileTree_HashComp_Colors[E_HashComparisonResult.equal],
+            color: Style_FileTree_HashComp_Colors[_comparisonResult],
             child: Text("", style: Style_FileTree_HashGen)));
+  }
+
+  // ##################################################
+  // @brief: Compare generated hash with text input
+  // @param: hashGen
+  // @param: hashComp
+  // ##################################################
+  // TODO: Whole line is recreated but only hash background color changes
+  void compareHashes(String hashGen, String hashComp) {
+    setState(() {
+      // If any of both hashes is empty, no comparison is done
+      if (hashGen.isEmpty || hashComp.isEmpty) {
+        _comparisonResult = E_HashComparisonResult.none;
+        return;
+      }
+
+      // For 2 valid inputs, the result is equal or not equal
+      _comparisonResult = hashGen == hashComp
+          ? E_HashComparisonResult.equal
+          : E_HashComparisonResult.notEqual;
+    });
   }
 }
