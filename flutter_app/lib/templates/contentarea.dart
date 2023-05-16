@@ -24,7 +24,7 @@ import 'package:file_tree_hasher/templates/filetree.dart';
 // ##################################################
 // # Body content
 // ##################################################
-GlobalKey<_T_BodyContent_state> BodyContent = GlobalKey<_T_BodyContent_state>();
+GlobalKey<T_BodyContent_state> BodyContent = GlobalKey<T_BodyContent_state>();
 
 // ##################################################
 // # Global hash selector
