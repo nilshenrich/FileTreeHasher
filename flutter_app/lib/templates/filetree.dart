@@ -168,7 +168,7 @@ class _T_FileView_state extends State<T_FileView> {
       T_FileHashSelector(
           key: widget.globKey_HashAlg,
           onChanged: (selected) {
-            hashGenerationView.currentState!.updateHashAlg(selected);
+            hashGenerationView.currentState!.generateHash(selected);
           }),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
@@ -288,16 +288,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   @override
   void initState() {
     super.initState();
-    _generateHash(DefaultHashAlgorithm.value);
-  }
-
-  // ##################################################
-  // @brief: Update hash algorith
-  //         This will rebuild the whole widget
-  // @param: alg
-  // ##################################################
-  void updateHashAlg(String? alg) {
-    _generateHash(alg);
+    generateHash(DefaultHashAlgorithm.value);
   }
 
   // ##################################################
@@ -326,7 +317,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // ##################################################
   // @brief: Calculate hash and update GUI
   // ##################################################
-  void _generateHash(String? alg) async {
+  void generateHash(String? alg) async {
     // -------------------- Read file --------------------
     File file = File(widget.filepath);
     if (!await file.exists()) {
