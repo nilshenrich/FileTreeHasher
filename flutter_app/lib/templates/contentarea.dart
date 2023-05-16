@@ -100,14 +100,14 @@ class T_BodyContent extends StatefulWidget {
   const T_BodyContent({super.key});
 
   @override
-  State<StatefulWidget> createState() => _T_BodyContent_state();
+  State<StatefulWidget> createState() => T_BodyContent_state();
 }
 
 // ##################################################
 // # STATE
 // # Body containing loaded files and comparisons
 // ##################################################
-class _T_BodyContent_state extends State<T_BodyContent> {
+class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
   final List<T_FileTreeView> _loadedTrees = [_exampleFileTree];
 
