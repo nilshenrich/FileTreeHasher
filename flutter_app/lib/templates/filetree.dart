@@ -17,6 +17,7 @@ import 'dart:io';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
+import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
@@ -286,7 +287,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   @override
   void initState() {
     super.initState();
-    _generateHash();
+    _generateHash(DefaultHashAlgorithm.value);
   }
 
   // ##################################################
@@ -295,7 +296,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // @param: alg
   // ##################################################
   void updateHashAlg(String? alg) {
-    _generateHash();
+    _generateHash(alg);
   }
 
   // ##################################################
@@ -324,7 +325,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // ##################################################
   // @brief: Calculate hash and update GUI
   // ##################################################
-  void _generateHash() async {
+  void _generateHash(String? alg) async {
     // -------------------- Read file --------------------
     File file = File(widget.filepath);
     if (!await file.exists()) {
