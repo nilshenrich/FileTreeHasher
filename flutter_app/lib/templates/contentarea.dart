@@ -27,12 +27,6 @@ import 'package:file_tree_hasher/templates/filetree.dart';
 GlobalKey<T_BodyContent_state> BodyContent = GlobalKey<T_BodyContent_state>();
 
 // ##################################################
-// # Global hash selector
-// ##################################################
-GlobalKey<T_HashSelector_state> GlobalHashSelector =
-    GlobalKey<T_HashSelector_state>();
-
-// ##################################################
 // # CONTENT
 // # Header bar containing general control elements
 // ##################################################
@@ -64,11 +58,9 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       ]),
       // -------------------- Section: Hash algorithm --------------------
       T_HeaderControlSection(headingText: "Algorithm selection", items: [
-        T_GlobalHashSelector(
-            key: GlobalHashSelector,
-            onChanged: (selected) {
-              BodyContent.currentState!.updateHashAlg(selected);
-            })
+        T_GlobalHashSelector(onChanged: (selected) {
+          BodyContent.currentState!.updateHashAlg(selected);
+        })
       ]),
       // -------------------- Section: Comparison --------------------
       T_HeaderControlSection(headingText: "Comparison", items: [

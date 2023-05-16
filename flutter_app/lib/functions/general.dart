@@ -17,7 +17,3 @@ Directory getHomeDir() {
   return Directory(
       Platform.environment[keywords[Platform.operatingSystem]] ?? "");
 }
-
-String? getGlobalHashAlg() {
-  return GlobalHashSelector.currentState!.get();
-}
