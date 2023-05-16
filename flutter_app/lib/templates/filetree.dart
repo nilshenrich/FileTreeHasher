@@ -153,10 +153,7 @@ class _T_FileView_state extends State<T_FileView> {
       const Icon(Icons.description),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      Expanded(
-          child: Container(
-              color: Style_FileTree_HashComp_Colors[_comparisonResult],
-              child: Text(_hashGen, style: Style_FileTree_HashGen))),
+      T_HashGenerationView(),
       T_FileHashSelector(key: widget.globKey_HashAlg),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
@@ -271,5 +268,32 @@ class _T_FileTreeView_state extends State<T_FileTreeView> {
                 ])
           ])
         : const SizedBox.shrink();
+  }
+}
+
+// ##################################################
+// # TEMPLATE
+// # Hash generation view
+// # This widget can be inserted into file view to show hash calculation progress or generated hash comparison
+// ##################################################
+class T_HashGenerationView extends StatefulWidget {
+  // Constructor
+  const T_HashGenerationView({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _T_HashGenerationView_state();
+}
+
+// ##################################################
+// # STATE
+// # Hash generation view state
+// ##################################################
+class _T_HashGenerationView_state extends State<T_HashGenerationView> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: Container(
+            color: Style_FileTree_HashComp_Colors[E_HashComparisonResult.equal],
+            child: Text("", style: Style_FileTree_HashGen)));
   }
 }
