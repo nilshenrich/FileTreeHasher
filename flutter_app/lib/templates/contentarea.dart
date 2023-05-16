@@ -22,12 +22,15 @@ import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
 
 // ##################################################
+// # Body content
+// ##################################################
+GlobalKey<_T_BodyContent_state> BodyContent = GlobalKey<_T_BodyContent_state>();
+
+// ##################################################
 // # Global hash selector
 // ##################################################
-T_GlobalHashSelector GlobalHashSelector =
-    T_GlobalHashSelector(onChanged: (selected) {
-  BodyContent.currentState!.updateHashAlg(selected);
-});
+GlobalKey<T_HashSelector_state> GlobalHashSelector =
+    GlobalKey<T_HashSelector_state>();
 
 // ##################################################
 // # CONTENT
@@ -60,8 +63,13 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
             tooltip: "Clear all loaded files and file trees")
       ]),
       // -------------------- Section: Hash algorithm --------------------
-      T_HeaderControlSection(
-          headingText: "Algorithm selection", items: [GlobalHashSelector]),
+      T_HeaderControlSection(headingText: "Algorithm selection", items: [
+        T_GlobalHashSelector(
+            key: GlobalHashSelector,
+            onChanged: (selected) {
+              BodyContent.currentState!.updateHashAlg(selected);
+            })
+      ]),
       // -------------------- Section: Comparison --------------------
       T_HeaderControlSection(headingText: "Comparison", items: [
         IconButton(
@@ -180,13 +188,11 @@ class _T_BodyContent_state extends State<T_BodyContent> {
   void updateHashAlg(String? selected) {
     for (T_FileTreeView view in _loadedTrees) {
       for (T_FileTreeItem item in view.items) {
-        item.globKey_HashAlg.currentState?.updateSelected(selected);
+        item.globKey_HashAlg.currentState?.set(selected);
       }
     }
   }
 }
-
-GlobalKey<_T_BodyContent_state> BodyContent = GlobalKey<_T_BodyContent_state>();
 
 // DEV: Example file tree
 T_FileTreeView _exampleFileTree = T_FileTreeView(

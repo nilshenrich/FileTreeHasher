@@ -128,7 +128,7 @@ class _T_FolderView_state extends State<T_FolderView> {
   void change_hashAlgorithm(String? selected) {
     // For all sub-elements change hash algorithm to same vale (Sub-folders will automatically do for their sub-elements)
     for (T_FileTreeItem subitem in widget.subitems) {
-      subitem.globKey_HashAlg.currentState?.updateSelected(selected);
+      subitem.globKey_HashAlg.currentState?.set(selected);
     }
   }
 }

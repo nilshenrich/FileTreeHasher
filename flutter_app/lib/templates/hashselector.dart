@@ -58,10 +58,14 @@ class T_HashSelector_state extends State<T_HashSelector> {
             items: getAllHashAlgorithmNames()
                 .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                 .toList(),
-            onChanged: updateSelected));
+            onChanged: set));
   }
 
-  void updateSelected(String? selected) {
+  String? get() {
+    return _selected;
+  }
+
+  void set(String? selected) {
     setState(() {
       _selected = selected;
     });
