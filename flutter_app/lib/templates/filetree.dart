@@ -170,16 +170,6 @@ class _T_FileView_state extends State<T_FileView> {
               }))
     ]);
   }
-
-  String getHashComp() {
-    return _hashComp;
-  }
-
-  void setHashComp(String s) {
-    setState(() {
-      _hashComp = s;
-    });
-  }
 }
 
 // ##################################################
@@ -259,7 +249,7 @@ class T_HashGenerationView extends StatefulWidget {
 // ##################################################
 class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // State attributes
-  String _hashGen = "test";
+  String _hashGen = "";
   E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
 
   @override
