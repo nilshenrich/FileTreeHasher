@@ -46,7 +46,7 @@ abstract class T_HashSelector extends StatefulWidget {
 // ##################################################
 class T_HashSelector_state extends State<T_HashSelector> {
   // Currently selected hash algorithm
-  String? _selected = DefaultHashAlgorithm.name;
+  String? _selected = SelectedGlobalHashAlg;
 
   @override
   Widget build(BuildContext context) {

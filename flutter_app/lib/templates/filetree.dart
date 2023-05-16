@@ -307,7 +307,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   @override
   void initState() {
     super.initState();
-    generateHash(DefaultHashAlgorithm.value);
+    generateHash(SelectedGlobalHashAlg);
   }
 
   // ##################################################
