@@ -15,6 +15,7 @@ import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 // ##################################################
 // # TEMPLATE
@@ -154,6 +155,7 @@ class _T_FileView_state extends State<T_FileView> {
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       Expanded(child: T_HashGenerationView(key: hashGenerationView)),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       T_FileHashSelector(key: widget.globKey_HashAlg),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
@@ -250,13 +252,21 @@ class T_HashGenerationView extends StatefulWidget {
 class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // State attributes
   String _hashGen = "";
+  double _genProgress = 0.1;
   E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Style_FileTree_HashComp_Colors[_comparisonResult],
-        child: Text(_hashGen, style: Style_FileTree_HashGen));
+    return _hashGen.isEmpty
+        ? LinearPercentIndicator(
+            percent: _genProgress,
+            lineHeight: Style_FileTree_HashGen_Prg_Height_px,
+            center: Text("${(_genProgress * 100).toStringAsFixed(1)}%",
+                style: Style_FileTree_HashGen_Prg_Text),
+            progressColor: Style_FileTree_HashGen_Prg_Color)
+        : Container(
+            color: Style_FileTree_HashComp_Colors[_comparisonResult],
+            child: Text(_hashGen, style: Style_FileTree_HashGen));
   }
 
   // ##################################################
