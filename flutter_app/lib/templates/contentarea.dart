@@ -27,9 +27,6 @@ import 'package:file_tree_hasher/templates/filetree.dart';
 // ##################################################
 GlobalKey<T_BodyContent_state> BodyContent = GlobalKey<T_BodyContent_state>();
 
-// ---------- Currently selected global hash algorithm ----------
-String? SelectedGlobalHashAlg = DefaultHashAlgorithm.value;
-
 // ##################################################
 // # CONTENT
 // # Header bar containing general control elements
