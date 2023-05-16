@@ -18,12 +18,18 @@
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:flutter/material.dart';
 
+// File tree icon
 const double Style_FileTree_Icon_Width_px = 24;
 const double Style_FileTree_Icon_Height_px = 24;
 
 // Hash selector
 const double Style_FileTree_HashSelector_Height_px = 24;
 const double Style_FileTree_HashSelector_FontSize_px = 14;
+
+// Hash generation progress bar
+const double Style_FileTree_HashGen_Prg_Height_px = 16;
+const TextStyle Style_FileTree_HashGen_Prg_Text = TextStyle(fontSize: 14);
+const Color Style_FileTree_HashGen_Prg_Color = Colors.green;
 
 // Hash comparison input
 const double Style_FileTree_ComparisonInput_Width_px = 200;

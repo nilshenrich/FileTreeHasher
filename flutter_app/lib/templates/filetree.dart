@@ -11,10 +11,18 @@
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:convert/convert.dart';
+import 'package:crypto/crypto.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
+import 'package:file_tree_hasher/definies/defaults.dart';
+import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 // ##################################################
 // # TEMPLATE
@@ -142,22 +150,26 @@ class T_FileView extends T_FileTreeItem {
 // ##################################################
 class _T_FileView_state extends State<T_FileView> {
   // State attributes
-  String _hashGen = "";
   String _hashComp = "";
-  E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<T_HashGenerationView_state> hashGenerationView =
+        GlobalKey<T_HashGenerationView_state>();
     return Row(children: [
       const SizedBox(width: Style_FileTree_Icon_Width_px),
       const Icon(Icons.description),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       Expanded(
-          child: Container(
-              color: Style_FileTree_HashComp_Colors[_comparisonResult],
-              child: Text(_hashGen, style: Style_FileTree_HashGen))),
-      T_FileHashSelector(key: widget.globKey_HashAlg),
+          child: T_HashGenerationView(
+              key: hashGenerationView, filepath: widget.path)),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      T_FileHashSelector(
+          key: widget.globKey_HashAlg,
+          onChanged: (selected) {
+            hashGenerationView.currentState!.generateHash(selected);
+          }),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
           width: Style_FileTree_ComparisonInput_Width_px,
@@ -169,58 +181,9 @@ class _T_FileView_state extends State<T_FileView> {
               controller: TextEditingController(text: _hashComp),
               onChanged: (value) {
                 _hashComp = value;
-                _compareHashes(hashComp: value);
+                hashGenerationView.currentState!.compareHashes(value);
               }))
     ]);
-  }
-
-  // ##################################################
-  // @brief: Compare generated hash with text input
-  // @param: hashGen
-  // @param: hashComp
-  // ##################################################
-  // TODO: Whole line is recreated but only hash background color changes
-  void _compareHashes({String? hashGen, String? hashComp}) {
-    // Get hashes if not passed
-    String hash_generated = hashGen ?? getHashGen();
-    String hash_comparison = hashComp ?? getHashComp();
-
-    setState(() {
-      // If any of both hashes is empty, no comparison is done
-      if (hash_generated.isEmpty || hash_comparison.isEmpty) {
-        _comparisonResult = E_HashComparisonResult.none;
-        return;
-      }
-
-      // For 2 valid inputs, the result is equal or not equal
-      _comparisonResult = hash_generated == hash_comparison
-          ? E_HashComparisonResult.equal
-          : E_HashComparisonResult.notEqual;
-    });
-  }
-
-  // ##################################################
-  // @brief: Getter/Setter for hash strings
-  // @return: String
-  // ##################################################
-  String getHashGen() {
-    return _hashGen;
-  }
-
-  String getHashComp() {
-    return _hashComp;
-  }
-
-  void setHashGen(String s) {
-    setState(() {
-      _hashGen = s;
-    });
-  }
-
-  void setHashComp(String s) {
-    setState(() {
-      _hashComp = s;
-    });
   }
 }
 
@@ -239,6 +202,10 @@ class T_FileTreeView extends StatefulWidget {
   State<StatefulWidget> createState() => _T_FileTreeView_state();
 }
 
+// ##################################################
+// # STATE
+// # File tree view area
+// ##################################################
 class _T_FileTreeView_state extends State<T_FileTreeView> {
   // Is file tree visible
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
@@ -271,5 +238,143 @@ class _T_FileTreeView_state extends State<T_FileTreeView> {
                 ])
           ])
         : const SizedBox.shrink();
+  }
+}
+
+// ##################################################
+// # TEMPLATE
+// # Hash generation view
+// # This widget can be inserted into file view to show hash calculation progress or generated hash comparison
+// ##################################################
+class T_HashGenerationView extends StatefulWidget {
+  // Attributes
+  final String filepath;
+
+  // Constructor
+  T_HashGenerationView({super.key, required this.filepath});
+
+  // Hash generation view key
+  final GlobalKey<T_HashGenerationView_state> globKey_HashGenView =
+      GlobalKey<T_HashGenerationView_state>();
+
+  @override
+  State<StatefulWidget> createState() => T_HashGenerationView_state();
+}
+
+// ##################################################
+// # STATE
+// # Hash generation view state
+// ##################################################
+class T_HashGenerationView_state extends State<T_HashGenerationView> {
+  // State attributes
+  String _hashGen = "";
+  double _genProgress = 0;
+  E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
+
+  @override
+  Widget build(BuildContext context) {
+    return _hashGen.isEmpty
+        ? LinearPercentIndicator(
+            percent: _genProgress,
+            lineHeight: Style_FileTree_HashGen_Prg_Height_px,
+            center: Text("${(_genProgress * 100).toStringAsFixed(1)}%",
+                style: Style_FileTree_HashGen_Prg_Text),
+            progressColor: Style_FileTree_HashGen_Prg_Color)
+        : Container(
+            color: Style_FileTree_HashComp_Colors[_comparisonResult],
+            child: Text(_hashGen, style: Style_FileTree_HashGen));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    generateHash(DefaultHashAlgorithm.value);
+  }
+
+  // ##################################################
+  // @brief: Compare generated hash with text input
+  // @param: hashGen
+  // @param: hashComp
+  // ##################################################
+  // TODO: Whole line is recreated but only hash background color changes
+  void compareHashes(String hashComp) {
+    setState(() {
+      // If any of both hashes is empty, no comparison is done
+      if (_hashGen.isEmpty || hashComp.isEmpty) {
+        _comparisonResult = E_HashComparisonResult.none;
+        return;
+      }
+
+      // For 2 valid inputs, the result is equal or not equal
+      _comparisonResult = _hashGen == hashComp
+          ? E_HashComparisonResult.equal
+          : E_HashComparisonResult.notEqual;
+
+      return;
+    });
+  }
+
+  // ##################################################
+  // @brief: Calculate hash and update GUI
+  // ##################################################
+  void generateHash(String? alg) async {
+    // -------------------- Read file --------------------
+    File file = File(widget.filepath);
+    if (!await file.exists()) {
+      throw FileSystemException("File ${widget.filepath} does not exist");
+    }
+
+    // -------------------- Generate hash --------------------
+
+    // Reset old hash
+    setState(() {
+      _hashGen = "";
+    });
+
+    // File size and processed size for progress calculation
+    int totalBytes = await file.length();
+    int bytesRead = 0;
+
+    // Select hash algorithm
+    var hashOut = AccumulatorSink<Digest>();
+    ByteConversionSink hasher;
+    if (alg == E_HashAlgorithms.MD5.value) {
+      hasher = md5.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA1.value) {
+      hasher = sha1.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA256.value) {
+      hasher = sha256.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA384.value) {
+      hasher = sha384.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA512.value) {
+      hasher = sha512.startChunkedConversion(hashOut);
+    } else {
+      setState(() {
+        _hashGen = "<Can't use hash algorithm '$alg'>";
+      });
+      return;
+    }
+
+    // Read file step by step and generate hash
+    await for (var chunk in file.openRead()) {
+      // Generate hash for next file part
+      bytesRead += chunk.length;
+      hasher.add(chunk);
+
+      // Update progress bar
+      setState(() {
+        _genProgress = bytesRead / totalBytes;
+      });
+    }
+
+    // -------------------- Done --------------------
+
+    // Extract hash string
+    hasher.close();
+    String hashString = hashOut.events.single.toString();
+
+    setState(() {
+      _hashGen = hashString;
+    });
   }
 }
