@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:file_tree_hasher/templates/contentarea.dart';
-
 // ##################################################
 // @brief: Get home directory depending on plattform
 // @return: Directory

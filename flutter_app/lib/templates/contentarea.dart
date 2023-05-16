@@ -13,6 +13,7 @@
 
 import 'dart:io';
 
+import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:path/path.dart' as path;
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,9 @@ import 'package:file_tree_hasher/templates/filetree.dart';
 // # Body content
 // ##################################################
 GlobalKey<T_BodyContent_state> BodyContent = GlobalKey<T_BodyContent_state>();
+
+// ---------- Currently selected global hash algorithm ----------
+String? SelectedGlobalHashAlg = DefaultHashAlgorithm.value;
 
 // ##################################################
 // # CONTENT
@@ -59,6 +63,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       // -------------------- Section: Hash algorithm --------------------
       T_HeaderControlSection(headingText: "Algorithm selection", items: [
         T_GlobalHashSelector(onChanged: (selected) {
+          SelectedGlobalHashAlg = selected;
           BodyContent.currentState!.updateHashAlg(selected);
         })
       ]),

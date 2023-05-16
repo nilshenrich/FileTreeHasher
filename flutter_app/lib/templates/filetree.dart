@@ -17,9 +17,9 @@ import 'dart:io';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
-import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
+import 'package:file_tree_hasher/templates/contentarea.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -307,7 +307,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   @override
   void initState() {
     super.initState();
-    generateHash(DefaultHashAlgorithm.value);
+    generateHash(SelectedGlobalHashAlg);
   }
 
   // ##################################################
