@@ -18,6 +18,7 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
+import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
@@ -346,8 +347,22 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
     // Select hash algorithm
     var hashOut = AccumulatorSink<Digest>();
     ByteConversionSink hasher;
-    hasher = sha256.startChunkedConversion(
-        hashOut); // TODO: Select algorithm based on selection
+    if (alg == E_HashAlgorithms.MD5.value) {
+      hasher = md5.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA1.value) {
+      hasher = sha1.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA256.value) {
+      hasher = sha256.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA384.value) {
+      hasher = sha384.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA512.value) {
+      hasher = sha512.startChunkedConversion(hashOut);
+    } else {
+      setState(() {
+        _hashGen = "<Can't use hash algorithm '$alg'>";
+      });
+      return;
+    }
 
     // Read file step by step and generate hash
     await for (var chunk in file.openRead()) {
