@@ -321,7 +321,11 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
     // -------------------- Read file --------------------
     File file = File(widget.filepath);
     if (!await file.exists()) {
-      throw FileSystemException("File ${widget.filepath} does not exist");
+      // throw FileSystemException("File ${widget.filepath} does not exist");
+      setState(() {
+        _hashGen = "<Can't find file in file system>";
+      });
+      return;
     }
 
     // -------------------- Generate hash --------------------
