@@ -269,6 +269,12 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
             child: Text(_hashGen, style: Style_FileTree_HashGen));
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _generateHash();
+  }
+
   // ##################################################
   // @brief: Compare generated hash with text input
   // @param: hashGen
@@ -289,6 +295,23 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
           : E_HashComparisonResult.notEqual;
 
       return;
+    });
+  }
+
+  // ##################################################
+  // @brief: Calculate hash and update GUI
+  // ##################################################
+  void _generateHash() async {
+    // TODO: Use real hash algorithm with progress
+    for (var element in Iterable.generate(27)) {
+      setState(() {
+        _genProgress = element / 27;
+      });
+      // sleep(Duration(milliseconds: 100));
+      await Future.delayed(Duration(milliseconds: 100));
+    }
+    setState(() {
+      _hashGen = "test";
     });
   }
 }
