@@ -163,7 +163,11 @@ class _T_FileView_state extends State<T_FileView> {
           child: T_HashGenerationView(
               key: hashGenerationView, filepath: widget.path)),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_FileHashSelector(key: widget.globKey_HashAlg),
+      T_FileHashSelector(
+          key: widget.globKey_HashAlg,
+          onChanged: (selected) {
+            hashGenerationView.currentState!.updateHashAlg(selected);
+          }),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
           width: Style_FileTree_ComparisonInput_Width_px,
@@ -262,7 +266,7 @@ class T_HashGenerationView extends StatefulWidget {
 class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // State attributes
   String _hashGen = "";
-  double _genProgress = 0.1;
+  double _genProgress = 0;
   E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
 
   @override
@@ -282,6 +286,15 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   @override
   void initState() {
     super.initState();
+    _generateHash();
+  }
+
+  // ##################################################
+  // @brief: Update hash algorith
+  //         This will rebuild the whole widget
+  // @param: alg
+  // ##################################################
+  void updateHashAlg(String? alg) {
     _generateHash();
   }
 
@@ -319,6 +332,11 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
     }
 
     // -------------------- Generate hash --------------------
+
+    // Reset old hash
+    setState(() {
+      _hashGen = "";
+    });
 
     // File size and processed size for progress calculation
     int totalBytes = await file.length();
