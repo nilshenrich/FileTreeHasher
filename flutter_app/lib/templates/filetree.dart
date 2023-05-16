@@ -142,7 +142,6 @@ class T_FileView extends T_FileTreeItem {
 // ##################################################
 class _T_FileView_state extends State<T_FileView> {
   // State attributes
-  String _hashGen = "";
   String _hashComp = "";
 
   @override
@@ -167,28 +166,13 @@ class _T_FileView_state extends State<T_FileView> {
               controller: TextEditingController(text: _hashComp),
               onChanged: (value) {
                 _hashComp = value;
-                hashGenerationView.currentState!
-                    .compareHashes(getHashGen(), value);
+                hashGenerationView.currentState!.compareHashes(value);
               }))
     ]);
   }
 
-  // ##################################################
-  // @brief: Getter/Setter for hash strings
-  // @return: String
-  // ##################################################
-  String getHashGen() {
-    return _hashGen;
-  }
-
   String getHashComp() {
     return _hashComp;
-  }
-
-  void setHashGen(String s) {
-    setState(() {
-      _hashGen = s;
-    });
   }
 
   void setHashComp(String s) {
@@ -275,13 +259,14 @@ class T_HashGenerationView extends StatefulWidget {
 // ##################################################
 class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // State attributes
+  String _hashGen = "test";
   E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
 
   @override
   Widget build(BuildContext context) {
     return Container(
         color: Style_FileTree_HashComp_Colors[_comparisonResult],
-        child: Text("", style: Style_FileTree_HashGen));
+        child: Text(_hashGen, style: Style_FileTree_HashGen));
   }
 
   // ##################################################
@@ -290,18 +275,20 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // @param: hashComp
   // ##################################################
   // TODO: Whole line is recreated but only hash background color changes
-  void compareHashes(String hashGen, String hashComp) {
+  void compareHashes(String hashComp) {
     setState(() {
       // If any of both hashes is empty, no comparison is done
-      if (hashGen.isEmpty || hashComp.isEmpty) {
+      if (_hashGen.isEmpty || hashComp.isEmpty) {
         _comparisonResult = E_HashComparisonResult.none;
         return;
       }
 
       // For 2 valid inputs, the result is equal or not equal
-      _comparisonResult = hashGen == hashComp
+      _comparisonResult = _hashGen == hashComp
           ? E_HashComparisonResult.equal
           : E_HashComparisonResult.notEqual;
+
+      return;
     });
   }
 }
