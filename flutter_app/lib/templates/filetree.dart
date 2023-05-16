@@ -22,6 +22,7 @@ import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 // ##################################################
@@ -282,7 +283,25 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
             progressColor: Style_FileTree_HashGen_Prg_Color)
         : Container(
             color: Style_FileTree_HashComp_Colors[_comparisonResult],
-            child: Text(_hashGen, style: Style_FileTree_HashGen));
+            child: Row(children: [
+              Text(_hashGen, style: Style_FileTree_HashGen),
+              SizedBox(
+                  height: Style_FileTree_HashSelector_FontSize_px,
+                  child: IconButton(
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: _hashGen));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Copied to clipboard")));
+                      },
+                      iconSize: Style_FileTree_HashSelector_FontSize_px,
+                      padding: EdgeInsets.zero,
+                      color: Style_FileTree_HashGen.color,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      icon: const Icon(Icons.copy)))
+            ]));
   }
 
   @override
