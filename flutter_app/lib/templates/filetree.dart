@@ -37,7 +37,7 @@ abstract class T_FileTreeItem extends StatefulWidget {
   final String namePathPart;
 
   // Hash algorithm selector key
-  final globKey_HashAlg = GlobalKey<T_HashSelector_state>();
+  final globKey_HashAlgorithm = GlobalKey<T_HashSelector_state>();
 
   // Constructor
   T_FileTreeItem({super.key, required name, required this.path})
@@ -97,7 +97,8 @@ class _T_FolderView_state extends State<T_FolderView> {
               Expanded(child: Text(widget.name)),
               const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
               T_FileHashSelector(
-                  key: widget.globKey_HashAlg, onChanged: change_hashAlgorithm),
+                  key: widget.globKey_HashAlgorithm,
+                  onChanged: change_hashAlgorithm),
               const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
               const SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
               SizedBox(
@@ -153,7 +154,7 @@ class _T_FolderView_state extends State<T_FolderView> {
   void change_hashAlgorithm(String? selected) {
     // For all sub-elements change hash algorithm to same vale (Sub-folders will automatically do for their sub-elements)
     for (T_FileTreeItem subitem in widget.subitems) {
-      subitem.globKey_HashAlg.currentState?.set(selected);
+      subitem.globKey_HashAlgorithm.currentState?.set(selected);
     }
   }
 }
@@ -163,8 +164,8 @@ class _T_FolderView_state extends State<T_FolderView> {
 // # Single file view
 // ##################################################
 class T_FileView extends T_FileTreeItem {
-  final hashGenerationView = GlobalKey<T_HashGenerationView_state>();
-  final hashComparisonView = GlobalKey<T_HashComparisonView_state>();
+  final globKey_HashGenerationView = GlobalKey<T_HashGenerationView_state>();
+  final globKey_HashComparisonView = GlobalKey<T_HashComparisonView_state>();
 
   // Constructor
   T_FileView({super.key, required super.path, required super.name});
@@ -194,19 +195,21 @@ class _T_FileView_state extends State<T_FileView> {
             const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
             Expanded(
                 child: T_HashGenerationView(
-                    key: widget.hashGenerationView, filepath: widget.path)),
+                    key: widget.globKey_HashGenerationView,
+                    filepath: widget.path)),
             const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
             T_FileHashSelector(
-                key: widget.globKey_HashAlg,
+                key: widget.globKey_HashAlgorithm,
                 onChanged: (selected) {
-                  widget.hashGenerationView.currentState!
+                  widget.globKey_HashGenerationView.currentState!
                       .generateHash(selected);
                 }),
             const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
             T_HashComparisonView(
-                key: widget.hashComparisonView,
+                key: widget.globKey_HashComparisonView,
                 onChanged: (value) {
-                  widget.hashGenerationView.currentState!.compareHashes(value);
+                  widget.globKey_HashGenerationView.currentState!
+                      .compareHashes(value);
                 }),
             SizedBox(
               height: Style_FileTree_ComparisonInput_Height_px,

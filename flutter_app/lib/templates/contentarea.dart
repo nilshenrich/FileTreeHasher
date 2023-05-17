@@ -183,11 +183,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void updateHashAlg(String? selected) {
     for (T_FileTreeView view in _loadedTrees) {
       for (T_FileTreeItem item in view.items) {
-        item.globKey_HashAlg.currentState?.set(selected);
+        item.globKey_HashAlgorithm.currentState?.set(selected);
       }
     }
     for (T_FileView item in _loadedFiles) {
-      item.globKey_HashAlg.currentState?.set(selected);
+      item.globKey_HashAlgorithm.currentState?.set(selected);
     }
   }
 
@@ -198,14 +198,14 @@ class T_BodyContent_state extends State<T_BodyContent> {
     for (T_FileTreeView view in _loadedTrees) {
       for (T_FileTreeItem item in view.items) {
         if (item is T_FileView) {
-          item.hashComparisonView.currentState?.set("");
+          item.globKey_HashComparisonView.currentState?.set("");
         } else if (item is T_FolderView) {
           _clearCompInp(item);
         }
       }
     }
     for (T_FileView item in _loadedFiles) {
-      item.hashComparisonView.currentState?.set("");
+      item.globKey_HashComparisonView.currentState?.set("");
     }
   }
 
@@ -259,7 +259,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void _clearCompInp(T_FolderView folder) {
     for (T_FileTreeItem item in folder.subitems) {
       if (item is T_FileView) {
-        item.hashComparisonView.currentState?.set("");
+        item.globKey_HashComparisonView.currentState?.set("");
       } else if (item is T_FolderView) {
         _clearCompInp(item);
       }
