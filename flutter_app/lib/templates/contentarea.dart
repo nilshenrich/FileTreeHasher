@@ -192,6 +192,19 @@ class T_BodyContent_state extends State<T_BodyContent> {
   }
 
   // ##################################################
+  // @brief: Create hash files from generated hashes
+  //         Hash file clusters:
+  //            - Each file tree gets its own hash file
+  //            - The single file section also gets its own hash file for all single files
+  //         Hash file storage location:
+  //            - Before the file is created, a popup opens where the user can select the storage location for each of the planned hash files
+  //              It is build like a table where the user can see the loaded trees and single files and belonging storage paths that can be changed via file selectors (file can be added or replaced)
+  //            - Default locations:
+  //                - For file trees the hash files default location is directly inside the loaded folder
+  //                - For single file section the hash files default location is the users home directory
+  // ##################################################
+
+  // ##################################################
   // @brief: Clear all inputs for comparison hash
   // ##################################################
   void clearComparisonInputs() {
