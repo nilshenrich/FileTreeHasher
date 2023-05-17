@@ -138,6 +138,9 @@ class _T_FolderView_state extends State<T_FolderView> {
 // # Single file view
 // ##################################################
 class T_FileView extends T_FileTreeItem {
+  final GlobalKey<T_HashGenerationView_state> hashGenerationView =
+      GlobalKey<T_HashGenerationView_state>();
+
   // Constructor
   T_FileView({super.key, required super.path, required super.name});
 
@@ -155,8 +158,6 @@ class _T_FileView_state extends State<T_FileView> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<T_HashGenerationView_state> hashGenerationView =
-        GlobalKey<T_HashGenerationView_state>();
     return Row(children: [
       const SizedBox(width: Style_FileTree_Icon_Width_px),
       const Icon(Icons.description),
@@ -164,12 +165,12 @@ class _T_FileView_state extends State<T_FileView> {
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       Expanded(
           child: T_HashGenerationView(
-              key: hashGenerationView, filepath: widget.path)),
+              key: widget.hashGenerationView, filepath: widget.path)),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       T_FileHashSelector(
           key: widget.globKey_HashAlg,
           onChanged: (selected) {
-            hashGenerationView.currentState!.generateHash(selected);
+            widget.hashGenerationView.currentState!.generateHash(selected);
           }),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       SizedBox(
@@ -182,7 +183,7 @@ class _T_FileView_state extends State<T_FileView> {
               controller: TextEditingController(text: _hashComp),
               onChanged: (value) {
                 _hashComp = value;
-                hashGenerationView.currentState!.compareHashes(value);
+                widget.hashGenerationView.currentState!.compareHashes(value);
               }))
     ]);
   }
