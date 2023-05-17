@@ -14,6 +14,7 @@
 import 'dart:io';
 
 import 'package:file_tree_hasher/definies/defaults.dart';
+import 'package:file_tree_hasher/templates/contentdivider.dart';
 import 'package:path/path.dart' as path;
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +108,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: _loadedTrees);
+    return Column(children: [
+      const ContentDivider_folders(),
+      Column(children: _loadedTrees),
+      const ContentDivider_files()
+    ]);
   }
 
   // ##################################################
@@ -136,7 +141,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @brief: Let user select a single file to show
   //         The new file is added to the view on its own
   // ##################################################
-  Future<void> selectNewFile() async {
+  void selectNewFile() async {
     // -------------------- Select file from system --------------------
     String? filePath = await FilesystemPicker.openDialog(
         title: "Select file",
