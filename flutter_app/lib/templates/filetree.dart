@@ -281,28 +281,27 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
             center: Text("${(_genProgress * 100).toStringAsFixed(1)}%",
                 style: Style_FileTree_HashGen_Prg_Text),
             progressColor: Style_FileTree_HashGen_Prg_Color)
-        : Container(
-            color: Style_FileTree_HashComp_Colors[_comparisonResult],
-            child: Row(children: [
-              Flexible(
-                  child: Text(_hashGen, style: Style_FileTree_HashGen_Text)),
-              SizedBox(
-                  height: Style_FileTree_HashSelector_FontSize_px,
-                  child: IconButton(
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: _hashGen));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Copied to clipboard")));
-                      },
-                      iconSize: Style_FileTree_HashSelector_FontSize_px,
-                      padding: EdgeInsets.zero,
-                      color: Style_FileTree_HashGen_Text.color,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      icon: const Icon(Icons.copy)))
-            ]));
+        : Row(children: [
+            Flexible(
+                child: Container(
+                    color: Style_FileTree_HashComp_Colors[_comparisonResult],
+                    child: Text(_hashGen, style: Style_FileTree_HashGen_Text))),
+            SizedBox(
+                height: Style_FileTree_HashSelector_FontSize_px,
+                child: IconButton(
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: _hashGen));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Copied to clipboard")));
+                    },
+                    iconSize: Style_FileTree_HashSelector_FontSize_px,
+                    padding: EdgeInsets.zero,
+                    color: Style_FileTree_HashGen_Text.color,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    icon: const Icon(Icons.copy)))
+          ]);
   }
 
   @override
