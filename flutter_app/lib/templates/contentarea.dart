@@ -42,13 +42,13 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       T_HeaderControlSection(headingText: "File tree control", items: [
         // ---------- Button: load file tree ----------
         IconButton(
-          onPressed: BodyContent.currentState?.selectNew,
+          onPressed: BodyContent.currentState?.selectNewFolder,
           icon: const Icon(Icons.drive_folder_upload),
           tooltip: "Load file tree",
         ),
         // ---------- Button: Load single file ----------
         IconButton(
-            onPressed: () {},
+            onPressed: BodyContent.currentState?.selectNewFile,
             icon: const Icon(Icons.upload_file),
             tooltip: "Load single file"),
         // ---------- Button: clear all ----------
@@ -114,7 +114,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @brief: Let user select a folder to show file tree of.
   //         The new tree view is added to the view under new expandable
   // ##################################################
-  void selectNew() async {
+  void selectNewFolder() async {
     // -------------------- Select folder from system --------------------
     // TODO: Don't show hidden folders
     String? filetreePath = await FilesystemPicker.openDialog(
@@ -129,14 +129,38 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
-    _showNew(filetreePath);
+    _showNewFolder(filetreePath);
+  }
+
+  // ##################################################
+  // @brief: Let user select a single file to show
+  //         The new file is added to the view on its own
+  // ##################################################
+  Future<void> selectNewFile() async {
+    // -------------------- Select file from system --------------------
+    String? filePath = await FilesystemPicker.openDialog(
+        title: "Select file",
+        context: context,
+        rootDirectory: getHomeDir(),
+        fsType: FilesystemType.file,
+        pickText: "Select file to load into view",
+        showGoUp: false);
+    if (filePath == null) {
+      return;
+    }
+
+    // -------------------- Show selected file in body --------------------
+    T_FileView file = T_FileView(path: filePath, name: path.basename(filePath));
+    setState(() {
+      _loadedTrees.add(T_FileTreeView(items: [file], title: filePath));
+    });
   }
 
   // ##################################################
   // @brief: Show file tree from a given path
   // @param: path
   // ##################################################
-  void _showNew(String path) {
+  void _showNewFolder(String path) {
     setState(() {
       _loadedTrees.add(
           T_FileTreeView(items: _loadFolder(Directory(path)), title: path));
