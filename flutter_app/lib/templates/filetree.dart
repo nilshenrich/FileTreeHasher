@@ -181,7 +181,6 @@ class T_FileView extends T_FileTreeItem {
 // TODO: File shall be removable
 class _T_FileView_state extends State<T_FileView> {
   // State attributes
-  String _hashComp = "";
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
   bool _visible = true;
 
@@ -211,9 +210,8 @@ class _T_FileView_state extends State<T_FileView> {
                 child: TextField(
                     style: Style_FileTree_ComparisonInput_Text,
                     decoration: Style_FileTree_ComparisonInput_Decoration,
-                    controller: TextEditingController(text: _hashComp),
+                    controller: TextEditingController(text: ""),
                     onChanged: (value) {
-                      _hashComp = value;
                       widget.hashGenerationView.currentState!
                           .compareHashes(value);
                     })),
