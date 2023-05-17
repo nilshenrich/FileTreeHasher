@@ -285,7 +285,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
         : Container(
             color: Style_FileTree_HashComp_Colors[_comparisonResult],
             child: Row(children: [
-              Text(_hashGen, style: Style_FileTree_HashGen),
+              Expanded(child: Text(_hashGen, style: Style_FileTree_HashGen)),
               SizedBox(
                   height: Style_FileTree_HashSelector_FontSize_px,
                   child: IconButton(

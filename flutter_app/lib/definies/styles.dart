@@ -43,7 +43,8 @@ const double Style_FileTree_SubItem_ShiftRight_px = 20;
 const double Style_FileTree_Item_ElementSpaces_px = 10;
 
 // Text style for generated hash
-const TextStyle Style_FileTree_HashGen = TextStyle(color: Colors.grey);
+const TextStyle Style_FileTree_HashGen =
+    TextStyle(color: Colors.grey, overflow: TextOverflow.ellipsis);
 const Map<E_HashComparisonResult, Color> Style_FileTree_HashComp_Colors = {
   E_HashComparisonResult.none: Colors.transparent,
   E_HashComparisonResult.equal: Colors.green,
