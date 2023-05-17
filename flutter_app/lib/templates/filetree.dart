@@ -177,7 +177,7 @@ class _T_FileView_state extends State<T_FileView> {
           width: Style_FileTree_ComparisonInput_Width_px,
           height: Style_FileTree_ComparisonInput_Height_px,
           child: TextField(
-              style: Style_FileTree_ComparisonInput,
+              style: Style_FileTree_ComparisonInput_Text,
               decoration: Style_FileTree_ComparisonInput_Decoration,
               controller: TextEditingController(text: _hashComp),
               onChanged: (value) {
@@ -284,7 +284,8 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
         : Container(
             color: Style_FileTree_HashComp_Colors[_comparisonResult],
             child: Row(children: [
-              Flexible(child: Text(_hashGen, style: Style_FileTree_HashGen)),
+              Flexible(
+                  child: Text(_hashGen, style: Style_FileTree_HashGen_Text)),
               SizedBox(
                   height: Style_FileTree_HashSelector_FontSize_px,
                   child: IconButton(
@@ -296,7 +297,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
                       },
                       iconSize: Style_FileTree_HashSelector_FontSize_px,
                       padding: EdgeInsets.zero,
-                      color: Style_FileTree_HashGen.color,
+                      color: Style_FileTree_HashGen_Text.color,
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       splashColor: Colors.transparent,

@@ -34,7 +34,7 @@ const Color Style_FileTree_HashGen_Prg_Color = Colors.green;
 // Hash comparison input
 const double Style_FileTree_ComparisonInput_Width_px = 200;
 const double Style_FileTree_ComparisonInput_Height_px = 20;
-const TextStyle Style_FileTree_ComparisonInput = TextStyle(fontSize: 14);
+const TextStyle Style_FileTree_ComparisonInput_Text = TextStyle(fontSize: 14);
 const InputDecoration Style_FileTree_ComparisonInput_Decoration =
     InputDecoration(
         border: OutlineInputBorder(),
@@ -48,7 +48,7 @@ const double Style_FileTree_SubItem_ShiftRight_px = 20;
 const double Style_FileTree_Item_ElementSpaces_px = 10;
 
 // Text style for generated hash
-const TextStyle Style_FileTree_HashGen =
+const TextStyle Style_FileTree_HashGen_Text =
     TextStyle(color: Colors.grey, overflow: TextOverflow.ellipsis);
 const Map<E_HashComparisonResult, Color> Style_FileTree_HashComp_Colors = {
   E_HashComparisonResult.none: Colors.transparent,
