@@ -164,7 +164,7 @@ class _T_FolderView_state extends State<T_FolderView> {
 // ##################################################
 class T_FileView extends T_FileTreeItem {
   final hashGenerationView = GlobalKey<T_HashGenerationView_state>();
-  final hashComparisonView = GlobalKey<State<TextField>>();
+  final hashComparisonView = GlobalKey<T_HashComparisonView_state>();
 
   // Constructor
   T_FileView({super.key, required super.path, required super.name});
@@ -477,12 +477,18 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
         child: TextField(
             style: Style_FileTree_ComparisonInput_Text,
             decoration: Style_FileTree_ComparisonInput_Decoration,
-            controller: TextEditingController(text: ""),
+            controller: TextEditingController(text: _hashComp),
             onChanged: (value) {
               _hashComp = value;
               if (widget.onChanged != null) {
                 widget.onChanged!(value);
               }
             }));
+  }
+
+  void set(String val) {
+    setState(() {
+      _hashComp = val;
+    });
   }
 }

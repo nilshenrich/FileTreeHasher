@@ -76,7 +76,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
             icon: const Icon(Icons.download_outlined),
             tooltip: "Safe checksum file"),
         IconButton(
-            onPressed: () {},
+            onPressed: BodyContent.currentState?.clearComparisonInputs,
             icon: const Icon(Icons.delete_forever_outlined),
             tooltip: "Clear comparison strings")
       ])
@@ -188,6 +188,26 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
     for (T_FileView item in _loadedFiles) {
       item.globKey_HashAlg.currentState?.set(selected);
+    }
+  }
+
+  // ##################################################
+  // @brief: Clear all inputs for comparison hash
+  // ##################################################
+  void clearComparisonInputs() {
+    for (T_FileTreeView view in _loadedTrees) {
+      for (T_FileTreeItem item in view.items) {
+        if (item is T_FileView) {
+          item.hashComparisonView.currentState?.set("");
+        } else if (item is T_FolderView) {
+          _clearCompInp(item);
+        }
+      }
+    }
+    for (T_FileView item in _loadedFiles) {
+      if (item is T_FileView) {
+        item.hashComparisonView.currentState?.set("");
+      }
     }
   }
 
