@@ -54,7 +54,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
             tooltip: "Load single file"),
         // ---------- Button: clear all ----------
         IconButton(
-            onPressed: () {},
+            onPressed: BodyContent.currentState?.clearContent,
             icon: const Icon(Icons.delete_forever_outlined),
             tooltip: "Clear all loaded files and file trees")
       ]),
@@ -167,6 +167,31 @@ class T_BodyContent_state extends State<T_BodyContent> {
   }
 
   // ##################################################
+  // @brief: Remove all loaded file trees and files
+  // ##################################################
+  void clearContent() {
+    setState(() {
+      _loadedTrees.clear();
+      _loadedFiles.clear();
+    });
+  }
+
+  // ##################################################
+  // @brief: Update all hash algorithms recursively
+  // @param: selected
+  // ##################################################
+  void updateHashAlg(String? selected) {
+    for (T_FileTreeView view in _loadedTrees) {
+      for (T_FileTreeItem item in view.items) {
+        item.globKey_HashAlg.currentState?.set(selected);
+      }
+    }
+    for (T_FileView item in _loadedFiles) {
+      item.globKey_HashAlg.currentState?.set(selected);
+    }
+  }
+
+  // ##################################################
   // @brief: Show file tree from a given path
   // @param: path
   // ##################################################
@@ -207,21 +232,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
       }
     }
     return itemsList;
-  }
-
-  // ##################################################
-  // @brief: Update all hash algorithms recursively
-  // @param: selected
-  // ##################################################
-  void updateHashAlg(String? selected) {
-    for (T_FileTreeView view in _loadedTrees) {
-      for (T_FileTreeItem item in view.items) {
-        item.globKey_HashAlg.currentState?.set(selected);
-      }
-    }
-    for (T_FileView item in _loadedFiles) {
-      item.globKey_HashAlg.currentState?.set(selected);
-    }
   }
 }
 
