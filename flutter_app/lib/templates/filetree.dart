@@ -177,9 +177,8 @@ class _T_FileView_state extends State<T_FileView> {
           width: Style_FileTree_ComparisonInput_Width_px,
           height: Style_FileTree_ComparisonInput_Height_px,
           child: TextField(
-              style: const TextStyle(
-                  fontSize: Style_FileTree_ComparisonInput_FontSize_px),
-              decoration: const InputDecoration(border: OutlineInputBorder()),
+              style: Style_FileTree_ComparisonInput,
+              decoration: Style_FileTree_ComparisonInput_Decoration,
               controller: TextEditingController(text: _hashComp),
               onChanged: (value) {
                 _hashComp = value;
