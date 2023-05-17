@@ -8,7 +8,7 @@ class _DividerPart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Expanded(child: Divider(color: Colors.black));
+    return const Expanded(child: Divider(color: Colors.black, thickness: 1));
   }
 }
 
@@ -20,7 +20,7 @@ class _TextPart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text);
+    return Text(text, style: const TextStyle(fontSize: 18));
   }
 }
 
@@ -35,9 +35,13 @@ abstract class _ContentDivider extends StatelessWidget {
     return Column(children: [
       const SizedBox(height: 10),
       Row(children: [
-        const _DividerPart(),
-        _TextPart(text: text),
-        const _DividerPart()
+        const SizedBox(width: 10), // Space to the left
+        const _DividerPart(), // Left divider line part
+        const SizedBox(width: 10), // Text space to the left
+        _TextPart(text: text), // Divider text
+        const SizedBox(width: 10), // Text space to the right
+        const _DividerPart(), // Right divider line part
+        const SizedBox(width: 10) // Space to the right
       ]),
       const SizedBox(height: 5)
     ]);

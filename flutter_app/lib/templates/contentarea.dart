@@ -105,13 +105,15 @@ class T_BodyContent extends StatefulWidget {
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
   final List<T_FileTreeView> _loadedTrees = [_exampleFileTree];
+  final List<T_FileView> _loadedFiles = [_exampleFile];
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       const ContentDivider_folders(),
       Column(children: _loadedTrees),
-      const ContentDivider_files()
+      const ContentDivider_files(),
+      Column(children: _loadedFiles)
     ]);
   }
 
@@ -155,9 +157,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected file in body --------------------
-    T_FileView file = T_FileView(path: filePath, name: path.basename(filePath));
+    T_FileView file = T_FileView(path: filePath, name: filePath);
     setState(() {
-      _loadedTrees.add(T_FileTreeView(items: [file], title: filePath));
+      _loadedFiles.add(file);
     });
   }
 
@@ -214,6 +216,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
         item.globKey_HashAlg.currentState?.set(selected);
       }
     }
+    for (T_FileView item in _loadedFiles) {
+      item.globKey_HashAlg.currentState?.set(selected);
+    }
   }
 }
 
@@ -237,3 +242,5 @@ T_FileTreeView _exampleFileTree = T_FileTreeView(
     T_FileView(path: "/root/file", name: "top-file")
   ],
 );
+T_FileView _exampleFile =
+    T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");

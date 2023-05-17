@@ -35,10 +35,7 @@ class T_HeaderControlSection extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           // ---------- Section heading ----------
-          Text(
-            headingText,
-            textScaleFactor: 1.5,
-          ),
+          Text(headingText, style: const TextStyle(fontSize: 22)),
           const Divider(
               thickness: 1.0,
               color: Colors.black,
