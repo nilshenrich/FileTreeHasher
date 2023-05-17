@@ -205,9 +205,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
       }
     }
     for (T_FileView item in _loadedFiles) {
-      if (item is T_FileView) {
-        item.hashComparisonView.currentState?.set("");
-      }
+      item.hashComparisonView.currentState?.set("");
     }
   }
 
@@ -252,6 +250,20 @@ class T_BodyContent_state extends State<T_BodyContent> {
       }
     }
     return itemsList;
+  }
+
+  // ##################################################
+  // @brief: Clear all inputs for comparison hash for folder sub-items
+  // @param: folder
+  // ##################################################
+  void _clearCompInp(T_FolderView folder) {
+    for (T_FileTreeItem item in folder.subitems) {
+      if (item is T_FileView) {
+        item.hashComparisonView.currentState?.set("");
+      } else if (item is T_FolderView) {
+        _clearCompInp(item);
+      }
+    }
   }
 }
 

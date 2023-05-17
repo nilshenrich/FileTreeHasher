@@ -486,6 +486,12 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
             }));
   }
 
+  // ##################################################
+  // @brief: Getter/Setter
+  // @param: val
+  // @return: String
+  // ##################################################
+  // FIXME: Hash needs to be rechecked on change
   void set(String val) {
     setState(() {
       _hashComp = val;
