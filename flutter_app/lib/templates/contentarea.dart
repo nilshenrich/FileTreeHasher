@@ -16,7 +16,6 @@ import 'dart:io';
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
-import 'package:path/path.dart' as libpath;
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
@@ -194,7 +193,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
         // Load all sub items of this subfolder and add to list
         T_FolderView subfolder = T_FolderView(
             path: item.path,
-            name: libpath.basename(item.path),
+            name: getFileName(item.path),
             subitems: _loadFolder(item));
         itemsList.add(subfolder);
       }
@@ -203,7 +202,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
       else if (item is File) {
         // Add file element to list
         T_FileView file =
-            T_FileView(path: item.path, name: libpath.basename(item.path));
+            T_FileView(path: item.path, name: getFileName(item.path));
         itemsList.add(file);
       }
     }
@@ -230,20 +229,34 @@ class T_BodyContent_state extends State<T_BodyContent> {
 T_FileTreeView _exampleFileTree = T_FileTreeView(
   title: "<First loaded file tree>",
   items: [
-    T_FolderView(path: "/root/folder", name: "top-folder", subitems: [
-      T_FolderView(path: "/root/folder/folder", name: "sub-folder", subitems: [
-        T_FolderView(
-            path: "/root/folder/folder/folder", name: "sub-sub-folder"),
-        T_FileView(path: "/root/folder/folder/file", name: "sub-sub-file")
-      ]),
-      T_FolderView(
-          path: "/root/folder/folder-long", name: "sub-folder-with-long-name"),
-      T_FileView(path: "/root/folder/file", name: "sub-file"),
-      T_FileView(
-          path: "/root/folder/file-long", name: "sub-file-with-long-name")
-    ]),
-    T_FolderView(path: "/root/folder-long", name: "folder-with-long-name"),
-    T_FileView(path: "/root/file", name: "top-file")
+    T_FolderView(
+        path: "/root/folder/top-folder",
+        name: "top-folder",
+        subitems: [
+          T_FolderView(
+              path: "/root/folder/top-folder/sub-folder",
+              name: "sub-folder",
+              subitems: [
+                T_FolderView(
+                    path: "/root/folder/top-folder/sub-folder/sub-sub-folder",
+                    name: "sub-sub-folder"),
+                T_FileView(
+                    path: "/root/folder/top-folder/sub-folder/sub-sub-file",
+                    name: "sub-sub-file")
+              ]),
+          T_FolderView(
+              path: "/root/folder/top-folder/sub-folder-with-long-name",
+              name: "sub-folder-with-long-name"),
+          T_FileView(
+              path: "/root/folder/top-folder/sub-file", name: "sub-file"),
+          T_FileView(
+              path: "/root/folder/top-folder/sub-file-with-long-name",
+              name: "sub-file-with-long-name")
+        ]),
+    T_FolderView(
+        path: "/root/folder/folder-with-long-name",
+        name: "folder-with-long-name"),
+    T_FileView(path: "/root/folder/top-file", name: "top-file")
   ],
 );
 T_FileView _exampleFile =
