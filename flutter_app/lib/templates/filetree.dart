@@ -65,6 +65,7 @@ class T_FolderView extends T_FileTreeItem {
 // # STATE
 // # Single folder view state
 // ##################################################
+// TODO: Folder shall be removable
 class _T_FolderView_state extends State<T_FolderView> {
   // States
   bool expanded = true; // Is folder extended?
@@ -207,6 +208,8 @@ class T_FileTreeView extends StatefulWidget {
 // # STATE
 // # File tree view area
 // ##################################################
+// TODO: File shall be removable
+// TODO: If path is part of name, the parent path shall be grayed out
 class _T_FileTreeView_state extends State<T_FileTreeView> {
   // Is file tree visible
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
@@ -231,7 +234,8 @@ class _T_FileTreeView_state extends State<T_FileTreeView> {
                 title: Text(widget.title,
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold)),
-                childrenPadding: const EdgeInsets.symmetric(horizontal: 10),
+                childrenPadding: const EdgeInsets.symmetric(
+                    horizontal: Style_FileTree_Item_ElementSpaces_px),
                 children: [
                   const SizedBox(height: 10),
                   Column(children: widget.items),
