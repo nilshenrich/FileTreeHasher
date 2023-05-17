@@ -76,7 +76,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
             icon: const Icon(Icons.download_outlined),
             tooltip: "Safe checksum file"),
         IconButton(
-            onPressed: () {},
+            onPressed: BodyContent.currentState?.clearComparisonInputs,
             icon: const Icon(Icons.delete_forever_outlined),
             tooltip: "Clear comparison strings")
       ])
@@ -192,6 +192,24 @@ class T_BodyContent_state extends State<T_BodyContent> {
   }
 
   // ##################################################
+  // @brief: Clear all inputs for comparison hash
+  // ##################################################
+  void clearComparisonInputs() {
+    for (T_FileTreeView view in _loadedTrees) {
+      for (T_FileTreeItem item in view.items) {
+        if (item is T_FileView) {
+          item.hashComparisonView.currentState?.set("");
+        } else if (item is T_FolderView) {
+          _clearCompInp(item);
+        }
+      }
+    }
+    for (T_FileView item in _loadedFiles) {
+      item.hashComparisonView.currentState?.set("");
+    }
+  }
+
+  // ##################################################
   // @brief: Show file tree from a given path
   // @param: path
   // ##################################################
@@ -232,6 +250,20 @@ class T_BodyContent_state extends State<T_BodyContent> {
       }
     }
     return itemsList;
+  }
+
+  // ##################################################
+  // @brief: Clear all inputs for comparison hash for folder sub-items
+  // @param: folder
+  // ##################################################
+  void _clearCompInp(T_FolderView folder) {
+    for (T_FileTreeItem item in folder.subitems) {
+      if (item is T_FileView) {
+        item.hashComparisonView.currentState?.set("");
+      } else if (item is T_FolderView) {
+        _clearCompInp(item);
+      }
+    }
   }
 }
 
