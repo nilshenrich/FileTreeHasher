@@ -478,12 +478,18 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
             style: Style_FileTree_ComparisonInput_Text,
             decoration: Style_FileTree_ComparisonInput_Decoration,
             controller: TextEditingController(text: _hashComp),
-            onChanged: (value) {
-              _hashComp = value;
-              if (widget.onChanged != null) {
-                widget.onChanged!(value);
-              }
-            }));
+            onChanged: _onChange));
+  }
+
+  // ##################################################
+  // @brief: Work on onChange
+  // @param: value
+  // ##################################################
+  _onChange(String value) {
+    _hashComp = value;
+    if (widget.onChanged != null) {
+      widget.onChanged!(value);
+    }
   }
 
   // ##################################################
@@ -496,5 +502,6 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
     setState(() {
       _hashComp = val;
     });
+    _onChange(val);
   }
 }
