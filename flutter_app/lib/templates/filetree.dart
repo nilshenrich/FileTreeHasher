@@ -497,7 +497,10 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
   // @param: val
   // @return: String
   // ##################################################
-  // FIXME: Hash needs to be rechecked on change
+  String get() {
+    return _hashComp;
+  }
+
   void set(String val) {
     setState(() {
       _hashComp = val;
