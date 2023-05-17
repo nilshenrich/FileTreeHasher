@@ -73,33 +73,53 @@ class T_FolderView extends T_FileTreeItem {
 class _T_FolderView_state extends State<T_FolderView> {
   // States
   bool expanded = true; // Is folder extended?
+  // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
+  bool _visible = true;
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Row(children: [
-        SizedBox(
-            width: Style_FileTree_Icon_Width_px,
-            height: Style_FileTree_Icon_Height_px,
-            child: IconButton(
-              icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              padding: EdgeInsets.zero,
-              onPressed: click_expander,
-            )),
-        const Icon(Icons.folder),
-        Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
-        Expanded(child: Text(widget.name)),
-        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-        T_FileHashSelector(
-            key: widget.globKey_HashAlg, onChanged: change_hashAlgorithm),
-        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-        const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
-      ]),
-      buildSubitems()
-    ]);
+    return _visible
+        ? Column(children: [
+            Row(children: [
+              SizedBox(
+                  width: Style_FileTree_Icon_Width_px,
+                  height: Style_FileTree_Icon_Height_px,
+                  child: IconButton(
+                    icon: Icon(
+                        expanded ? Icons.chevron_right : Icons.expand_more),
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    padding: EdgeInsets.zero,
+                    onPressed: click_expander,
+                  )),
+              const Icon(Icons.folder),
+              Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
+              Expanded(child: Text(widget.name)),
+              const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+              T_FileHashSelector(
+                  key: widget.globKey_HashAlg, onChanged: change_hashAlgorithm),
+              const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+              const SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
+              SizedBox(
+                height: Style_FileTree_ComparisonInput_Height_px,
+                child: IconButton(
+                    iconSize: Style_FileTree_HashSelector_FontSize_px,
+                    onPressed: () {
+                      setState(() {
+                        _visible = false;
+                      });
+                    },
+                    icon: const Icon(Icons.delete),
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    padding: EdgeInsets.zero),
+              )
+            ]),
+            buildSubitems()
+          ])
+        : const SizedBox.shrink();
   }
 
   // Sub-items
@@ -162,37 +182,58 @@ class T_FileView extends T_FileTreeItem {
 class _T_FileView_state extends State<T_FileView> {
   // State attributes
   String _hashComp = "";
+  // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
+  bool _visible = true;
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      const SizedBox(width: Style_FileTree_Icon_Width_px),
-      const Icon(Icons.description),
-      Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
-      Text(widget.name),
-      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      Expanded(
-          child: T_HashGenerationView(
-              key: widget.hashGenerationView, filepath: widget.path)),
-      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_FileHashSelector(
-          key: widget.globKey_HashAlg,
-          onChanged: (selected) {
-            widget.hashGenerationView.currentState!.generateHash(selected);
-          }),
-      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      SizedBox(
-          width: Style_FileTree_ComparisonInput_Width_px,
-          height: Style_FileTree_ComparisonInput_Height_px,
-          child: TextField(
-              style: Style_FileTree_ComparisonInput_Text,
-              decoration: Style_FileTree_ComparisonInput_Decoration,
-              controller: TextEditingController(text: _hashComp),
-              onChanged: (value) {
-                _hashComp = value;
-                widget.hashGenerationView.currentState!.compareHashes(value);
-              }))
-    ]);
+    return _visible
+        ? Row(children: [
+            const SizedBox(width: Style_FileTree_Icon_Width_px),
+            const Icon(Icons.description),
+            Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
+            Text(widget.name),
+            const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+            Expanded(
+                child: T_HashGenerationView(
+                    key: widget.hashGenerationView, filepath: widget.path)),
+            const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+            T_FileHashSelector(
+                key: widget.globKey_HashAlg,
+                onChanged: (selected) {
+                  widget.hashGenerationView.currentState!
+                      .generateHash(selected);
+                }),
+            const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+            SizedBox(
+                width: Style_FileTree_ComparisonInput_Width_px,
+                height: Style_FileTree_ComparisonInput_Height_px,
+                child: TextField(
+                    style: Style_FileTree_ComparisonInput_Text,
+                    decoration: Style_FileTree_ComparisonInput_Decoration,
+                    controller: TextEditingController(text: _hashComp),
+                    onChanged: (value) {
+                      _hashComp = value;
+                      widget.hashGenerationView.currentState!
+                          .compareHashes(value);
+                    })),
+            SizedBox(
+              height: Style_FileTree_ComparisonInput_Height_px,
+              child: IconButton(
+                  iconSize: Style_FileTree_HashSelector_FontSize_px,
+                  onPressed: () {
+                    setState(() {
+                      _visible = false;
+                    });
+                  },
+                  icon: const Icon(Icons.delete),
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  padding: EdgeInsets.zero),
+            )
+          ])
+        : const SizedBox.shrink();
   }
 }
 
