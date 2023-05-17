@@ -20,6 +20,7 @@ import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
+import 'package:file_tree_hasher/functions/general.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,13 +34,16 @@ abstract class T_FileTreeItem extends StatefulWidget {
   // Parameter
   final String name;
   final String path;
+  final String namePathPart;
 
   // Hash algorithm selector key
   final GlobalKey<T_HashSelector_state> globKey_HashAlg =
       GlobalKey<T_HashSelector_state>();
 
   // Constructor
-  T_FileTreeItem({super.key, required this.name, required this.path});
+  T_FileTreeItem({super.key, required name, required this.path})
+      : name = getFileName(name),
+        namePathPart = getParentPath(name);
 }
 
 // ##################################################
@@ -86,6 +90,7 @@ class _T_FolderView_state extends State<T_FolderView> {
               onPressed: click_expander,
             )),
         const Icon(Icons.folder),
+        Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
         Expanded(child: Text(widget.name)),
         const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         T_FileHashSelector(
@@ -153,6 +158,7 @@ class T_FileView extends T_FileTreeItem {
 // # STATE
 // # Single file view state
 // ##################################################
+// TODO: File shall be removable
 class _T_FileView_state extends State<T_FileView> {
   // State attributes
   String _hashComp = "";
@@ -162,6 +168,7 @@ class _T_FileView_state extends State<T_FileView> {
     return Row(children: [
       const SizedBox(width: Style_FileTree_Icon_Width_px),
       const Icon(Icons.description),
+      Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       Expanded(
@@ -208,8 +215,6 @@ class T_FileTreeView extends StatefulWidget {
 // # STATE
 // # File tree view area
 // ##################################################
-// TODO: File shall be removable
-// TODO: If path is part of name, the parent path shall be grayed out
 class _T_FileTreeView_state extends State<T_FileTreeView> {
   // Is file tree visible
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage

@@ -22,6 +22,9 @@ import 'package:flutter/material.dart';
 const double Style_FileTree_Icon_Width_px = 24;
 const double Style_FileTree_Icon_Height_px = 24;
 
+// File tree text
+const TextStyle Style_FileTree_Text_ParentPath = TextStyle(color: Colors.grey);
+
 // Hash selector
 const double Style_FileTree_HashSelector_Height_px = 24;
 const double Style_FileTree_HashSelector_FontSize_px = 14;
