@@ -14,6 +14,7 @@
 import 'dart:io';
 
 import 'package:file_tree_hasher/definies/defaults.dart';
+import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
 import 'package:path/path.dart' as path;
 import 'package:file_tree_hasher/functions/general.dart';
@@ -113,7 +114,10 @@ class T_BodyContent_state extends State<T_BodyContent> {
       const ContentDivider_folders(),
       Column(children: _loadedTrees),
       const ContentDivider_files(),
-      Column(children: _loadedFiles)
+      Row(children: [
+        Flexible(child: Column(children: _loadedFiles)),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)
+      ])
     ]);
   }
 
