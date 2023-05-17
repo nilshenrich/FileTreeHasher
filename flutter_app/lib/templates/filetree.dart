@@ -37,8 +37,7 @@ abstract class T_FileTreeItem extends StatefulWidget {
   final String namePathPart;
 
   // Hash algorithm selector key
-  final GlobalKey<T_HashSelector_state> globKey_HashAlg =
-      GlobalKey<T_HashSelector_state>();
+  final globKey_HashAlg = GlobalKey<T_HashSelector_state>();
 
   // Constructor
   T_FileTreeItem({super.key, required name, required this.path})
@@ -164,8 +163,8 @@ class _T_FolderView_state extends State<T_FolderView> {
 // # Single file view
 // ##################################################
 class T_FileView extends T_FileTreeItem {
-  final GlobalKey<T_HashGenerationView_state> hashGenerationView =
-      GlobalKey<T_HashGenerationView_state>();
+  final hashGenerationView = GlobalKey<T_HashGenerationView_state>();
+  final hashComparisonView = GlobalKey<State<TextField>>();
 
   // Constructor
   T_FileView({super.key, required super.path, required super.name});
@@ -204,17 +203,11 @@ class _T_FileView_state extends State<T_FileView> {
                       .generateHash(selected);
                 }),
             const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-            SizedBox(
-                width: Style_FileTree_ComparisonInput_Width_px,
-                height: Style_FileTree_ComparisonInput_Height_px,
-                child: TextField(
-                    style: Style_FileTree_ComparisonInput_Text,
-                    decoration: Style_FileTree_ComparisonInput_Decoration,
-                    controller: TextEditingController(text: ""),
-                    onChanged: (value) {
-                      widget.hashGenerationView.currentState!
-                          .compareHashes(value);
-                    })),
+            T_HashComparisonView(
+                key: widget.hashComparisonView,
+                onChanged: (value) {
+                  widget.hashGenerationView.currentState!.compareHashes(value);
+                }),
             SizedBox(
               height: Style_FileTree_ComparisonInput_Height_px,
               child: IconButton(
@@ -303,8 +296,7 @@ class T_HashGenerationView extends StatefulWidget {
   T_HashGenerationView({super.key, required this.filepath});
 
   // Hash generation view key
-  final GlobalKey<T_HashGenerationView_state> globKey_HashGenView =
-      GlobalKey<T_HashGenerationView_state>();
+  final globKey_HashGenView = GlobalKey<T_HashGenerationView_state>();
 
   @override
   State<StatefulWidget> createState() => T_HashGenerationView_state();
@@ -447,5 +439,50 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
     setState(() {
       _hashGen = hashString;
     });
+  }
+}
+
+// ##################################################
+// # TEMPLATE
+// # Hash comparison view
+// # This widget can be inserted into file view to provide user input for hash comparison
+// ##################################################
+class T_HashComparisonView extends StatefulWidget {
+  // Function call on changed
+  final Function(String)? onChanged;
+
+  // Constructor
+  T_HashComparisonView({super.key, this.onChanged});
+
+  // Hash comparison view key
+  final globKey_HashCompView = GlobalKey<T_HashComparisonView_state>();
+
+  @override
+  State<StatefulWidget> createState() => T_HashComparisonView_state();
+}
+
+// ##################################################
+// # STATE
+// # Hash comparison view state
+// ##################################################
+class T_HashComparisonView_state extends State<T_HashComparisonView> {
+  // state attributes
+  String _hashComp = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        width: Style_FileTree_ComparisonInput_Width_px,
+        height: Style_FileTree_ComparisonInput_Height_px,
+        child: TextField(
+            style: Style_FileTree_ComparisonInput_Text,
+            decoration: Style_FileTree_ComparisonInput_Decoration,
+            controller: TextEditingController(text: ""),
+            onChanged: (value) {
+              _hashComp = value;
+              if (widget.onChanged != null) {
+                widget.onChanged!(value);
+              }
+            }));
   }
 }
