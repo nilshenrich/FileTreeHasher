@@ -326,7 +326,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       }
 
       // For 2 valid inputs, the result is equal or not equal
-      _comparisonResult = _hashGen == hashComp
+      _comparisonResult = _hashGen.toLowerCase() == hashComp.toLowerCase()
           ? E_HashComparisonResult.equal
           : E_HashComparisonResult.notEqual;
 
