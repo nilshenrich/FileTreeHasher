@@ -215,9 +215,16 @@ class T_BodyContent_state extends State<T_BodyContent> {
     for (T_FileTreeView views in _loadedTrees) {
       dialogRows.add(Row(children: [
         Expanded(child: Text(views.title)),
-        Text("<Choose file path>")
+        IconButton(
+          icon: Icon(Icons.more_horiz),
+          onPressed: () {},
+        )
       ]));
     }
+    dialogRows.add(Row(children: [
+      Expanded(child: Text("Single files")),
+      IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz))
+    ]));
 
     // Add exit buttons at the end
     dialogRows.add(Row(children: [
