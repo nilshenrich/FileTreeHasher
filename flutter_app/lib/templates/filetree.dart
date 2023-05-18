@@ -488,7 +488,7 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
   // @brief: Work on onChange
   // @param: value
   // ##################################################
-  _onChange(String value) {
+  void _onChange(String value) {
     _hashComp = value;
     if (widget.onChanged != null) {
       widget.onChanged!(value);

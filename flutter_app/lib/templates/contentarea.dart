@@ -13,6 +13,7 @@
 
 import 'dart:io';
 
+import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
@@ -72,7 +73,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
             icon: const Icon(Icons.upload_outlined),
             tooltip: "Load checksum file"),
         IconButton(
-            onPressed: () {},
+            onPressed: BodyContent.currentState?.safeHashFile,
             icon: const Icon(Icons.download_outlined),
             tooltip: "Safe checksum file"),
         IconButton(
@@ -203,6 +204,45 @@ class T_BodyContent_state extends State<T_BodyContent> {
   //                - For file trees the hash files default location is directly inside the loaded folder
   //                - For single file section the hash files default location is the users home directory
   // ##################################################
+  void safeHashFile() {
+    // -------------------- Open file safe dialog --------------------
+
+    // All chosen paths
+    C_HashPaths hashPaths = C_HashPaths();
+
+    // Get all file trees and single files into widgets
+    List<Widget> dialogRows = [];
+    for (T_FileTreeView views in _loadedTrees) {
+      dialogRows.add(Row(children: [
+        Expanded(child: Text(views.title)),
+        Text("<Choose file path>")
+      ]));
+    }
+
+    // Add exit buttons at the end
+    dialogRows.add(Row(children: [
+      Expanded(child: SizedBox.shrink()),
+      IconButton(
+          onPressed: () => Navigator.pop(context, hashPaths),
+          icon: Icon(Icons.check)),
+      IconButton(
+          onPressed: () => Navigator.pop(context, C_HashPaths()),
+          icon: Icon(Icons.close))
+    ]));
+
+    // Show dialog
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text("Choose storage locations for hash files"),
+            children: [Column(children: dialogRows)],
+          );
+        });
+
+    // -------------------- Generate hash files --------------------
+  }
 
   // ##################################################
   // @brief: Clear all inputs for comparison hash
