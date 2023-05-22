@@ -323,41 +323,39 @@ class T_BodyContent_state extends State<T_BodyContent> {
 // # TEMPLATE
 // # Storage chooser row for hash file creation
 // ##################################################
-class T_StorageChooserRow extends StatefulWidget {
+class T_StorageChooserRow extends StatelessWidget {
   // Attributes
   final String title;
+  final TextEditingController _textEditingController = TextEditingController();
 
   // Constructor
-  const T_StorageChooserRow({super.key, required this.title});
-
-  @override
-  State<T_StorageChooserRow> createState() => _T_StorageChooserRowState();
-}
-
-class _T_StorageChooserRowState extends State<T_StorageChooserRow> {
-  // State attributes
-  TextEditingController _textEditingController = TextEditingController();
+  T_StorageChooserRow({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Text(widget.title),
+      Text(title),
       const SizedBox(width: 10),
       Expanded(
           child: SizedBox(
-        height: 32,
+        // height: 24,
         child: TextField(
             controller: _textEditingController,
             decoration: InputDecoration(
                 hintText: "Select hash file path",
                 suffixIcon: IconButton(
                   onPressed: () {
-                    String enteredText = _textEditingController.text;
+                    _textEditingController.text = selectStoragePath();
                   },
                   icon: Icon(Icons.more_horiz),
                 ))),
       ))
     ]);
+  }
+
+  // ##################################################
+  String selectStoragePath() {
+    return "<selected>";
   }
 }
 
