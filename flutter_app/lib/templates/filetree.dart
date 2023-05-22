@@ -205,6 +205,7 @@ class _T_FileView_state extends State<T_FileView> {
                       .generateHash(selected);
                 }),
             const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+            // TODO: Changing TextField value does not need a StatefulWidget
             T_HashComparisonView(
                 key: widget.globKey_HashComparisonView,
                 onChanged: (value) {
