@@ -13,6 +13,7 @@
 
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
@@ -215,7 +216,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     for (T_FileTreeView views in _loadedTrees) {
       dialogRows.add(T_StorageChooserRow(title: views.title));
     }
-    dialogRows.add(const T_StorageChooserRow(title: "Single files"));
+    dialogRows.add(T_StorageChooserRow(title: "Single files"));
 
     // Add exit buttons at the end
     dialogRows.add(Row(children: [
@@ -344,17 +345,21 @@ class T_StorageChooserRow extends StatelessWidget {
             decoration: InputDecoration(
                 hintText: "Select hash file path",
                 suffixIcon: IconButton(
-                  onPressed: () {
-                    _textEditingController.text = selectStoragePath();
+                  onPressed: () async {
+                    _textEditingController.text = await selectStoragePath();
                   },
-                  icon: Icon(Icons.more_horiz),
+                  icon: const Icon(Icons.more_horiz),
                 ))),
       ))
     ]);
   }
 
   // ##################################################
-  String selectStoragePath() {
+  Future<String> selectStoragePath() async {
+    // BUG: Dialog does not open: https://github.com/miguelpruivo/flutter_file_picker/wiki/Setup#--desktop
+    FilePickerResult? picker = await FilePicker.platform.pickFiles();
+
+    // TODO: Just temporarily
     return "<selected>";
   }
 }
