@@ -213,18 +213,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
     for (T_FileTreeView views in _loadedTrees) {
-      dialogRows.add(Row(children: [
-        Expanded(child: Text(views.title)),
-        IconButton(
-          icon: Icon(Icons.more_horiz),
-          onPressed: () {},
-        )
-      ]));
+      dialogRows.add(T_StorageChooserRow(title: views.title));
     }
-    dialogRows.add(Row(children: [
-      Expanded(child: Text("Single files")),
-      IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz))
-    ]));
+    dialogRows.add(const T_StorageChooserRow(title: "Single files"));
 
     // Add exit buttons at the end
     dialogRows.add(Row(children: [
@@ -243,6 +234,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             title: Text("Choose storage locations for hash files"),
             children: [Column(children: dialogRows)],
           );
@@ -324,6 +316,26 @@ class T_BodyContent_state extends State<T_BodyContent> {
         _clearCompInp(item);
       }
     }
+  }
+}
+
+// ##################################################
+// # TEMPLATE
+// # Storage chooser row for hash file creation
+// ##################################################
+class T_StorageChooserRow extends StatelessWidget {
+  // Attributes
+  final String title;
+
+  // Constructor
+  const T_StorageChooserRow({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Expanded(child: Text(title)),
+      IconButton(icon: const Icon(Icons.more_horiz), onPressed: () {})
+    ]);
   }
 }
 
