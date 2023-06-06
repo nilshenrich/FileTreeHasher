@@ -20,7 +20,6 @@ import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
-import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
@@ -128,14 +127,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void selectNewFolder() async {
     // -------------------- Select folder from system --------------------
-    // TODO: Don't show hidden folders
-    String? filetreePath = await FilesystemPicker.openDialog(
-        title: "Select folder",
-        context: context,
-        rootDirectory: getHomeDir(),
-        fsType: FilesystemType.folder,
-        pickText: "Select folder to load file tree from",
-        showGoUp: false);
+    // TODO: Multiple folders could be selected (Button description to be adapted)
+    String? filetreePath = await FilePicker.platform
+        .getDirectoryPath(initialDirectory: getHomeDir().path);
     if (filetreePath == null) {
       return;
     }
@@ -150,21 +144,17 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void selectNewFile() async {
     // -------------------- Select file from system --------------------
-    String? filePath = await FilesystemPicker.openDialog(
-        title: "Select file",
-        context: context,
-        rootDirectory: getHomeDir(),
-        fsType: FilesystemType.file,
-        pickText: "Select file to load into view",
-        showGoUp: false);
+    // TODO: Multiple files could be selected (Button description to be adapted)
+    FilePickerResult? filePath = await FilePicker.platform
+        .pickFiles(initialDirectory: getHomeDir().path);
     if (filePath == null) {
       return;
     }
 
     // -------------------- Show selected file in body --------------------
-    T_FileView file = T_FileView(path: filePath, name: filePath);
+    PlatformFile file = filePath.files.first;
     setState(() {
-      _loadedFiles.add(file);
+      _loadedFiles.add(T_FileView(path: file.path!, name: file.name));
     });
   }
 
