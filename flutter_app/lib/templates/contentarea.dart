@@ -49,10 +49,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
           tooltip: "Load file tree",
         ),
         // ---------- Button: Load single file ----------
-        IconButton(
-            onPressed: BodyContent.currentState?.selectNewFile,
-            icon: const Icon(Icons.upload_file),
-            tooltip: "Load single file"),
+        IconButton(onPressed: BodyContent.currentState?.selectNewFile, icon: const Icon(Icons.upload_file), tooltip: "Load single file"),
         // ---------- Button: clear all ----------
         IconButton(
             onPressed: BodyContent.currentState?.clearContent,
@@ -68,14 +65,8 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       ]),
       // -------------------- Section: Comparison --------------------
       T_HeaderControlSection(headingText: "Comparison", items: [
-        IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.upload_outlined),
-            tooltip: "Load checksum file"),
-        IconButton(
-            onPressed: BodyContent.currentState?.safeHashFile,
-            icon: const Icon(Icons.download_outlined),
-            tooltip: "Safe checksum file"),
+        IconButton(onPressed: () {}, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file"),
+        IconButton(onPressed: BodyContent.currentState?.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file"),
         IconButton(
             onPressed: BodyContent.currentState?.clearComparisonInputs,
             icon: const Icon(Icons.delete_forever_outlined),
@@ -114,10 +105,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
       const ContentDivider_folders(),
       Column(children: _loadedTrees),
       const ContentDivider_files(),
-      Row(children: [
-        Flexible(child: Column(children: _loadedFiles)),
-        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)
-      ])
+      Row(children: [Flexible(child: Column(children: _loadedFiles)), const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)])
     ]);
   }
 
@@ -128,8 +116,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void selectNewFolder() async {
     // -------------------- Select folder from system --------------------
     // TODO: Multiple folders could be selected (Button description to be adapted)
-    String? filetreePath = await FilePicker.platform
-        .getDirectoryPath(initialDirectory: getHomeDir().path);
+    String? filetreePath = await FilePicker.platform.getDirectoryPath(initialDirectory: getHomeDir().path);
     if (filetreePath == null) {
       return;
     }
@@ -145,8 +132,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void selectNewFile() async {
     // -------------------- Select file from system --------------------
     // TODO: Multiple files could be selected (Button description to be adapted)
-    FilePickerResult? filePath = await FilePicker.platform
-        .pickFiles(initialDirectory: getHomeDir().path);
+    FilePickerResult? filePath = await FilePicker.platform.pickFiles(initialDirectory: getHomeDir().path);
     if (filePath == null) {
       return;
     }
@@ -211,12 +197,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // Add exit buttons at the end
     dialogRows.add(Row(children: [
       Expanded(child: SizedBox.shrink()),
-      IconButton(
-          onPressed: () => Navigator.pop(context, hashPaths),
-          icon: Icon(Icons.check)),
-      IconButton(
-          onPressed: () => Navigator.pop(context, C_HashfileStoragepaths()),
-          icon: Icon(Icons.close))
+      IconButton(onPressed: () => Navigator.pop(context, hashPaths), icon: Icon(Icons.check)),
+      IconButton(onPressed: () => Navigator.pop(context, C_HashfileStoragepaths()), icon: Icon(Icons.close))
     ]));
 
     // Show dialog
@@ -258,8 +240,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void _showNewFolder(String path) {
     setState(() {
-      _loadedTrees.add(
-          T_FileTreeView(items: _loadFolder(Directory(path)), title: path));
+      _loadedTrees.add(T_FileTreeView(items: _loadFolder(Directory(path)), title: path));
     });
   }
 
@@ -277,18 +258,14 @@ class T_BodyContent_state extends State<T_BodyContent> {
       // For subfolders
       if (item is Directory) {
         // Load all sub items of this subfolder and add to list
-        T_FolderView subfolder = T_FolderView(
-            path: item.path,
-            name: getFileName(item.path),
-            subitems: _loadFolder(item));
+        T_FolderView subfolder = T_FolderView(path: item.path, name: getFileName(item.path), subitems: _loadFolder(item));
         itemsList.add(subfolder);
       }
 
       // For files
       else if (item is File) {
         // Add file element to list
-        T_FileView file =
-            T_FileView(path: item.path, name: getFileName(item.path));
+        T_FileView file = T_FileView(path: item.path, name: getFileName(item.path));
         itemsList.add(file);
       }
     }
@@ -358,35 +335,20 @@ class T_StorageChooserRow extends StatelessWidget {
 T_FileTreeView _exampleFileTree = T_FileTreeView(
   title: "<First loaded file tree>",
   items: [
-    T_FolderView(
-        path: "/root/folder/top-folder",
-        name: "top-folder",
-        subitems: [
-          T_FolderView(
-              path: "/root/folder/top-folder/sub-folder",
-              name: "sub-folder",
-              subitems: [
-                T_FolderView(
-                    path: "/root/folder/top-folder/sub-folder/sub-sub-folder",
-                    name: "sub-sub-folder"),
-                T_FileView(
-                    path: "/root/folder/top-folder/sub-folder/sub-sub-file",
-                    name: "sub-sub-file")
-              ]),
-          T_FolderView(
-              path: "/root/folder/top-folder/sub-folder-with-long-name",
-              name: "sub-folder-with-long-name"),
-          T_FileView(
-              path: "/root/folder/top-folder/sub-file", name: "sub-file"),
-          T_FileView(
-              path: "/root/folder/top-folder/sub-file-with-long-name",
-              name: "sub-file-with-long-name")
-        ]),
-    T_FolderView(
-        path: "/root/folder/folder-with-long-name",
-        name: "folder-with-long-name"),
+    T_FolderView(path: "/root/folder/top-folder", name: "top-folder", subitems: [
+      T_FolderView(path: "/root/folder/top-folder/sub-folder", name: "sub-folder", subitems: [
+        T_FolderView(path: "/root/folder/top-folder/sub-folder/sub-sub-folder", name: "sub-sub-folder"),
+        T_FileView(path: "/root/folder/top-folder/sub-folder/sub-sub-file", name: "sub-sub-file")
+      ]),
+      T_FolderView(path: "/root/folder/top-folder/sub-folder-with-long-name", name: "sub-folder-with-long-name"),
+      T_FileView(path: "/root/folder/top-folder/sub-file", name: "sub-file"),
+      T_FileView(path: "/root/folder/top-folder/sub-file-with-long-name", name: "sub-file-with-long-name")
+    ]),
+    T_FolderView(path: "/root/folder/folder-with-long-name", name: "folder-with-long-name"),
     T_FileView(path: "/root/folder/top-file", name: "top-file")
   ],
 );
-T_FileView _exampleFile =
-    T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");
+T_FileView _exampleFile = T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");
+
+// DEV: Example hash view
+C_FileViewHashes exampleHashView = C_FileViewHashes([], []);

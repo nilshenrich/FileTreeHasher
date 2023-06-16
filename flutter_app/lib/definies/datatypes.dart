@@ -21,6 +21,28 @@ enum E_HashComparisonResult {
 }
 
 // ##################################################
+// # Assignment file and hash string
+// ##################################################
+class C_FileHashPair {
+  final String _file; // File name or path
+  final String? _hash; // Generated hash
+
+  // Constructor
+  C_FileHashPair(String file, String? hash)
+      : _file = file,
+        _hash = hash;
+
+  // Getter for file and hash
+  String get file {
+    return _file;
+  }
+
+  String? get hash {
+    return _hash;
+  }
+}
+
+// ##################################################
 // # Chosen storage paths for hash files
 // ##################################################
 class C_HashfileStoragepaths {
@@ -53,5 +75,27 @@ class C_HashfileStoragepaths {
 
   void setSingle(String singleFilesPath) {
     _singleFilesPath = singleFilesPath;
+  }
+}
+
+// ##################################################
+// # Files and hashes for a view section
+// ##################################################
+class C_FileViewHashes {
+  final List<C_FileHashPair> _files; //Top level files with corresponding hashes
+  final List<C_FileViewHashes> _folders; // Subfolders that can contain files and subfolders
+
+  // Constructor
+  C_FileViewHashes(List<C_FileHashPair>? files, List<C_FileViewHashes>? folders)
+      : _files = files ?? [],
+        _folders = folders ?? [];
+
+  // Getter for files and folders
+  List<C_FileHashPair> get files {
+    return _files;
+  }
+
+  List<C_FileViewHashes> get folders {
+    return _folders;
   }
 }

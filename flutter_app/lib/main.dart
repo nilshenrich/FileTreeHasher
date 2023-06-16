@@ -9,6 +9,7 @@
 // #
 // ####################################################################################################
 
+import 'package:file_tree_hasher/functions/hashfile.dart';
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/contentarea.dart';
 
@@ -43,8 +44,7 @@ class ControlHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: const T_HeaderBar(),
-        body: SingleChildScrollView(child: T_BodyContent(key: BodyContent)));
+    generateHashfile(exampleHashView, "test.hash"); // DEV: Testing method
+    return Scaffold(appBar: const T_HeaderBar(), body: SingleChildScrollView(child: T_BodyContent(key: BodyContent)));
   }
 }
