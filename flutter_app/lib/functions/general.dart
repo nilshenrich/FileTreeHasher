@@ -1,3 +1,14 @@
+// ####################################################################################################
+// # @file general.dart
+// # @author Nils Henrich
+// # @brief Collection of general functions and algorithms
+// # @version 0.0.0+1
+// # @date 2023-04-22
+// #
+// # @copyright Copyright (c) 2023
+// #
+// ####################################################################################################
+
 import 'dart:io';
 import 'package:path/path.dart' as libpath;
 

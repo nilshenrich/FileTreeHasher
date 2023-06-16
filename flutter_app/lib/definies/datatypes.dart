@@ -23,13 +23,13 @@ enum E_HashComparisonResult {
 // ##################################################
 // # Chosen storage paths for hash files
 // ##################################################
-class C_HashPaths {
+class C_HashfileStoragepaths {
   // Attributes
-  List<String> _fileTreePaths = []; // <tree list index, hash file path>
-  String _singleFilesPath = "";
+  List<String> _fileTreePaths = []; // Storage paths for all loaded file trees
+  String _singleFilesPath = ""; // Storage path for single files
 
   // Constructor
-  C_HashPaths();
+  C_HashfileStoragepaths();
 
   // ##################################################
   // @brief: Getters/Setters

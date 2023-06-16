@@ -199,7 +199,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // -------------------- Open file safe dialog --------------------
 
     // All chosen paths
-    C_HashPaths hashPaths = C_HashPaths();
+    C_HashfileStoragepaths hashPaths = C_HashfileStoragepaths();
 
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
@@ -215,7 +215,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
           onPressed: () => Navigator.pop(context, hashPaths),
           icon: Icon(Icons.check)),
       IconButton(
-          onPressed: () => Navigator.pop(context, C_HashPaths()),
+          onPressed: () => Navigator.pop(context, C_HashfileStoragepaths()),
           icon: Icon(Icons.close))
     ]));
 
