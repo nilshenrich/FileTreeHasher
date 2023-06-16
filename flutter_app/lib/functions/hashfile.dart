@@ -74,9 +74,10 @@ String _preceding(int level) {
     default:
       {
         newLine = "|   ";
-        for (int i = 2; i <= level; i += 1) {
+        for (int i = 3; i <= level; i += 1) {
           newLine += "    ";
         }
+        newLine += "+---";
       }
       break;
   }

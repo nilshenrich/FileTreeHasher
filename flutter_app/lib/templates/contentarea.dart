@@ -354,5 +354,9 @@ T_FileView _exampleFile = T_FileView(path: "/root/folder/file.txt", name: "/root
 C_FileViewHashes exampleHashView = C_FileViewHashes("test view", [
   C_FileHashPair("top-file", "abcde")
 ], [
-  C_FileViewHashes("top-folder", [C_FileHashPair("sub-file", "abcde1")], [])
+  C_FileViewHashes("top-folder", [
+    C_FileHashPair("sub-file", "abcde1")
+  ], [
+    C_FileViewHashes("sub-folder", [C_FileHashPair("sub-sub-file", "abcde11")], [])
+  ])
 ]);
