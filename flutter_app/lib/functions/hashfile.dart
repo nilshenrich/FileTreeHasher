@@ -37,7 +37,32 @@ void generateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
     filesocket.writeAsBytesSync([]);
   }
 
-  // Sub element styling
+  // Loop over all view elements
+  // - For a file, add entry to hash file
+  // - For a folder, recurse on folder
+  for (C_FileViewHashes folder in fileviewhashes.folders) {
+    String newLine = _preceding(level);
+    newLine += folder.name;
+    newLine += "\n";
+    filesocket.writeAsStringSync(newLine, mode: FileMode.append);
+    generateHashfile(folder, storagepath, override: false, level: level + 1);
+  }
+  for (C_FileHashPair file in fileviewhashes.files) {
+    String newLine = _preceding(level);
+    newLine += file.file;
+    newLine += " ";
+    newLine += file.hash ?? "<no hash>";
+    newLine += "\n";
+    filesocket.writeAsStringSync(newLine, mode: FileMode.append);
+  }
+}
+
+// ##################################################
+// @brief: Generate preceeding string for hash file generation
+// @param: level
+// @return: String
+// ##################################################
+String _preceding(int level) {
   String newLine;
   switch (level) {
     case 0:
@@ -55,21 +80,5 @@ void generateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
       }
       break;
   }
-
-  // Loop over all view elements
-  // - For a file, add entry to hash file
-  // - For a folder, recurse on folder
-  for (C_FileViewHashes folder in fileviewhashes.folders) {
-    newLine += folder.name;
-    newLine += "\n";
-    filesocket.writeAsStringSync(newLine, mode: FileMode.append);
-    generateHashfile(folder, storagepath, override: false, level: level + 1);
-  }
-  for (C_FileHashPair file in fileviewhashes.files) {
-    newLine += file.file;
-    newLine += " ";
-    newLine += file.hash ?? "<no hash>";
-    newLine += "\n";
-    filesocket.writeAsStringSync(newLine, mode: FileMode.append);
-  }
+  return newLine;
 }
