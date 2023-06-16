@@ -351,4 +351,8 @@ T_FileTreeView _exampleFileTree = T_FileTreeView(
 T_FileView _exampleFile = T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");
 
 // DEV: Example hash view
-C_FileViewHashes exampleHashView = C_FileViewHashes([], []);
+C_FileViewHashes exampleHashView = C_FileViewHashes("test view", [
+  C_FileHashPair("top-file", "abcde")
+], [
+  C_FileViewHashes("top-folder", [C_FileHashPair("sub-file", "abcde1")], [])
+]);

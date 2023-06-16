@@ -27,39 +27,45 @@ import 'package:file_tree_hasher/definies/datatypes.dart';
 // @param: storagepath
 // @param: override
 // ##################################################
+// BUG: Folders are rewritten as files
 void generateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool override = true, int level = 0}) {
   // Get file socket
   File filesocket = File(storagepath);
 
   // If file shall be overridded, just recreate it
   if (override) {
-    filesocket.createSync();
+    filesocket.writeAsBytesSync([]);
+  }
+
+  // Sub element styling
+  String newLine;
+  switch (level) {
+    case 0:
+      newLine = "";
+      break;
+    case 1:
+      newLine = "+---";
+      break;
+    default:
+      {
+        newLine = "|   ";
+        for (int i = 2; i <= level; i += 1) {
+          newLine += "    ";
+        }
+      }
+      break;
   }
 
   // Loop over all view elements
   // - For a file, add entry to hash file
   // - For a folder, recurse on folder
   for (C_FileViewHashes folder in fileviewhashes.folders) {
+    newLine += folder.name;
+    newLine += "\n";
+    filesocket.writeAsStringSync(newLine, mode: FileMode.append);
     generateHashfile(folder, storagepath, override: false, level: level + 1);
   }
   for (C_FileHashPair file in fileviewhashes.files) {
-    String newLine;
-    switch (level) {
-      case 0:
-        newLine = "";
-        break;
-      case 1:
-        newLine = "+---";
-        break;
-      default:
-        {
-          newLine = "|   ";
-          for (int i = 2; i <= level; i += 1) {
-            newLine += "    ";
-          }
-        }
-        break;
-    }
     newLine += file.file;
     newLine += " ";
     newLine += file.hash ?? "<no hash>";

@@ -82,15 +82,21 @@ class C_HashfileStoragepaths {
 // # Files and hashes for a view section
 // ##################################################
 class C_FileViewHashes {
+  final String _name; // Name of this view
   final List<C_FileHashPair> _files; //Top level files with corresponding hashes
   final List<C_FileViewHashes> _folders; // Subfolders that can contain files and subfolders
 
   // Constructor
-  C_FileViewHashes(List<C_FileHashPair>? files, List<C_FileViewHashes>? folders)
-      : _files = files ?? [],
+  C_FileViewHashes(String name, List<C_FileHashPair>? files, List<C_FileViewHashes>? folders)
+      : _name = name,
+        _files = files ?? [],
         _folders = folders ?? [];
 
   // Getter for files and folders
+  String get name {
+    return _name;
+  }
+
   List<C_FileHashPair> get files {
     return _files;
   }
