@@ -55,7 +55,7 @@ class C_FileHashPair {
 // ##################################################
 class C_HashfileStoragepaths {
   // Attributes
-  List<String> _fileTreePaths = []; // Storage paths for all loaded file trees
+  final List<String> _fileTreePaths = []; // Storage paths for all loaded file trees
   String _singleFilesPath = ""; // Storage path for single files
 
   // Constructor

@@ -18,7 +18,6 @@ import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
-import 'package:file_tree_hasher/functions/hashfile.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
@@ -198,17 +197,18 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
     // Add exit buttons at the end
     dialogRows.add(Row(children: [
-      Expanded(child: SizedBox.shrink()),
+      const Expanded(child: SizedBox.shrink()),
       IconButton(
           onPressed: () {
             for (Widget row in dialogRows) {
               if (row is! T_StorageChooserRow) continue;
               String storagepath = row.getStoragePath();
+              // TODO: Get all loaded files nad hashes of the current view into a C_FileViewHashes and generate the has file
             }
             Navigator.pop(context);
           },
-          icon: Icon(Icons.check)),
-      IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close))
+          icon: const Icon(Icons.check)),
+      IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close))
     ]));
 
     // Show dialog
@@ -217,8 +217,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            title: Text("Choose storage locations for hash files"),
+            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            title: const Text("Choose storage locations for hash files"),
             children: [Column(children: dialogRows)],
           );
         });
