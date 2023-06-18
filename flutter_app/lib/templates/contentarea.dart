@@ -18,6 +18,7 @@ import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
+import 'package:file_tree_hasher/functions/hashfile.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
@@ -198,8 +199,16 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // Add exit buttons at the end
     dialogRows.add(Row(children: [
       Expanded(child: SizedBox.shrink()),
-      IconButton(onPressed: () => Navigator.pop(context, hashPaths), icon: Icon(Icons.check)),
-      IconButton(onPressed: () => Navigator.pop(context, C_HashfileStoragepaths()), icon: Icon(Icons.close))
+      IconButton(
+          onPressed: () {
+            for (Widget row in dialogRows) {
+              if (row is! T_StorageChooserRow) continue;
+              String storagepath = row.getStoragePath();
+            }
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.check)),
+      IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close))
     ]));
 
     // Show dialog
@@ -323,6 +332,9 @@ class T_StorageChooserRow extends StatelessWidget {
   }
 
   // ##################################################
+  // @brief: Open user dialog to select a path to stora a file
+  // @return: Future<String>
+  // ##################################################
   Future<String> selectStoragePath() async {
     String? hashfile = await FilePicker.platform.saveFile(
         dialogTitle: "Choose a file to store hashes to", initialDirectory: GetHomeDir().path, lockParentWindow: true, allowedExtensions: ["hash"]);
@@ -333,6 +345,14 @@ class T_StorageChooserRow extends StatelessWidget {
       return "$hashfile.hash";
     }
     return "# TODO: Error";
+  }
+
+  // ##################################################
+  // @brief: Get chosen file storage path
+  // @return: String
+  // ##################################################
+  String getStoragePath() {
+    return _textEditingController.text;
   }
 }
 
