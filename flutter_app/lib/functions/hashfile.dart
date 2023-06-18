@@ -34,7 +34,7 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
 
   // If file shall be overridded, just recreate it with information header
   if (override) {
-    filesocket.writeAsStringSync("$HashFileHeader\n\n${fileviewhashes.name}\n");
+    filesocket.writeAsStringSync("$HashFileHeader\n\n${fileviewhashes.name}\n", mode: FileMode.writeOnly);
   }
 
   // Loop over all view elements
@@ -51,6 +51,6 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
     newLine += ",\"";
     newLine += GetRawString(file.file);
     newLine += "\"\n";
-    filesocket.writeAsStringSync(newLine, mode: FileMode.append);
+    filesocket.writeAsStringSync(newLine, mode: FileMode.writeOnlyAppend);
   }
 }
