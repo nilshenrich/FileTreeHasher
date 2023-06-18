@@ -34,7 +34,7 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
 
   // If file shall be overridded, just recreate it with information header
   if (override) {
-    filesocket.writeAsStringSync("$HashFileHeader\n\n");
+    filesocket.writeAsStringSync("$HashFileHeader\n\n${fileviewhashes.name}\n");
   }
 
   // Loop over all view elements

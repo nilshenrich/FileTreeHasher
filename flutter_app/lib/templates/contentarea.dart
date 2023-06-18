@@ -351,12 +351,12 @@ T_FileTreeView _exampleFileTree = T_FileTreeView(
 T_FileView _exampleFile = T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");
 
 // DEV: Example hash view
-C_FileViewHashes exampleHashView = C_FileViewHashes("test view", [
+C_FileViewHashes exampleHashView = C_FileViewHashes("/some/path/to/view", [
   C_FileHashPair("top-file", "abcde", E_HashAlgorithms.MD5)
 ], [
   C_FileViewHashes("top-folder", [
-    C_FileHashPair("sub-file", "abcde1", E_HashAlgorithms.SHA1)
+    C_FileHashPair("top-folder/sub-file", "abcde1", E_HashAlgorithms.SHA1)
   ], [
-    C_FileViewHashes("sub-folder", [C_FileHashPair("sub-sub-file", "abcde11", E_HashAlgorithms.SHA256)], [])
+    C_FileViewHashes("top-folder/sub-folder", [C_FileHashPair("top-folder/sub-folder/sub-sub-file", "abcde11", E_HashAlgorithms.SHA256)], [])
   ])
 ]);
