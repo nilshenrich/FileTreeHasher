@@ -327,6 +327,9 @@ class T_StorageChooserRow extends StatelessWidget {
     String? hashfile = await FilePicker.platform.saveFile(
         dialogTitle: "Choose a file to store hashes to", initialDirectory: GetHomeDir().path, lockParentWindow: true, allowedExtensions: ["hash"]);
     if (hashfile != null) {
+      if (hashfile.endsWith(".hash")) {
+        return hashfile;
+      }
       return "$hashfile.hash";
     }
     return "# TODO: Error";
