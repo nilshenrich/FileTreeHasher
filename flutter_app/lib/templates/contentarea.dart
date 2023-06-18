@@ -324,10 +324,12 @@ class T_StorageChooserRow extends StatelessWidget {
 
   // ##################################################
   Future<String> selectStoragePath() async {
-    FilePickerResult? picker = await FilePicker.platform.pickFiles();
-
-    // TODO: Just temporarily
-    return "<selected>";
+    String? hashfile = await FilePicker.platform.saveFile(
+        dialogTitle: "Choose a file to store hashes to", initialDirectory: GetHomeDir().path, lockParentWindow: true, allowedExtensions: ["hash"]);
+    if (hashfile != null) {
+      return "$hashfile.hash";
+    }
+    return "# TODO: Error";
   }
 }
 
