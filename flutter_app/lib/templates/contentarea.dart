@@ -117,7 +117,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void selectNewFolder() async {
     // -------------------- Select folder from system --------------------
     // TODO: Multiple folders could be selected (Button description to be adapted)
-    String? filetreePath = await FilePicker.platform.getDirectoryPath(initialDirectory: getHomeDir().path);
+    String? filetreePath = await FilePicker.platform.getDirectoryPath(initialDirectory: GetHomeDir().path);
     if (filetreePath == null) {
       return;
     }
@@ -133,7 +133,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void selectNewFile() async {
     // -------------------- Select file from system --------------------
     // TODO: Multiple files could be selected (Button description to be adapted)
-    FilePickerResult? filePath = await FilePicker.platform.pickFiles(initialDirectory: getHomeDir().path);
+    FilePickerResult? filePath = await FilePicker.platform.pickFiles(initialDirectory: GetHomeDir().path);
     if (filePath == null) {
       return;
     }
@@ -259,14 +259,14 @@ class T_BodyContent_state extends State<T_BodyContent> {
       // For subfolders
       if (item is Directory) {
         // Load all sub items of this subfolder and add to list
-        T_FolderView subfolder = T_FolderView(path: item.path, name: getFileName(item.path), subitems: _loadFolder(item));
+        T_FolderView subfolder = T_FolderView(path: item.path, name: GetFileName(item.path), subitems: _loadFolder(item));
         itemsList.add(subfolder);
       }
 
       // For files
       else if (item is File) {
         // Add file element to list
-        T_FileView file = T_FileView(path: item.path, name: getFileName(item.path));
+        T_FileView file = T_FileView(path: item.path, name: GetFileName(item.path));
         itemsList.add(file);
       }
     }
@@ -324,7 +324,6 @@ class T_StorageChooserRow extends StatelessWidget {
 
   // ##################################################
   Future<String> selectStoragePath() async {
-    // BUG: Dialog does not open: https://github.com/miguelpruivo/flutter_file_picker/wiki/Setup#--desktop
     FilePickerResult? picker = await FilePicker.platform.pickFiles();
 
     // TODO: Just temporarily

@@ -9,10 +9,12 @@
 // #
 // ####################################################################################################
 
+// ignore_for_file: non_constant_identifier_names
+
 // ##################################################
 // # Hash file header block containing general info
 // ##################################################
-String hashFileHeader = """*** File Tree Hasher ***
+String HashFileHeader = """*** File Tree Hasher ***
 Author: Nils Henrich
 Website: https://github.com/nilshenrich/FileTreeHasher
 Version: 0.0.0+1""";

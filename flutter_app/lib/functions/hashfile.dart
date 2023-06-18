@@ -15,6 +15,8 @@
 // #
 // ####################################################################################################
 
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:io';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/info.dart';
@@ -26,20 +28,20 @@ import 'package:file_tree_hasher/functions/general.dart';
 // @param: storagepath
 // @param: override
 // ##################################################
-void generateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool override = true, int level = 0}) {
+void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool override = true, int level = 0}) {
   // Get file socket
   File filesocket = File(storagepath);
 
   // If file shall be overridded, just recreate it with information header
   if (override) {
-    filesocket.writeAsStringSync("$hashFileHeader\n\n");
+    filesocket.writeAsStringSync("$HashFileHeader\n\n");
   }
 
   // Loop over all view elements
   // - For a file, add entry to hash file
   // - For a folder, recurse on folder
   for (C_FileViewHashes folder in fileviewhashes.folders) {
-    generateHashfile(folder, storagepath, override: false, level: level + 1);
+    GenerateHashfile(folder, storagepath, override: false, level: level + 1);
   }
   for (C_FileHashPair file in fileviewhashes.files) {
     String newLine = "";
@@ -47,7 +49,7 @@ void generateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
     newLine += ",";
     newLine += file.algorithm.name;
     newLine += ",\"";
-    newLine += getRawString(file.file);
+    newLine += GetRawString(file.file);
     newLine += "\"\n";
     filesocket.writeAsStringSync(newLine, mode: FileMode.append);
   }

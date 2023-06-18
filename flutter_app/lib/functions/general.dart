@@ -9,6 +9,8 @@
 // #
 // ####################################################################################################
 
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:io';
 import 'package:path/path.dart' as libpath;
 
@@ -16,7 +18,7 @@ import 'package:path/path.dart' as libpath;
 // @brief: Get home directory depending on plattform
 // @return: Directory
 // ##################################################
-Directory getHomeDir() {
+Directory GetHomeDir() {
   Map<String, String> keywords = {"linux": "HOME", "macos": "HOME", "windows": "USERPROFILE", "android": "HOME"};
 
   return Directory(Platform.environment[keywords[Platform.operatingSystem]] ?? "");
@@ -29,7 +31,7 @@ Directory getHomeDir() {
 // @param: path
 // @return: String
 // ##################################################
-String getParentPath(String path) {
+String GetParentPath(String path) {
   String parent = libpath.dirname(path);
 
   // Raltive path without directory
@@ -48,7 +50,7 @@ String getParentPath(String path) {
 // @param: path
 // @return: String
 // ##################################################
-String getFileName(String path) {
+String GetFileName(String path) {
   return libpath.basename(path);
 }
 
@@ -58,6 +60,6 @@ String getFileName(String path) {
 // @param: in
 // @return: String
 // ##################################################
-String getRawString(String s) {
+String GetRawString(String s) {
   return s.replaceAll('"', '\\"').replaceAll("'", "\\'").replaceAll("\\", "\\\\").replaceAll("\n", "\\n");
 }
