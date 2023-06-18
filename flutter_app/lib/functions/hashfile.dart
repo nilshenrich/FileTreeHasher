@@ -26,7 +26,6 @@ import 'package:file_tree_hasher/functions/general.dart';
 // @param: storagepath
 // @param: override
 // ##################################################
-// BUG: Folders are rewritten as files
 void generateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool override = true, int level = 0}) {
   // Get file socket
   File filesocket = File(storagepath);
