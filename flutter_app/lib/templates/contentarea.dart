@@ -16,6 +16,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
+import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
 import 'package:file_tree_hasher/functions/general.dart';
@@ -352,11 +353,11 @@ T_FileView _exampleFile = T_FileView(path: "/root/folder/file.txt", name: "/root
 
 // DEV: Example hash view
 C_FileViewHashes exampleHashView = C_FileViewHashes("test view", [
-  C_FileHashPair("top-file", "abcde")
+  C_FileHashPair("top-file", "abcde", E_HashAlgorithms.MD5)
 ], [
   C_FileViewHashes("top-folder", [
-    C_FileHashPair("sub-file", "abcde1")
+    C_FileHashPair("sub-file", "abcde1", E_HashAlgorithms.SHA1)
   ], [
-    C_FileViewHashes("sub-folder", [C_FileHashPair("sub-sub-file", "abcde11")], [])
+    C_FileViewHashes("sub-folder", [C_FileHashPair("sub-sub-file", "abcde11", E_HashAlgorithms.SHA256)], [])
   ])
 ]);

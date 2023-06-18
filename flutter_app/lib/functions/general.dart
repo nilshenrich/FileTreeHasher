@@ -17,15 +17,9 @@ import 'package:path/path.dart' as libpath;
 // @return: Directory
 // ##################################################
 Directory getHomeDir() {
-  Map<String, String> keywords = {
-    "linux": "HOME",
-    "macos": "HOME",
-    "windows": "USERPROFILE",
-    "android": "HOME"
-  };
+  Map<String, String> keywords = {"linux": "HOME", "macos": "HOME", "windows": "USERPROFILE", "android": "HOME"};
 
-  return Directory(
-      Platform.environment[keywords[Platform.operatingSystem]] ?? "");
+  return Directory(Platform.environment[keywords[Platform.operatingSystem]] ?? "");
 }
 
 // ##################################################
@@ -56,4 +50,14 @@ String getParentPath(String path) {
 // ##################################################
 String getFileName(String path) {
   return libpath.basename(path);
+}
+
+// ##################################################
+// @brief: Convert string to raw string
+//         All escape sequences will be replaced by their ASCII code
+// @param: in
+// @return: String
+// ##################################################
+String getRawString(String s) {
+  return s.replaceAll('"', '\\"').replaceAll("'", "\\'").replaceAll("\\", "\\\\").replaceAll("\n", "\\n");
 }

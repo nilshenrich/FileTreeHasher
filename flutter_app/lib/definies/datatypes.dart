@@ -14,6 +14,8 @@
 // ##################################################
 // # Hash comparison result
 // ##################################################
+import 'package:file_tree_hasher/definies/hashalgorithms.dart';
+
 enum E_HashComparisonResult {
   none, // No comparison
   equal, // Generated hash and comparison hash match
@@ -26,11 +28,13 @@ enum E_HashComparisonResult {
 class C_FileHashPair {
   final String _file; // File name or path
   final String? _hash; // Generated hash
+  final E_HashAlgorithms _algorithm; // Hash algorithm
 
   // Constructor
-  C_FileHashPair(String file, String? hash)
+  C_FileHashPair(String file, String? hash, E_HashAlgorithms algorithm)
       : _file = file,
-        _hash = hash;
+        _hash = hash,
+        _algorithm = algorithm;
 
   // Getter for file and hash
   String get file {
@@ -39,6 +43,10 @@ class C_FileHashPair {
 
   String? get hash {
     return _hash;
+  }
+
+  E_HashAlgorithms get algorithm {
+    return _algorithm;
   }
 }
 

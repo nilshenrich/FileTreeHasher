@@ -3,14 +3,11 @@
 // # @author Nils Henrich
 // # @brief Algorithms for hash file: creating, loading
 //          Hash file format:
-//          <folder1>
-//          +---<file11> <hash>
-//          +---<folder11>
-//          |   +---<file111> <hash>
-//          |   +---<folder<111>
-//          |       +---<file1111> <hash>
-//          +---<folder12>
-//          <file1> <hash>
+//          <some general header lines>
+//
+//          <absolute view path (or distinctive text for single files)>
+//          abcde,md5,"top-file"
+//          abcde,sha1,"top-folder/sub-file"
 // # @version 0.0.0+1
 // # @date 2023-06-16
 // #
@@ -20,6 +17,8 @@
 
 import 'dart:io';
 import 'package:file_tree_hasher/definies/datatypes.dart';
+import 'package:file_tree_hasher/definies/info.dart';
+import 'package:file_tree_hasher/functions/general.dart';
 
 // ##################################################
 // @brief: Generate hash file from given file paths and hashes
@@ -32,54 +31,25 @@ void generateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
   // Get file socket
   File filesocket = File(storagepath);
 
-  // If file shall be overridded, just recreate it
+  // If file shall be overridded, just recreate it with information header
   if (override) {
-    filesocket.writeAsBytesSync([]);
+    filesocket.writeAsStringSync("$hashFileHeader\n\n");
   }
 
   // Loop over all view elements
   // - For a file, add entry to hash file
   // - For a folder, recurse on folder
   for (C_FileViewHashes folder in fileviewhashes.folders) {
-    String newLine = _preceding(level);
-    newLine += folder.name;
-    newLine += "\n";
-    filesocket.writeAsStringSync(newLine, mode: FileMode.append);
     generateHashfile(folder, storagepath, override: false, level: level + 1);
   }
   for (C_FileHashPair file in fileviewhashes.files) {
-    String newLine = _preceding(level);
-    newLine += file.file;
-    newLine += " ";
+    String newLine = "";
     newLine += file.hash ?? "<no hash>";
-    newLine += "\n";
+    newLine += ",";
+    newLine += file.algorithm.name;
+    newLine += ",\"";
+    newLine += getRawString(file.file);
+    newLine += "\"\n";
     filesocket.writeAsStringSync(newLine, mode: FileMode.append);
   }
-}
-
-// ##################################################
-// @brief: Generate preceeding string for hash file generation
-// @param: level
-// @return: String
-// ##################################################
-String _preceding(int level) {
-  String newLine;
-  switch (level) {
-    case 0:
-      newLine = "";
-      break;
-    case 1:
-      newLine = "+---";
-      break;
-    default:
-      {
-        newLine = "|   ";
-        for (int i = 3; i <= level; i += 1) {
-          newLine += "    ";
-        }
-        newLine += "+---";
-      }
-      break;
-  }
-  return newLine;
 }
