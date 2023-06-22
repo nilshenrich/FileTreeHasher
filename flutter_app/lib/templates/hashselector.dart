@@ -55,6 +55,13 @@ class T_HashSelector_state extends State<T_HashSelector> {
             onChanged: set));
   }
 
+  // ##################################################
+  // @brief: Getter/Setter
+  // ##################################################
+  String? get() {
+    return _selected;
+  }
+
   void set(String? selected) {
     setState(() {
       _selected = selected;

@@ -48,7 +48,7 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
     String newLine = "";
     newLine += file.hash ?? "<no hash>";
     newLine += ",";
-    newLine += file.algorithm.name;
+    newLine += file.algorithm;
     newLine += ",\"";
     newLine += GetRawString(file.file);
     newLine += "\"\n";
@@ -64,5 +64,14 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
 // ##################################################
 // TODO: Implement
 C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTreeItem> items, String name) {
-  return C_FileViewHashes("", [], []);
+  List<C_FileViewHashes> folders = [];
+  List<C_FileHashPair> files = [];
+  for (T_FileTreeItem item in items) {
+    if (item is T_FolderView) {
+      folders.add(FileTreeItems_to_FileViewHashes(item.subitems, item.path));
+    } else if (item is T_FileView) {
+      files.add(C_FileHashPair(item.path, item.globKey_HashGenerationView.currentState!.HashGen, item.globKey_HashAlgorithm.currentState!.get()!));
+    }
+  }
+  return C_FileViewHashes(name, files, folders);
 }

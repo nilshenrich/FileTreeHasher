@@ -28,10 +28,10 @@ enum E_HashComparisonResult {
 class C_FileHashPair {
   final String _file; // File name or path
   final String? _hash; // Generated hash
-  final E_HashAlgorithms _algorithm; // Hash algorithm
+  final String _algorithm; // Hash algorithm
 
   // Constructor
-  C_FileHashPair(String file, String? hash, E_HashAlgorithms algorithm)
+  C_FileHashPair(String file, String? hash, String algorithm)
       : _file = file,
         _hash = hash,
         _algorithm = algorithm;
@@ -45,7 +45,7 @@ class C_FileHashPair {
     return _hash;
   }
 
-  E_HashAlgorithms get algorithm {
+  String get algorithm {
     return _algorithm;
   }
 }

@@ -417,6 +417,14 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       _hashGen = hashString;
     });
   }
+
+  // ##################################################
+  // @brief: Getter: generated hash
+  // @return: String
+  // ##################################################
+  String get HashGen {
+    return _hashGen;
+  }
 }
 
 // ##################################################
