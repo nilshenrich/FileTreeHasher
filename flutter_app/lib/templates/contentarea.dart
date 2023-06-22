@@ -44,13 +44,9 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       // -------------------- Section: File tree --------------------
       T_HeaderControlSection(headingText: "File tree control", items: [
         // ---------- Button: load file tree ----------
-        IconButton(
-          onPressed: BodyContent.currentState?.selectNewFolder,
-          icon: const Icon(Icons.drive_folder_upload),
-          tooltip: "Load file tree",
-        ),
+        IconButton(onPressed: BodyContent.currentState?.selectNewFolder, icon: const Icon(Icons.drive_folder_upload), tooltip: "Load file tree"),
         // ---------- Button: Load single file ----------
-        IconButton(onPressed: BodyContent.currentState?.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single file"),
+        IconButton(onPressed: BodyContent.currentState?.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single files"),
         // ---------- Button: clear all ----------
         IconButton(
             onPressed: BodyContent.currentState?.clearContent,
@@ -116,7 +112,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void selectNewFolder() async {
     // -------------------- Select folder from system --------------------
-    // TODO: Multiple folders could be selected (Button description to be adapted)
+    // TODO: Multiple folders could be selected (Button description to be adapted). Think that is not possible for folders
     String? filetreePath = await FilePicker.platform.getDirectoryPath(initialDirectory: GetHomeDir().path);
     if (filetreePath == null) {
       return;
