@@ -75,3 +75,17 @@ C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTreeItem> items, Str
   }
   return C_FileViewHashes(name, files, folders);
 }
+
+// ##################################################
+// @brief: Transform a given list of single files into a C_FileViewHashes
+// @param: files
+// @param: name
+// @return: C_FileViewHashes
+// ##################################################
+C_FileViewHashes SingleFiles_to_FileViewHashes(List<T_FileView> fileViews, String name) {
+  List<C_FileHashPair> files = [];
+  for (T_FileView file in fileViews) {
+    files.add(C_FileHashPair(file.path, file.globKey_HashGenerationView.currentState!.HashGen, file.globKey_HashAlgorithm.currentState!.get()!));
+  }
+  return C_FileViewHashes(name, files, []);
+}

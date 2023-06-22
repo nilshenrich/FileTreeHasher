@@ -204,8 +204,12 @@ class T_BodyContent_state extends State<T_BodyContent> {
             for (Widget row in dialogRows) {
               if (row is! T_StorageChooserRow) continue;
               String storagepath = row.getStoragePath();
-              C_FileViewHashes hashlist = FileTreeItems_to_FileViewHashes(row.fileTreeViewKey.currentState!.widget.items, storagepath);
-              GenerateHashfile(hashlist, storagepath);
+              GlobalKey<T_FileTreeView_state>? key = row.fileTreeViewKey;
+              if (key == null) {
+                GenerateHashfile(SingleFiles_to_FileViewHashes(_loadedFiles, "Single files"), storagepath);
+              } else {
+                GenerateHashfile(FileTreeItems_to_FileViewHashes(row.fileTreeViewKey!.currentState!.widget.items, storagepath), storagepath);
+              }
             }
             Navigator.pop(context);
           },
@@ -306,11 +310,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
 class T_StorageChooserRow extends StatelessWidget {
   // Attributes
   final String title;
-  final GlobalKey<T_FileTreeView_state> fileTreeViewKey;
+  final GlobalKey<T_FileTreeView_state>? fileTreeViewKey; // null means single files
   final TextEditingController _textEditingController = TextEditingController();
 
   // Constructor
-  T_StorageChooserRow({super.key, required this.title, required this.fileTreeViewKey});
+  T_StorageChooserRow({super.key, required this.title, this.fileTreeViewKey});
 
   @override
   Widget build(BuildContext context) {
