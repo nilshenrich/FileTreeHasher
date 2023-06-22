@@ -21,6 +21,7 @@ import 'dart:io';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/functions/general.dart';
+import 'package:file_tree_hasher/templates/filetree.dart';
 
 // ##################################################
 // @brief: Generate hash file from given file paths and hashes
@@ -53,4 +54,15 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
     newLine += "\"\n";
     filesocket.writeAsStringSync(newLine, mode: FileMode.writeOnlyAppend);
   }
+}
+
+// ##################################################
+// @brief: Transform a given list of file tree items into a C_FileViewHashes
+// @param: items
+// @param: name
+// @return: C_FileViewHashes
+// ##################################################
+// TODO: Implement
+C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTreeItem> items, String name) {
+  return C_FileViewHashes("", [], []);
 }

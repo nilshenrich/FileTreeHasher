@@ -18,6 +18,7 @@ import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
+import 'package:file_tree_hasher/functions/hashfile.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
@@ -191,7 +192,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
     for (T_FileTreeView views in _loadedTrees) {
-      dialogRows.add(T_StorageChooserRow(title: views.title, fileTreeViewKey: views.key));
+      dialogRows.add(T_StorageChooserRow(title: views.title, fileTreeViewKey: views.key as GlobalKey<T_FileTreeView_state>));
     }
     dialogRows.add(T_StorageChooserRow(title: "Single files"));
 
@@ -203,8 +204,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
             for (Widget row in dialogRows) {
               if (row is! T_StorageChooserRow) continue;
               String storagepath = row.getStoragePath();
-              // TODO: Get all loaded files nad hashes of the current view into a C_FileViewHashes and generate the has file
-              Key key = row.fileTreeViewKey!;
+              C_FileViewHashes hashlist = FileTreeItems_to_FileViewHashes(row.fileTreeViewKey.currentState!.widget.items, storagepath);
+              GenerateHashfile(hashlist, storagepath);
             }
             Navigator.pop(context);
           },
@@ -305,11 +306,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
 class T_StorageChooserRow extends StatelessWidget {
   // Attributes
   final String title;
-  final Key? fileTreeViewKey;
+  final GlobalKey<T_FileTreeView_state> fileTreeViewKey;
   final TextEditingController _textEditingController = TextEditingController();
 
   // Constructor
-  T_StorageChooserRow({super.key, required this.title, this.fileTreeViewKey});
+  T_StorageChooserRow({super.key, required this.title, required this.fileTreeViewKey});
 
   @override
   Widget build(BuildContext context) {
