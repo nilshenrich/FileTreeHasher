@@ -229,14 +229,14 @@ class T_FileTreeView extends StatefulWidget {
   const T_FileTreeView({super.key, required this.items, required this.title});
 
   @override
-  State<StatefulWidget> createState() => _T_FileTreeView_state();
+  State<StatefulWidget> createState() => T_FileTreeView_state();
 }
 
 // ##################################################
 // # STATE
 // # File tree view area
 // ##################################################
-class _T_FileTreeView_state extends State<T_FileTreeView> {
+class T_FileTreeView_state extends State<T_FileTreeView> {
   // Is file tree visible
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
   bool _visible = true;
