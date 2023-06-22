@@ -98,8 +98,8 @@ class T_BodyContent extends StatefulWidget {
 // ##################################################
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
-  final List<T_FileTreeView> _loadedTrees = [_exampleFileTree];
-  final List<T_FileView> _loadedFiles = [_exampleFile];
+  final List<T_FileTreeView> _loadedTrees = [];
+  final List<T_FileView> _loadedFiles = [];
 
   @override
   Widget build(BuildContext context) {
@@ -183,6 +183,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   //                - For file trees the hash files default location is directly inside the loaded folder
   //                - For single file section the hash files default location is the users home directory
   // ##################################################
+  // BUG: Deletd files and views are shown as a path selector
   void safeHashFile() {
     // -------------------- Open file safe dialog --------------------
 
