@@ -18,9 +18,9 @@ import 'package:path/path.dart' as libpath;
 // @brief: Get home directory depending on plattform
 // @return: Directory
 // ##################################################
+// FIXME: For Linux /home is chosen, not /home/$USER
 Directory GetHomeDir() {
   Map<String, String> keywords = {"linux": "HOME", "macos": "HOME", "windows": "USERPROFILE", "android": "HOME"};
-
   return Directory(Platform.environment[keywords[Platform.operatingSystem]] ?? "");
 }
 
