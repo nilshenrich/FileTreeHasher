@@ -96,8 +96,8 @@ class T_BodyContent extends StatefulWidget {
 // ##################################################
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
-  final List<T_FileTreeView> _loadedTrees = [];
-  final List<T_FileView> _loadedFiles = [];
+  final List<T_FileTreeView> _loadedTrees = [_exampleFileTree];
+  final List<T_FileView> _loadedFiles = [_exampleFile];
 
   @override
   Widget build(BuildContext context) {
@@ -354,3 +354,23 @@ class T_StorageChooserRow extends StatelessWidget {
     return _textEditingController.text;
   }
 }
+
+// DEV: Example file tree
+T_FileTreeView _exampleFileTree = T_FileTreeView(
+  key: GlobalKey<T_FileTreeView_state>(),
+  title: "<First loaded file tree>",
+  items: [
+    T_FolderView(path: "/root/folder/top-folder", name: "top-folder", subitems: [
+      T_FolderView(path: "/root/folder/top-folder/sub-folder", name: "sub-folder", subitems: [
+        T_FolderView(path: "/root/folder/top-folder/sub-folder/sub-sub-folder", name: "sub-sub-folder"),
+        T_FileView(path: "/root/folder/top-folder/sub-folder/sub-sub-file", name: "sub-sub-file")
+      ]),
+      T_FolderView(path: "/root/folder/top-folder/sub-folder-with-long-name", name: "sub-folder-with-long-name"),
+      T_FileView(path: "/root/folder/top-folder/sub-file", name: "sub-file"),
+      T_FileView(path: "/root/folder/top-folder/sub-file-with-long-name", name: "sub-file-with-long-name")
+    ]),
+    T_FolderView(path: "/root/folder/folder-with-long-name", name: "folder-with-long-name"),
+    T_FileView(path: "/root/folder/top-file", name: "top-file")
+  ],
+);
+T_FileView _exampleFile = T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");
