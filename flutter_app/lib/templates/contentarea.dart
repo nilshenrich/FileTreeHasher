@@ -250,7 +250,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void _showNewFolder(String path) {
     setState(() {
-      _loadedTrees.add(T_FileTreeView(items: _loadFolder(Directory(path)), title: path));
+      _loadedTrees.add(T_FileTreeView(key: GlobalKey<T_FileTreeView_state>(), items: _loadFolder(Directory(path)), title: path));
     });
   }
 
@@ -358,6 +358,7 @@ class T_StorageChooserRow extends StatelessWidget {
 
 // DEV: Example file tree
 T_FileTreeView _exampleFileTree = T_FileTreeView(
+  key: GlobalKey<T_FileTreeView_state>(),
   title: "<First loaded file tree>",
   items: [
     T_FolderView(path: "/root/folder/top-folder", name: "top-folder", subitems: [
