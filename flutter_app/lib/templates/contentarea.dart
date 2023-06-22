@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
+import 'package:path/path.dart' as libpath;
 
 // ##################################################
 // # Body content
@@ -49,7 +50,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
           tooltip: "Load file tree",
         ),
         // ---------- Button: Load single file ----------
-        IconButton(onPressed: BodyContent.currentState?.selectNewFile, icon: const Icon(Icons.upload_file), tooltip: "Load single file"),
+        IconButton(onPressed: BodyContent.currentState?.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single file"),
         // ---------- Button: clear all ----------
         IconButton(
             onPressed: BodyContent.currentState?.clearContent,
@@ -126,22 +127,23 @@ class T_BodyContent_state extends State<T_BodyContent> {
   }
 
   // ##################################################
-  // @brief: Let user select a single file to show
-  //         The new file is added to the view on its own
+  // @brief: Let user select single files to show
+  //         The new files are added to the view on its own
   // ##################################################
-  void selectNewFile() async {
-    // -------------------- Select file from system --------------------
-    // TODO: Multiple files could be selected (Button description to be adapted)
-    FilePickerResult? filePath = await FilePicker.platform.pickFiles(initialDirectory: GetHomeDir().path);
-    if (filePath == null) {
+  void selectNewFiles() async {
+    // -------------------- Select files from system --------------------
+    FilePickerResult? filePaths = await FilePicker.platform.pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true);
+    if (filePaths == null) {
       return;
     }
 
-    // -------------------- Show selected file in body --------------------
-    PlatformFile file = filePath.files.first;
-    setState(() {
-      _loadedFiles.add(T_FileView(path: file.path!, name: file.name));
-    });
+    // -------------------- Show selected files in body --------------------
+    List<String?> paths = filePaths.paths;
+    for (String? path in paths) {
+      setState(() {
+        _loadedFiles.add(T_FileView(path: path!, name: libpath.basename(path)));
+      });
+    }
   }
 
   // ##################################################
