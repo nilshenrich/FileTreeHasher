@@ -19,3 +19,6 @@ const E_HashAlgorithms DefaultHashAlgorithm = E_HashAlgorithms.MD5;
 
 // ---------- Currently selected global hash algorithm ----------
 String? SelectedGlobalHashAlg = DefaultHashAlgorithm.value;
+
+// -------------------- Distinctive text for single files stored in hash file --------------------
+const String HashfileSingletext = "Single files";

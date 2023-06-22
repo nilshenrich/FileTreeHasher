@@ -13,12 +13,15 @@
 
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
+import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
+import 'package:file_tree_hasher/functions/hashfile.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
-import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
@@ -48,10 +51,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
           tooltip: "Load file tree",
         ),
         // ---------- Button: Load single file ----------
-        IconButton(
-            onPressed: BodyContent.currentState?.selectNewFile,
-            icon: const Icon(Icons.upload_file),
-            tooltip: "Load single file"),
+        IconButton(onPressed: BodyContent.currentState?.selectNewFile, icon: const Icon(Icons.upload_file), tooltip: "Load single file"),
         // ---------- Button: clear all ----------
         IconButton(
             onPressed: BodyContent.currentState?.clearContent,
@@ -67,14 +67,8 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       ]),
       // -------------------- Section: Comparison --------------------
       T_HeaderControlSection(headingText: "Comparison", items: [
-        IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.upload_outlined),
-            tooltip: "Load checksum file"),
-        IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.download_outlined),
-            tooltip: "Safe checksum file"),
+        IconButton(onPressed: () {}, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file"),
+        IconButton(onPressed: BodyContent.currentState?.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file"),
         IconButton(
             onPressed: BodyContent.currentState?.clearComparisonInputs,
             icon: const Icon(Icons.delete_forever_outlined),
@@ -104,8 +98,8 @@ class T_BodyContent extends StatefulWidget {
 // ##################################################
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
-  final List<T_FileTreeView> _loadedTrees = [_exampleFileTree];
-  final List<T_FileView> _loadedFiles = [_exampleFile];
+  final List<T_FileTreeView> _loadedTrees = [];
+  final List<T_FileView> _loadedFiles = [];
 
   @override
   Widget build(BuildContext context) {
@@ -113,10 +107,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
       const ContentDivider_folders(),
       Column(children: _loadedTrees),
       const ContentDivider_files(),
-      Row(children: [
-        Flexible(child: Column(children: _loadedFiles)),
-        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)
-      ])
+      Row(children: [Flexible(child: Column(children: _loadedFiles)), const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)])
     ]);
   }
 
@@ -126,14 +117,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void selectNewFolder() async {
     // -------------------- Select folder from system --------------------
-    // TODO: Don't show hidden folders
-    String? filetreePath = await FilesystemPicker.openDialog(
-        title: "Select folder",
-        context: context,
-        rootDirectory: getHomeDir(),
-        fsType: FilesystemType.folder,
-        pickText: "Select folder to load file tree from",
-        showGoUp: false);
+    // TODO: Multiple folders could be selected (Button description to be adapted)
+    String? filetreePath = await FilePicker.platform.getDirectoryPath(initialDirectory: GetHomeDir().path);
     if (filetreePath == null) {
       return;
     }
@@ -148,21 +133,16 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void selectNewFile() async {
     // -------------------- Select file from system --------------------
-    String? filePath = await FilesystemPicker.openDialog(
-        title: "Select file",
-        context: context,
-        rootDirectory: getHomeDir(),
-        fsType: FilesystemType.file,
-        pickText: "Select file to load into view",
-        showGoUp: false);
+    // TODO: Multiple files could be selected (Button description to be adapted)
+    FilePickerResult? filePath = await FilePicker.platform.pickFiles(initialDirectory: GetHomeDir().path);
     if (filePath == null) {
       return;
     }
 
     // -------------------- Show selected file in body --------------------
-    T_FileView file = T_FileView(path: filePath, name: filePath);
+    PlatformFile file = filePath.files.first;
     setState(() {
-      _loadedFiles.add(file);
+      _loadedFiles.add(T_FileView(path: file.path!, name: file.name));
     });
   }
 
@@ -192,6 +172,68 @@ class T_BodyContent_state extends State<T_BodyContent> {
   }
 
   // ##################################################
+  // @brief: Create hash files from generated hashes
+  //         Hash file clusters:
+  //            - Each file tree gets its own hash file
+  //            - The single file section also gets its own hash file for all single files
+  //         Hash file storage location:
+  //            - Before the file is created, a popup opens where the user can select the storage location for each of the planned hash files
+  //              It is build like a table where the user can see the loaded trees and single files and belonging storage paths that can be changed via file selectors (file can be added or replaced)
+  //            - Default locations:
+  //                - For file trees the hash files default location is directly inside the loaded folder
+  //                - For single file section the hash files default location is the users home directory
+  // ##################################################
+  // BUG: Deletd files and views are shown as a path selector
+  void safeHashFile() {
+    // -------------------- Open file safe dialog --------------------
+
+    // All chosen paths
+    C_HashfileStoragepaths hashPaths = C_HashfileStoragepaths();
+
+    // Get all file trees and single files into widgets
+    List<Widget> dialogRows = [];
+    for (T_FileTreeView views in _loadedTrees) {
+      dialogRows.add(T_StorageChooserRow(title: views.title, fileTreeViewKey: views.key as GlobalKey<T_FileTreeView_state>));
+    }
+    dialogRows.add(T_StorageChooserRow(title: "Single files"));
+
+    // Add exit buttons at the end
+    dialogRows.add(Row(children: [
+      const Expanded(child: SizedBox.shrink()),
+      IconButton(
+          onPressed: () {
+            for (Widget row in dialogRows) {
+              if (row is! T_StorageChooserRow) continue;
+              String storagepath = row.getStoragePath();
+              GlobalKey<T_FileTreeView_state>? key = row.fileTreeViewKey;
+              if (key == null) {
+                GenerateHashfile(SingleFiles_to_FileViewHashes(_loadedFiles, "Single files"), storagepath);
+              } else {
+                GenerateHashfile(FileTreeItems_to_FileViewHashes(row.fileTreeViewKey!.currentState!.widget.items, storagepath), storagepath);
+              }
+            }
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.check)),
+      IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close))
+    ]));
+
+    // Show dialog
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            title: const Text("Choose storage locations for hash files"),
+            children: [Column(children: dialogRows)],
+          );
+        });
+
+    // -------------------- Generate hash files --------------------
+  }
+
+  // ##################################################
   // @brief: Clear all inputs for comparison hash
   // ##################################################
   void clearComparisonInputs() {
@@ -215,8 +257,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void _showNewFolder(String path) {
     setState(() {
-      _loadedTrees.add(
-          T_FileTreeView(items: _loadFolder(Directory(path)), title: path));
+      _loadedTrees.add(T_FileTreeView(key: GlobalKey<T_FileTreeView_state>(), items: _loadFolder(Directory(path)), title: path));
     });
   }
 
@@ -234,18 +275,14 @@ class T_BodyContent_state extends State<T_BodyContent> {
       // For subfolders
       if (item is Directory) {
         // Load all sub items of this subfolder and add to list
-        T_FolderView subfolder = T_FolderView(
-            path: item.path,
-            name: getFileName(item.path),
-            subitems: _loadFolder(item));
+        T_FolderView subfolder = T_FolderView(path: item.path, name: GetFileName(item.path), subitems: _loadFolder(item));
         itemsList.add(subfolder);
       }
 
       // For files
       else if (item is File) {
         // Add file element to list
-        T_FileView file =
-            T_FileView(path: item.path, name: getFileName(item.path));
+        T_FileView file = T_FileView(path: item.path, name: GetFileName(item.path));
         itemsList.add(file);
       }
     }
@@ -267,39 +304,93 @@ class T_BodyContent_state extends State<T_BodyContent> {
   }
 }
 
+// ##################################################
+// # TEMPLATE
+// # Storage chooser row for hash file creation
+// ##################################################
+class T_StorageChooserRow extends StatelessWidget {
+  // Attributes
+  final String title;
+  final GlobalKey<T_FileTreeView_state>? fileTreeViewKey; // null means single files
+  final TextEditingController _textEditingController = TextEditingController();
+
+  // Constructor
+  T_StorageChooserRow({super.key, required this.title, this.fileTreeViewKey});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Text(title),
+      const SizedBox(width: 10),
+      Expanded(
+          child: SizedBox(
+        // height: 24,
+        child: TextField(
+            controller: _textEditingController,
+            decoration: InputDecoration(
+                hintText: "Select hash file path",
+                suffixIcon: IconButton(
+                  onPressed: () async {
+                    _textEditingController.text = await selectStoragePath();
+                  },
+                  icon: const Icon(Icons.more_horiz),
+                ))),
+      ))
+    ]);
+  }
+
+  // ##################################################
+  // @brief: Open user dialog to select a path to stora a file
+  // @return: Future<String>
+  // ##################################################
+  Future<String> selectStoragePath() async {
+    String? hashfile = await FilePicker.platform.saveFile(
+        dialogTitle: "Choose a file to store hashes to", initialDirectory: GetHomeDir().path, lockParentWindow: true, allowedExtensions: ["hash"]);
+    if (hashfile != null) {
+      if (hashfile.endsWith(".hash")) {
+        return hashfile;
+      }
+      return "$hashfile.hash";
+    }
+    return "# TODO: Error";
+  }
+
+  // ##################################################
+  // @brief: Get chosen file storage path
+  // @return: String
+  // ##################################################
+  String getStoragePath() {
+    return _textEditingController.text;
+  }
+}
+
 // DEV: Example file tree
 T_FileTreeView _exampleFileTree = T_FileTreeView(
+  key: GlobalKey<T_FileTreeView_state>(),
   title: "<First loaded file tree>",
   items: [
-    T_FolderView(
-        path: "/root/folder/top-folder",
-        name: "top-folder",
-        subitems: [
-          T_FolderView(
-              path: "/root/folder/top-folder/sub-folder",
-              name: "sub-folder",
-              subitems: [
-                T_FolderView(
-                    path: "/root/folder/top-folder/sub-folder/sub-sub-folder",
-                    name: "sub-sub-folder"),
-                T_FileView(
-                    path: "/root/folder/top-folder/sub-folder/sub-sub-file",
-                    name: "sub-sub-file")
-              ]),
-          T_FolderView(
-              path: "/root/folder/top-folder/sub-folder-with-long-name",
-              name: "sub-folder-with-long-name"),
-          T_FileView(
-              path: "/root/folder/top-folder/sub-file", name: "sub-file"),
-          T_FileView(
-              path: "/root/folder/top-folder/sub-file-with-long-name",
-              name: "sub-file-with-long-name")
-        ]),
-    T_FolderView(
-        path: "/root/folder/folder-with-long-name",
-        name: "folder-with-long-name"),
+    T_FolderView(path: "/root/folder/top-folder", name: "top-folder", subitems: [
+      T_FolderView(path: "/root/folder/top-folder/sub-folder", name: "sub-folder", subitems: [
+        T_FolderView(path: "/root/folder/top-folder/sub-folder/sub-sub-folder", name: "sub-sub-folder"),
+        T_FileView(path: "/root/folder/top-folder/sub-folder/sub-sub-file", name: "sub-sub-file")
+      ]),
+      T_FolderView(path: "/root/folder/top-folder/sub-folder-with-long-name", name: "sub-folder-with-long-name"),
+      T_FileView(path: "/root/folder/top-folder/sub-file", name: "sub-file"),
+      T_FileView(path: "/root/folder/top-folder/sub-file-with-long-name", name: "sub-file-with-long-name")
+    ]),
+    T_FolderView(path: "/root/folder/folder-with-long-name", name: "folder-with-long-name"),
     T_FileView(path: "/root/folder/top-file", name: "top-file")
   ],
 );
-T_FileView _exampleFile =
-    T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");
+T_FileView _exampleFile = T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");
+
+// DEV: Example hash view
+C_FileViewHashes exampleHashView = C_FileViewHashes("/some/path/to/view", [
+  C_FileHashPair("top-file", "abcde", E_HashAlgorithms.MD5.value)
+], [
+  C_FileViewHashes("top-folder", [
+    C_FileHashPair("top-folder/sub-file", "abcde1", E_HashAlgorithms.SHA1.name)
+  ], [
+    C_FileViewHashes("top-folder/sub-folder", [C_FileHashPair("top-folder/sub-folder/sub-sub-file", "abcde11", E_HashAlgorithms.SHA256.name)], [])
+  ])
+]);

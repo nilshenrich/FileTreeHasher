@@ -1,3 +1,16 @@
+// ####################################################################################################
+// # @file general.dart
+// # @author Nils Henrich
+// # @brief Collection of general functions and algorithms
+// # @version 0.0.0+1
+// # @date 2023-04-22
+// #
+// # @copyright Copyright (c) 2023
+// #
+// ####################################################################################################
+
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:io';
 import 'package:path/path.dart' as libpath;
 
@@ -5,16 +18,10 @@ import 'package:path/path.dart' as libpath;
 // @brief: Get home directory depending on plattform
 // @return: Directory
 // ##################################################
-Directory getHomeDir() {
-  Map<String, String> keywords = {
-    "linux": "HOME",
-    "macos": "HOME",
-    "windows": "USERPROFILE",
-    "android": "HOME"
-  };
+Directory GetHomeDir() {
+  Map<String, String> keywords = {"linux": "HOME", "macos": "HOME", "windows": "USERPROFILE", "android": "HOME"};
 
-  return Directory(
-      Platform.environment[keywords[Platform.operatingSystem]] ?? "");
+  return Directory(Platform.environment[keywords[Platform.operatingSystem]] ?? "");
 }
 
 // ##################################################
@@ -24,7 +31,7 @@ Directory getHomeDir() {
 // @param: path
 // @return: String
 // ##################################################
-String getParentPath(String path) {
+String GetParentPath(String path) {
   String parent = libpath.dirname(path);
 
   // Raltive path without directory
@@ -43,6 +50,16 @@ String getParentPath(String path) {
 // @param: path
 // @return: String
 // ##################################################
-String getFileName(String path) {
+String GetFileName(String path) {
   return libpath.basename(path);
+}
+
+// ##################################################
+// @brief: Convert string to raw string
+//         All escape sequences will be replaced by their ASCII code
+// @param: in
+// @return: String
+// ##################################################
+String GetRawString(String s) {
+  return s.replaceAll('"', '\\"').replaceAll("'", "\\'").replaceAll("\\", "\\\\").replaceAll("\n", "\\n");
 }

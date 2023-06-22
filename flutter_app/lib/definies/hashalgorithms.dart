@@ -9,7 +9,7 @@
 // #
 // ####################################################################################################
 
-// ignore_for_file: camel_case_types, constant_identifier_names
+// ignore_for_file: camel_case_types, constant_identifier_names, non_constant_identifier_names
 
 // ##################################################
 // # ENUM
@@ -39,7 +39,7 @@ enum E_HashAlgorithms {
 // @brief: Get list of all known hash algorithm names
 // @return: List<String>
 // ##################################################
-List<String> getAllHashAlgorithmNames() {
+List<String> GetAllHashAlgorithmNames() {
   List<String> returnList = [];
   for (E_HashAlgorithms alg in E_HashAlgorithms.values) {
     returnList.add(alg.name);

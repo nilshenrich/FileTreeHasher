@@ -41,8 +41,8 @@ abstract class T_FileTreeItem extends StatefulWidget {
 
   // Constructor
   T_FileTreeItem({super.key, required name, required this.path})
-      : name = getFileName(name),
-        namePathPart = getParentPath(name);
+      : name = GetFileName(name),
+        namePathPart = GetParentPath(name);
 }
 
 // ##################################################
@@ -54,11 +54,7 @@ class T_FolderView extends T_FileTreeItem {
   final List<T_FileTreeItem> subitems;
 
   // Constructor
-  T_FolderView(
-      {super.key,
-      required super.path,
-      required super.name,
-      this.subitems = const []});
+  T_FolderView({super.key, required super.path, required super.name, this.subitems = const []});
 
   @override
   State<StatefulWidget> createState() => _T_FolderView_state();
@@ -84,8 +80,7 @@ class _T_FolderView_state extends State<T_FolderView> {
                   width: Style_FileTree_Icon_Width_px,
                   height: Style_FileTree_Icon_Height_px,
                   child: IconButton(
-                    icon: Icon(
-                        expanded ? Icons.chevron_right : Icons.expand_more),
+                    icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     splashColor: Colors.transparent,
@@ -96,9 +91,7 @@ class _T_FolderView_state extends State<T_FolderView> {
               Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
               Expanded(child: Text(widget.name)),
               const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-              T_FileHashSelector(
-                  key: widget.globKey_HashAlgorithm,
-                  onChanged: change_hashAlgorithm),
+              T_FileHashSelector(key: widget.globKey_HashAlgorithm, onChanged: change_hashAlgorithm),
               const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
               const SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
               SizedBox(
@@ -126,10 +119,7 @@ class _T_FolderView_state extends State<T_FolderView> {
   Offstage buildSubitems() {
     return Offstage(
         offstage: !expanded,
-        child: Row(children: [
-          const SizedBox(width: Style_FileTree_SubItem_ShiftRight_px),
-          Expanded(child: Column(children: widget.subitems))
-        ]));
+        child: Row(children: [const SizedBox(width: Style_FileTree_SubItem_ShiftRight_px), Expanded(child: Column(children: widget.subitems))]));
   }
 
   // ##################################################
@@ -193,23 +183,19 @@ class _T_FileView_state extends State<T_FileView> {
             Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
             Text(widget.name),
             const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-            Expanded(
-                child: T_HashGenerationView(
-                    key: widget.globKey_HashGenerationView,
-                    filepath: widget.path)),
+            Expanded(child: T_HashGenerationView(key: widget.globKey_HashGenerationView, filepath: widget.path)),
             const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
             T_FileHashSelector(
                 key: widget.globKey_HashAlgorithm,
                 onChanged: (selected) {
-                  widget.globKey_HashGenerationView.currentState!
-                      .generateHash(selected);
+                  widget.globKey_HashGenerationView.currentState!.generateHash(selected);
                 }),
             const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+            // TODO: Changing TextField value does not need a StatefulWidget
             T_HashComparisonView(
                 key: widget.globKey_HashComparisonView,
                 onChanged: (value) {
-                  widget.globKey_HashGenerationView.currentState!
-                      .compareHashes(value);
+                  widget.globKey_HashGenerationView.currentState!.compareHashes(value);
                 }),
             SizedBox(
               height: Style_FileTree_ComparisonInput_Height_px,
@@ -243,14 +229,14 @@ class T_FileTreeView extends StatefulWidget {
   const T_FileTreeView({super.key, required this.items, required this.title});
 
   @override
-  State<StatefulWidget> createState() => _T_FileTreeView_state();
+  State<StatefulWidget> createState() => T_FileTreeView_state();
 }
 
 // ##################################################
 // # STATE
 // # File tree view area
 // ##################################################
-class _T_FileTreeView_state extends State<T_FileTreeView> {
+class T_FileTreeView_state extends State<T_FileTreeView> {
   // Is file tree visible
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
   bool _visible = true;
@@ -271,16 +257,9 @@ class _T_FileTreeView_state extends State<T_FileTreeView> {
                         _visible = false;
                       });
                     }),
-                title: Text(widget.title,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
-                childrenPadding: const EdgeInsets.symmetric(
-                    horizontal: Style_FileTree_Item_ElementSpaces_px),
-                children: [
-                  const SizedBox(height: 10),
-                  Column(children: widget.items),
-                  const SizedBox(height: 10)
-                ])
+                title: Text(widget.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                childrenPadding: const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px),
+                children: [const SizedBox(height: 10), Column(children: widget.items), const SizedBox(height: 10)])
           ])
         : const SizedBox.shrink();
   }
@@ -321,21 +300,18 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
         ? LinearPercentIndicator(
             percent: _genProgress,
             lineHeight: Style_FileTree_HashGen_Prg_Height_px,
-            center: Text("${(_genProgress * 100).toStringAsFixed(1)}%",
-                style: Style_FileTree_HashGen_Prg_Text),
+            center: Text("${(_genProgress * 100).toStringAsFixed(1)}%", style: Style_FileTree_HashGen_Prg_Text),
             progressColor: Style_FileTree_HashGen_Prg_Color)
         : Row(children: [
             Flexible(
-                child: Container(
-                    color: Style_FileTree_HashComp_Colors[_comparisonResult],
-                    child: Text(_hashGen, style: Style_FileTree_HashGen_Text))),
+                child:
+                    Container(color: Style_FileTree_HashComp_Colors[_comparisonResult], child: Text(_hashGen, style: Style_FileTree_HashGen_Text))),
             SizedBox(
                 height: Style_FileTree_HashSelector_FontSize_px,
                 child: IconButton(
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: _hashGen));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Copied to clipboard")));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied to clipboard")));
                     },
                     iconSize: Style_FileTree_HashSelector_FontSize_px,
                     padding: EdgeInsets.zero,
@@ -368,9 +344,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       }
 
       // For 2 valid inputs, the result is equal or not equal
-      _comparisonResult = _hashGen.toLowerCase() == hashComp.toLowerCase()
-          ? E_HashComparisonResult.equal
-          : E_HashComparisonResult.notEqual;
+      _comparisonResult = _hashGen.toLowerCase() == hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
 
       return;
     });
@@ -443,6 +417,14 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       _hashGen = hashString;
     });
   }
+
+  // ##################################################
+  // @brief: Getter: generated hash
+  // @return: String
+  // ##################################################
+  String get HashGen {
+    return _hashGen;
+  }
 }
 
 // ##################################################
@@ -488,7 +470,7 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
   // @brief: Work on onChange
   // @param: value
   // ##################################################
-  _onChange(String value) {
+  void _onChange(String value) {
     _hashComp = value;
     if (widget.onChanged != null) {
       widget.onChanged!(value);

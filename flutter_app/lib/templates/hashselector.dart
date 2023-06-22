@@ -30,11 +30,7 @@ abstract class T_HashSelector extends StatefulWidget {
   final Function(String?)? onChanged;
 
   // Constructor
-  const T_HashSelector(
-      {super.key,
-      required this.height,
-      required this.fontSize,
-      this.onChanged});
+  const T_HashSelector({super.key, required this.height, required this.fontSize, this.onChanged});
 
   @override
   State<StatefulWidget> createState() => T_HashSelector_state();
@@ -55,10 +51,15 @@ class T_HashSelector_state extends State<T_HashSelector> {
         child: DropdownButton(
             value: _selected,
             style: TextStyle(fontSize: widget.fontSize, color: Colors.black),
-            items: getAllHashAlgorithmNames()
-                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                .toList(),
+            items: GetAllHashAlgorithmNames().map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
             onChanged: set));
+  }
+
+  // ##################################################
+  // @brief: Getter/Setter
+  // ##################################################
+  String? get() {
+    return _selected;
   }
 
   void set(String? selected) {
@@ -76,8 +77,7 @@ class T_HashSelector_state extends State<T_HashSelector> {
 // # Global hash selector
 // ##################################################
 class T_GlobalHashSelector extends T_HashSelector {
-  const T_GlobalHashSelector({super.key, super.onChanged})
-      : super(height: 48, fontSize: 16);
+  const T_GlobalHashSelector({super.key, super.onChanged}) : super(height: 48, fontSize: 16);
 }
 
 // ##################################################
@@ -86,7 +86,5 @@ class T_GlobalHashSelector extends T_HashSelector {
 // ##################################################
 class T_FileHashSelector extends T_HashSelector {
   const T_FileHashSelector({super.key, super.onChanged})
-      : super(
-            height: Style_FileTree_HashSelector_Height_px,
-            fontSize: Style_FileTree_HashSelector_FontSize_px);
+      : super(height: Style_FileTree_HashSelector_Height_px, fontSize: Style_FileTree_HashSelector_FontSize_px);
 }
