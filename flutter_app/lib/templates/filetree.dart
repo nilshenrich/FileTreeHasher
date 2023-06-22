@@ -334,7 +334,6 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // @param: hashGen
   // @param: hashComp
   // ##################################################
-  // TODO: Whole line is recreated but only hash background color changes
   void compareHashes(String hashComp) {
     setState(() {
       // If any of both hashes is empty, no comparison is done

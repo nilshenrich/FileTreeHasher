@@ -14,7 +14,6 @@
 // ##################################################
 // # Hash comparison result
 // ##################################################
-import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 
 enum E_HashComparisonResult {
   none, // No comparison

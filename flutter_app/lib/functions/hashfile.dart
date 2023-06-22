@@ -62,7 +62,6 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
 // @param: name
 // @return: C_FileViewHashes
 // ##################################################
-// TODO: Implement
 C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTreeItem> items, String name) {
   List<C_FileViewHashes> folders = [];
   List<C_FileHashPair> files = [];

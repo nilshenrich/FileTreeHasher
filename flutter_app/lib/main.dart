@@ -9,7 +9,6 @@
 // #
 // ####################################################################################################
 
-import 'package:file_tree_hasher/functions/hashfile.dart';
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/contentarea.dart';
 

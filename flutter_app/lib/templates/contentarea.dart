@@ -14,9 +14,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
-import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/hashfile.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
@@ -185,11 +183,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   // BUG: Deletd files and views are shown as a path selector
   void safeHashFile() {
-    // -------------------- Open file safe dialog --------------------
-
-    // All chosen paths
-    C_HashfileStoragepaths hashPaths = C_HashfileStoragepaths();
-
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
     for (T_FileTreeView views in _loadedTrees) {
@@ -229,8 +222,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
             children: [Column(children: dialogRows)],
           );
         });
-
-    // -------------------- Generate hash files --------------------
   }
 
   // ##################################################
@@ -363,34 +354,3 @@ class T_StorageChooserRow extends StatelessWidget {
     return _textEditingController.text;
   }
 }
-
-// DEV: Example file tree
-T_FileTreeView _exampleFileTree = T_FileTreeView(
-  key: GlobalKey<T_FileTreeView_state>(),
-  title: "<First loaded file tree>",
-  items: [
-    T_FolderView(path: "/root/folder/top-folder", name: "top-folder", subitems: [
-      T_FolderView(path: "/root/folder/top-folder/sub-folder", name: "sub-folder", subitems: [
-        T_FolderView(path: "/root/folder/top-folder/sub-folder/sub-sub-folder", name: "sub-sub-folder"),
-        T_FileView(path: "/root/folder/top-folder/sub-folder/sub-sub-file", name: "sub-sub-file")
-      ]),
-      T_FolderView(path: "/root/folder/top-folder/sub-folder-with-long-name", name: "sub-folder-with-long-name"),
-      T_FileView(path: "/root/folder/top-folder/sub-file", name: "sub-file"),
-      T_FileView(path: "/root/folder/top-folder/sub-file-with-long-name", name: "sub-file-with-long-name")
-    ]),
-    T_FolderView(path: "/root/folder/folder-with-long-name", name: "folder-with-long-name"),
-    T_FileView(path: "/root/folder/top-file", name: "top-file")
-  ],
-);
-T_FileView _exampleFile = T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");
-
-// DEV: Example hash view
-C_FileViewHashes exampleHashView = C_FileViewHashes("/some/path/to/view", [
-  C_FileHashPair("top-file", "abcde", E_HashAlgorithms.MD5.value)
-], [
-  C_FileViewHashes("top-folder", [
-    C_FileHashPair("top-folder/sub-file", "abcde1", E_HashAlgorithms.SHA1.name)
-  ], [
-    C_FileViewHashes("top-folder/sub-folder", [C_FileHashPair("top-folder/sub-folder/sub-sub-file", "abcde11", E_HashAlgorithms.SHA256.name)], [])
-  ])
-]);
