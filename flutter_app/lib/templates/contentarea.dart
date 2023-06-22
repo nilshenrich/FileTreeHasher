@@ -191,7 +191,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
     for (T_FileTreeView views in _loadedTrees) {
-      dialogRows.add(T_StorageChooserRow(title: views.title));
+      dialogRows.add(T_StorageChooserRow(title: views.title, fileTreeViewKey: views.key));
     }
     dialogRows.add(T_StorageChooserRow(title: "Single files"));
 
@@ -204,6 +204,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
               if (row is! T_StorageChooserRow) continue;
               String storagepath = row.getStoragePath();
               // TODO: Get all loaded files nad hashes of the current view into a C_FileViewHashes and generate the has file
+              Key key = row.fileTreeViewKey!;
             }
             Navigator.pop(context);
           },
@@ -304,10 +305,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
 class T_StorageChooserRow extends StatelessWidget {
   // Attributes
   final String title;
+  final Key? fileTreeViewKey;
   final TextEditingController _textEditingController = TextEditingController();
 
   // Constructor
-  T_StorageChooserRow({super.key, required this.title});
+  T_StorageChooserRow({super.key, required this.title, this.fileTreeViewKey});
 
   @override
   Widget build(BuildContext context) {
