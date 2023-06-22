@@ -44,7 +44,6 @@ class ControlHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GenerateHashfile(exampleHashView, "test.hash"); // DEV: Testing method
     return Scaffold(appBar: const T_HeaderBar(), body: SingleChildScrollView(child: T_BodyContent(key: BodyContent)));
   }
 }
