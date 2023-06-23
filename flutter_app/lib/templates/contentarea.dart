@@ -320,7 +320,8 @@ class T_StorageChooserRow extends StatelessWidget {
                 hintText: "Select hash file path",
                 suffixIcon: IconButton(
                   onPressed: () async {
-                    _textEditingController.text = await selectStoragePath();
+                    String? path = await selectStoragePath();
+                    if (path != null) _textEditingController.text = path;
                   },
                   icon: const Icon(Icons.more_horiz),
                 ))),
@@ -330,9 +331,9 @@ class T_StorageChooserRow extends StatelessWidget {
 
   // ##################################################
   // @brief: Open user dialog to select a path to stora a file
-  // @return: Future<String>
+  // @return: Future<String?>
   // ##################################################
-  Future<String> selectStoragePath() async {
+  Future<String?> selectStoragePath() async {
     String? hashfile = await FilePicker.platform.saveFile(
         dialogTitle: "Choose a file to store hashes to", initialDirectory: GetHomeDir().path, lockParentWindow: true, allowedExtensions: ["hash"]);
     if (hashfile != null) {
@@ -341,7 +342,7 @@ class T_StorageChooserRow extends StatelessWidget {
       }
       return "$hashfile.hash";
     }
-    return "# TODO: Error";
+    return null;
   }
 
   // ##################################################
