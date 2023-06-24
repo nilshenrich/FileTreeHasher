@@ -23,6 +23,7 @@ import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
+import 'package:path/path.dart' as libpath;
 
 // ##################################################
 // @brief: Generate hash file from given file paths and hashes
@@ -99,6 +100,13 @@ C_FileViewHashes? LoadHashfile(String storagepath) {
     String filepath = csvrow[2];
 
     // Split file paths into folder tree and create nested C_FileViewHashes element
+    // libpath.normalize just needed if hash file is exchanged between different plattforms
+    List<String> pathparts = libpath.split(filepath).where((element) => element.isNotEmpty).toList();
+    List<String> folders = pathparts.sublist(0, pathparts.length - 1);
+    String file = pathparts.last;
+    for (String folder in folders) {
+      // TODO: Create nested C_FileViewHashes
+    }
   }
 }
 
