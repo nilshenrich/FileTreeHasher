@@ -18,6 +18,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:io';
+import 'package:csv/csv.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/functions/general.dart';
@@ -27,7 +28,8 @@ import 'package:file_tree_hasher/templates/filetree.dart';
 // @brief: Generate hash file from given file paths and hashes
 // @param: fileviewhashes
 // @param: storagepath
-// @param: override
+// @param: [override]
+// @param: [level]
 // ##################################################
 void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool override = true, int level = 0}) {
   // Get file socket
@@ -51,8 +53,52 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
     newLine += file.algorithm;
     newLine += ",\"";
     newLine += GetRawString(file.file);
-    newLine += "\"\n";
+    newLine += "\"\n"; // TODO: Use typical line endings depending on system
     filesocket.writeAsStringSync(newLine, mode: FileMode.writeOnlyAppend);
+  }
+}
+
+// ##################################################
+// @brief: Load hash file from system and return info in usable form
+// @param: storagepath
+// @return C_FileViewHashes?
+// ##################################################
+C_FileViewHashes? LoadHashfile(String storagepath) {
+  // Read hash file
+  File filesocket = File(storagepath);
+  if (!filesocket.existsSync()) return null;
+  List<String> lines = filesocket.readAsLinesSync(); // TODO: Better read file dynamically
+
+  // Iterate over all lines
+  // Ignore all lines before the empty line, they are part of the file header
+  bool isRealData = false;
+  String? rootpath;
+  for (String line in lines) {
+    // Search for empty line to identify usable data
+    if (line.isEmpty) {
+      isRealData = true;
+      continue;
+    }
+    if (!isRealData) continue;
+
+    // First line of usable data is the tree views root path or the marker "Single files"
+    if (rootpath == null) {
+      rootpath = line;
+      continue;
+    }
+
+    // Get 3 CSV colums from line
+    // TODO: Use typical line endings depending on system
+    List<List<String>> csvrow_list = const CsvToListConverter()
+        .convert(line, fieldDelimiter: ",", textDelimiter: '"', textEndDelimiter: '"', eol: "\n", shouldParseNumbers: false);
+    if (csvrow_list.isEmpty) continue;
+    List csvrow = csvrow_list[0];
+    if (csvrow.length != 3) ;
+    String hashstring = csvrow[0];
+    String hashalg = csvrow[1];
+    String filepath = csvrow[2];
+
+    // Split file paths into folder tree and create nested C_FileViewHashes element
   }
 }
 
