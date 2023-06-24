@@ -186,7 +186,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     for (T_FileTreeView views in _loadedTrees) {
       dialogRows.add(T_StorageChooserRow(title: views.title, fileTreeViewKey: views.key as GlobalKey<T_FileTreeView_state>));
     }
-    dialogRows.add(T_StorageChooserRow(title: "Single files"));
+    dialogRows.add(T_StorageChooserRow(title: HashfileSingletext));
 
     // Add exit buttons at the end
     dialogRows.add(Row(children: [
