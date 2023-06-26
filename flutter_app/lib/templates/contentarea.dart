@@ -228,14 +228,14 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void loadHashfile() async {
     // -------------------- Pick hash files to load --------------------
-    // FilePickerResult? filePaths = await FilePicker.platform
-    //     .pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true, type: FileType.custom, allowedExtensions: ['hash']);
-    // if (filePaths == null) {
-    //   return;
-    // }
+    FilePickerResult? filePaths = await FilePicker.platform
+        .pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true, type: FileType.custom, allowedExtensions: ['hash']);
+    if (filePaths == null) {
+      return;
+    }
 
     // -------------------- Update file views --------------------
-    List<String?> paths = ["test.hash"]; //filePaths.paths;
+    List<String?> paths = filePaths.paths;
     for (String? path in paths) {
       // Load and parse hash file
       if (path == null) {
