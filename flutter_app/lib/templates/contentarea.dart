@@ -44,12 +44,12 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       // -------------------- Section: File tree --------------------
       T_HeaderControlSection(headingText: "File tree control", items: [
         // ---------- Button: load file tree ----------
-        IconButton(onPressed: BodyContent.currentState?.selectNewFolder, icon: const Icon(Icons.drive_folder_upload), tooltip: "Load file tree"),
+        IconButton(onPressed: BodyContent.currentState!.selectNewFolder, icon: const Icon(Icons.drive_folder_upload), tooltip: "Load file tree"),
         // ---------- Button: Load single file ----------
-        IconButton(onPressed: BodyContent.currentState?.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single files"),
+        IconButton(onPressed: BodyContent.currentState!.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single files"),
         // ---------- Button: clear all ----------
         IconButton(
-            onPressed: BodyContent.currentState?.clearContent,
+            onPressed: BodyContent.currentState!.clearContent,
             icon: const Icon(Icons.delete_forever_outlined),
             tooltip: "Clear all loaded files and file trees")
       ]),
@@ -62,10 +62,10 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       ]),
       // -------------------- Section: Comparison --------------------
       T_HeaderControlSection(headingText: "Comparison", items: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file"),
-        IconButton(onPressed: BodyContent.currentState?.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file"),
+        IconButton(onPressed: BodyContent.currentState!.loadHashfile, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file"),
+        IconButton(onPressed: BodyContent.currentState!.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file"),
         IconButton(
-            onPressed: BodyContent.currentState?.clearComparisonInputs,
+            onPressed: BodyContent.currentState!.clearComparisonInputs,
             icon: const Icon(Icons.delete_forever_outlined),
             tooltip: "Clear comparison strings")
       ])
@@ -159,11 +159,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void updateHashAlg(String? selected) {
     for (T_FileTreeView view in _loadedTrees) {
       for (T_FileTreeItem item in view.items) {
-        item.globKey_HashAlgorithm.currentState?.set(selected);
+        item.globKey_HashAlgorithm.currentState!.set(selected);
       }
     }
     for (T_FileView item in _loadedFiles) {
-      item.globKey_HashAlgorithm.currentState?.set(selected);
+      item.globKey_HashAlgorithm.currentState!.set(selected);
     }
   }
 
@@ -223,20 +223,29 @@ class T_BodyContent_state extends State<T_BodyContent> {
   }
 
   // ##################################################
+  // @brief: Load hash file from system and set comparison texts and hash algorithms accordingly
+  // ##################################################
+  Future<void> loadHashfile() async {
+    // Pick hash files to load
+    FilePickerResult? filePaths =
+        await FilePicker.platform.pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true, allowedExtensions: ['hash']);
+  }
+
+  // ##################################################
   // @brief: Clear all inputs for comparison hash
   // ##################################################
   void clearComparisonInputs() {
     for (T_FileTreeView view in _loadedTrees) {
       for (T_FileTreeItem item in view.items) {
         if (item is T_FileView) {
-          item.globKey_HashComparisonView.currentState?.set("");
+          item.globKey_HashComparisonView.currentState!.set("");
         } else if (item is T_FolderView) {
           _clearCompInp(item);
         }
       }
     }
     for (T_FileView item in _loadedFiles) {
-      item.globKey_HashComparisonView.currentState?.set("");
+      item.globKey_HashComparisonView.currentState!.set("");
     }
   }
 
@@ -285,7 +294,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void _clearCompInp(T_FolderView folder) {
     for (T_FileTreeItem item in folder.subitems) {
       if (item is T_FileView) {
-        item.globKey_HashComparisonView.currentState?.set("");
+        item.globKey_HashComparisonView.currentState!.set("");
       } else if (item is T_FolderView) {
         _clearCompInp(item);
       }
