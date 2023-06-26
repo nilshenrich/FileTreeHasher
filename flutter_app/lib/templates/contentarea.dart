@@ -259,7 +259,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
       // For all hash string pairs:
       // Go along file path and update file view if existing
-      GlobalKey<T_FolderView_state> folderview_key;
       for (C_FileHashPair hashpair in hashlist) {
         List<String> pathparts = libpath.split(hashpair.file);
         List<String> folders = pathparts.sublist(0, pathparts.length - 1);
