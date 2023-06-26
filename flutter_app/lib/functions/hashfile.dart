@@ -60,14 +60,17 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
 }
 
 // ##################################################
-// @brief: Load hash file from system and return info in usable form
+// @brief: Load hash file from system and return info in usable form (List of hashed files with absolute path)
 // @param: storagepath
-// @return C_FileViewHashes?
+// @return List<C_FileHashPair>
 // ##################################################
-C_FileViewHashes? LoadHashfile(String storagepath) {
+List<C_FileHashPair> LoadHashfile(String storagepath) {
+  // Lists to return
+  List<C_FileHashPair> filesToReturn = [];
+
   // Read hash file
   File filesocket = File(storagepath);
-  if (!filesocket.existsSync()) return null;
+  if (!filesocket.existsSync()) return List.empty();
   List<String> lines = filesocket.readAsLinesSync(); // TODO: Better read file dynamically
 
   // Iterate over all lines
@@ -85,6 +88,12 @@ C_FileViewHashes? LoadHashfile(String storagepath) {
     // First line of usable data is the tree views root path or the marker "Single files"
     if (rootpath == null) {
       rootpath = line;
+      int rootpathLastIndex = rootpath.length - 1;
+      String lastPathChar = rootpath[rootpathLastIndex];
+      if (lastPathChar != "/") {
+        // TODO: Use system specific path delimiter
+        rootpath += "/";
+      }
       continue;
     }
 
@@ -99,15 +108,11 @@ C_FileViewHashes? LoadHashfile(String storagepath) {
     String hashalg = csvrow[1];
     String filepath = csvrow[2];
 
-    // Split file paths into folder tree and create nested C_FileViewHashes element
-    // libpath.normalize just needed if hash file is exchanged between different plattforms
-    List<String> pathparts = libpath.split(filepath).where((element) => element.isNotEmpty).toList();
-    List<String> folders = pathparts.sublist(0, pathparts.length - 1);
-    String file = pathparts.last;
-    for (String folder in folders) {
-      // TODO: Create nested C_FileViewHashes
-    }
+    // Get the current line (file) into return object
+    filesToReturn.add(C_FileHashPair(rootpath + filepath, hashstring, hashalg));
   }
+
+  return filesToReturn;
 }
 
 // ##################################################
