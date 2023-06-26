@@ -23,7 +23,6 @@ import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
-import 'package:path/path.dart' as libpath;
 
 // ##################################################
 // @brief: Generate hash file from given file paths and hashes
@@ -32,6 +31,7 @@ import 'package:path/path.dart' as libpath;
 // @param: [override]
 // @param: [level]
 // ##################################################
+// BUG: File paths (for tree view) are absolute
 void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool override = true, int level = 0}) {
   // Get file socket
   File filesocket = File(storagepath);

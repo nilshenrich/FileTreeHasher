@@ -181,6 +181,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   //                - For single file section the hash files default location is the users home directory
   // ##################################################
   // BUG: Deletd files and views are shown as a path selector
+  // TODO: What if hash generation is ongoing?
   void safeHashFile() {
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
@@ -201,7 +202,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
               if (key == null) {
                 GenerateHashfile(SingleFiles_to_FileViewHashes(_loadedFiles, "Single files"), storagepath);
               } else {
-                GenerateHashfile(FileTreeItems_to_FileViewHashes(row.fileTreeViewKey!.currentState!.widget.items, storagepath), storagepath);
+                T_FileTreeView view = row.fileTreeViewKey!.currentState!.widget;
+                GenerateHashfile(FileTreeItems_to_FileViewHashes(view.items, view.title), storagepath);
               }
             }
             Navigator.pop(context);
@@ -226,6 +228,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   // @brief: Load hash file from system and set comparison texts and hash algorithms accordingly
   // ##################################################
+  // TODO: Not done for single files
   void loadHashfile() async {
     // -------------------- Pick hash files to load --------------------
     FilePickerResult? filePaths = await FilePicker.platform
