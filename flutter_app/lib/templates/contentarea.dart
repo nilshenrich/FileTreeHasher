@@ -249,11 +249,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
       List<C_FileHashPair> hashlist = parsedHashfile.files;
 
       // Find matching file tree view
-      GlobalKey<T_FileTreeView_state>? matchingview_key;
+      T_FileTreeView? matchingview;
       for (T_FileTreeView view in _loadedTrees) {
-        if (view.title == viewpath) matchingview_key = view.key as GlobalKey<T_FileTreeView_state>?;
+        if (view.title == viewpath) matchingview = view;
       }
-      if (matchingview_key == null) {
+      if (matchingview == null) {
         continue;
       }
 
@@ -263,7 +263,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
         List<String> pathparts = libpath.split(hashpair.file);
         List<String> folders = pathparts.sublist(0, pathparts.length - 1);
         String file = pathparts.last;
-        T_FileView? matchingFileview = _getMatchingFileview(matchingview_key.currentState!.widget.items, folders, file);
+        T_FileView? matchingFileview = _getMatchingFileview(matchingview.items, folders, file);
         if (matchingFileview == null) {
           continue;
         }
