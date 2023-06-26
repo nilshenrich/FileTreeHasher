@@ -33,7 +33,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 abstract class T_FileTreeItem extends StatefulWidget {
   // Parameter
   final String name;
-  final String path;
+  final String path; // TODO: Can path be removed?
   final String namePathPart;
 
   // Hash algorithm selector key
@@ -57,7 +57,7 @@ class T_FolderView extends T_FileTreeItem {
   T_FolderView({super.key, required super.path, required super.name, this.subitems = const []});
 
   @override
-  State<StatefulWidget> createState() => _T_FolderView_state();
+  State<StatefulWidget> createState() => T_FolderView_state();
 }
 
 // ##################################################
@@ -65,7 +65,7 @@ class T_FolderView extends T_FileTreeItem {
 // # Single folder view state
 // ##################################################
 // TODO: Folder shall be removable
-class _T_FolderView_state extends State<T_FolderView> {
+class T_FolderView_state extends State<T_FolderView> {
   // States
   bool expanded = true; // Is folder extended?
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage

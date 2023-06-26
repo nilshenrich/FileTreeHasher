@@ -14,6 +14,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/hashfile.dart';
@@ -225,10 +226,52 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   // @brief: Load hash file from system and set comparison texts and hash algorithms accordingly
   // ##################################################
-  Future<void> loadHashfile() async {
-    // Pick hash files to load
-    FilePickerResult? filePaths =
-        await FilePicker.platform.pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true, allowedExtensions: ['hash']);
+  void loadHashfile() async {
+    // -------------------- Pick hash files to load --------------------
+    // FilePickerResult? filePaths = await FilePicker.platform
+    //     .pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true, type: FileType.custom, allowedExtensions: ['hash']);
+    // if (filePaths == null) {
+    //   return;
+    // }
+
+    // -------------------- Update file views --------------------
+    List<String?> paths = ["test.hash"]; //filePaths.paths;
+    for (String? path in paths) {
+      // Load and parse hash file
+      if (path == null) {
+        continue;
+      }
+      C_FileViewHashes? parsedHashfile = LoadHashfile(path);
+      if (parsedHashfile == null) {
+        continue;
+      }
+      String viewpath = parsedHashfile.name;
+      List<C_FileHashPair> hashlist = parsedHashfile.files;
+
+      // Find matching file tree view
+      GlobalKey<T_FileTreeView_state>? matchingview_key;
+      for (T_FileTreeView view in _loadedTrees) {
+        if (view.title == viewpath) matchingview_key = view.key as GlobalKey<T_FileTreeView_state>?;
+      }
+      if (matchingview_key == null) {
+        continue;
+      }
+
+      // For all hash string pairs:
+      // Go along file path and update file view if existing
+      GlobalKey<T_FolderView_state> folderview_key;
+      for (C_FileHashPair hashpair in hashlist) {
+        List<String> pathparts = libpath.split(hashpair.file);
+        List<String> folders = pathparts.sublist(0, pathparts.length - 1);
+        String file = pathparts.last;
+        T_FileView? matchingFileview = _getMatchingFileview(matchingview_key.currentState!.widget.items, folders, file);
+        if (matchingFileview == null) {
+          continue;
+        }
+        matchingFileview.globKey_HashAlgorithm.currentState!.set(hashpair.algorithm);
+        matchingFileview.globKey_HashComparisonView.currentState!.set(hashpair.hash ?? "");
+      }
+    }
   }
 
   // ##################################################
@@ -299,6 +342,39 @@ class T_BodyContent_state extends State<T_BodyContent> {
         _clearCompInp(item);
       }
     }
+  }
+
+  // ##################################################
+  // @brief: Get file view element (if existing) that matches a folder path
+  // @param: viewitems
+  // @param: folders
+  // @param: file
+  // @return: T_FileView?
+  // ##################################################
+  T_FileView? _getMatchingFileview(List<T_FileTreeItem> viewitems, List<String> folders, String file) {
+    for (T_FileTreeItem item in viewitems) {
+      // Work on folder
+      if (item is T_FolderView) {
+        if (folders.isEmpty) {
+          continue; // File searched, folder found
+        }
+        T_FileView? found = _getMatchingFileview(item.subitems, folders.sublist(1, folders.length), file);
+        if (found != null) {
+          return found;
+        }
+      }
+
+      // Work on file
+      if (item is T_FileView) {
+        if (folders.isNotEmpty) {
+          continue; // Folder searched, file found
+        }
+        if (item.name == file) {
+          return item;
+        }
+      }
+    }
+    return null;
   }
 }
 
