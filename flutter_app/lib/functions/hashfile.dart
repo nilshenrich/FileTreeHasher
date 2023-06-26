@@ -62,15 +62,15 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
 // ##################################################
 // @brief: Load hash file from system and return info in usable form (List of hashed files with absolute path)
 // @param: storagepath
-// @return List<C_FileHashPair>
+// @return C_FileViewHashes? (No containing folders, just having full path files)
 // ##################################################
-List<C_FileHashPair> LoadHashfile(String storagepath) {
+C_FileViewHashes? LoadHashfile(String storagepath) {
   // Lists to return
   List<C_FileHashPair> filesToReturn = [];
 
   // Read hash file
   File filesocket = File(storagepath);
-  if (!filesocket.existsSync()) return List.empty();
+  if (!filesocket.existsSync()) return null;
   List<String> lines = filesocket.readAsLinesSync(); // TODO: Better read file dynamically
 
   // Iterate over all lines
@@ -88,12 +88,6 @@ List<C_FileHashPair> LoadHashfile(String storagepath) {
     // First line of usable data is the tree views root path or the marker "Single files"
     if (rootpath == null) {
       rootpath = line;
-      int rootpathLastIndex = rootpath.length - 1;
-      String lastPathChar = rootpath[rootpathLastIndex];
-      if (lastPathChar != "/") {
-        // TODO: Use system specific path delimiter
-        rootpath += "/";
-      }
       continue;
     }
 
@@ -109,10 +103,13 @@ List<C_FileHashPair> LoadHashfile(String storagepath) {
     String filepath = csvrow[2];
 
     // Get the current line (file) into return object
-    filesToReturn.add(C_FileHashPair(rootpath + filepath, hashstring, hashalg));
+    filesToReturn.add(C_FileHashPair(filepath, hashstring, hashalg));
   }
 
-  return filesToReturn;
+  if (rootpath == null) {
+    return null;
+  }
+  return C_FileViewHashes(rootpath, filesToReturn, []);
 }
 
 // ##################################################
