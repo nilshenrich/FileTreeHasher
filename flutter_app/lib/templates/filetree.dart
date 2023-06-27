@@ -32,9 +32,9 @@ import 'package:percent_indicator/percent_indicator.dart';
 // ##################################################
 abstract class T_FileTreeItem extends StatefulWidget {
   // Parameter
-  final String name;
-  final String path; // TODO: Can path be removed?
-  final String namePathPart;
+  final String name; // File name used for view
+  final String path; // Absolute file path used for loading file
+  final String namePathPart; // Path to parent folder if name is given as a path
 
   // Hash algorithm selector key
   final globKey_HashAlgorithm = GlobalKey<T_HashSelector_state>();
