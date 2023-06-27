@@ -63,6 +63,7 @@ class T_HashSelector_state extends State<T_HashSelector> {
   }
 
   void set(String? selected) {
+    if (selected == _selected) return;
     setState(() {
       _selected = selected;
     });
