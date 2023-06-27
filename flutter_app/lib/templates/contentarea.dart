@@ -251,27 +251,44 @@ class T_BodyContent_state extends State<T_BodyContent> {
       String viewpath = parsedHashfile.name;
       List<C_FileHashPair> hashlist = parsedHashfile.files;
 
-      // Find matching file tree view
-      T_FileTreeView? matchingview;
-      for (T_FileTreeView view in _loadedTrees) {
-        if (view.title == viewpath) matchingview = view;
-      }
-      if (matchingview == null) {
-        continue;
+      // ---------- Update single files ----------
+      if (viewpath == HashfileSingletext) {
+        // For all hash string pairs:
+        // Just find if a single file exists with matching path
+        for (C_FileHashPair hashPair in hashlist) {
+          for (T_FileView singlefile in _loadedFiles) {
+            if (singlefile.path == hashPair.file) {
+              singlefile.globKey_HashAlgorithm.currentState!.set(hashPair.algorithm);
+              singlefile.globKey_HashComparisonView.currentState!.set(hashPair.hash ?? "");
+            }
+          }
+        }
       }
 
-      // For all hash string pairs:
-      // Go along file path and update file view if existing
-      for (C_FileHashPair hashpair in hashlist) {
-        List<String> pathparts = libpath.split(hashpair.file);
-        List<String> folders = pathparts.sublist(0, pathparts.length - 1);
-        String file = pathparts.last;
-        T_FileView? matchingFileview = _getMatchingFileview(matchingview.items, folders, file);
-        if (matchingFileview == null) {
+      // ---------- Update tree views ----------
+      else {
+        // Find matching file tree view
+        T_FileTreeView? matchingview;
+        for (T_FileTreeView view in _loadedTrees) {
+          if (view.title == viewpath) matchingview = view;
+        }
+        if (matchingview == null) {
           continue;
         }
-        matchingFileview.globKey_HashAlgorithm.currentState!.set(hashpair.algorithm);
-        matchingFileview.globKey_HashComparisonView.currentState!.set(hashpair.hash ?? "");
+
+        // For all hash string pairs:
+        // Go along file path and update file view if existing
+        for (C_FileHashPair hashpair in hashlist) {
+          List<String> pathparts = libpath.split(hashpair.file);
+          List<String> folders = pathparts.sublist(0, pathparts.length - 1);
+          String file = pathparts.last;
+          T_FileView? matchingFileview = _getMatchingFileview(matchingview.items, folders, file);
+          if (matchingFileview == null) {
+            continue;
+          }
+          matchingFileview.globKey_HashAlgorithm.currentState!.set(hashpair.algorithm);
+          matchingFileview.globKey_HashComparisonView.currentState!.set(hashpair.hash ?? "");
+        }
       }
     }
   }
@@ -444,7 +461,7 @@ class T_StorageChooserRow extends StatelessWidget {
 // DEV: Example file tree
 T_FileTreeView _exampleFileTree = T_FileTreeView(
   key: GlobalKey<T_FileTreeView_state>(),
-  title: "<First loaded file tree>",
+  title: "/root/folder",
   items: [
     T_FolderView(path: "/root/folder/top-folder", name: "top-folder", subitems: [
       T_FolderView(path: "/root/folder/top-folder/sub-folder", name: "sub-folder", subitems: [
