@@ -228,7 +228,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   // @brief: Load hash file from system and set comparison texts and hash algorithms accordingly
   // ##################################################
-  // TODO: Not done for single files
   void loadHashfile() async {
     // -------------------- Pick hash files to load --------------------
     FilePickerResult? filePaths = await FilePicker.platform
