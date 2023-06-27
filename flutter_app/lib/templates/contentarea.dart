@@ -200,7 +200,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
               String storagepath = row.getStoragePath();
               GlobalKey<T_FileTreeView_state>? key = row.fileTreeViewKey;
               if (key == null) {
-                GenerateHashfile(SingleFiles_to_FileViewHashes(_loadedFiles, "Single files"), storagepath);
+                GenerateHashfile(SingleFiles_to_FileViewHashes(_loadedFiles, HashfileSingletext), storagepath);
               } else {
                 T_FileTreeView view = row.fileTreeViewKey!.currentState!.widget;
                 GenerateHashfile(FileTreeItems_to_FileViewHashes(view.items, view.title, view.title), storagepath);
