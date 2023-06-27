@@ -203,7 +203,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
                 GenerateHashfile(SingleFiles_to_FileViewHashes(_loadedFiles, "Single files"), storagepath);
               } else {
                 T_FileTreeView view = row.fileTreeViewKey!.currentState!.widget;
-                GenerateHashfile(FileTreeItems_to_FileViewHashes(view.items, view.title), storagepath);
+                GenerateHashfile(FileTreeItems_to_FileViewHashes(view.items, view.title, view.title), storagepath);
               }
             }
             Navigator.pop(context);

@@ -23,6 +23,7 @@ import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
+import 'package:path/path.dart' as libpath;
 
 // ##################################################
 // @brief: Generate hash file from given file paths and hashes
@@ -118,14 +119,15 @@ C_FileViewHashes? LoadHashfile(String storagepath) {
 // @param: name
 // @return: C_FileViewHashes
 // ##################################################
-C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTreeItem> items, String name) {
+C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTreeItem> items, String name, String rootpath) {
   List<C_FileViewHashes> folders = [];
   List<C_FileHashPair> files = [];
   for (T_FileTreeItem item in items) {
+    String relpath = libpath.relative(item.path, from: rootpath);
     if (item is T_FolderView) {
-      folders.add(FileTreeItems_to_FileViewHashes(item.subitems, item.path));
+      folders.add(FileTreeItems_to_FileViewHashes(item.subitems, item.path, rootpath));
     } else if (item is T_FileView) {
-      files.add(C_FileHashPair(item.path, item.globKey_HashGenerationView.currentState!.HashGen, item.globKey_HashAlgorithm.currentState!.get()!));
+      files.add(C_FileHashPair(relpath, item.globKey_HashGenerationView.currentState!.HashGen, item.globKey_HashAlgorithm.currentState!.get()!));
     }
   }
   return C_FileViewHashes(name, files, folders);
