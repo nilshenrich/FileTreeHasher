@@ -138,7 +138,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     List<String?> paths = filePaths.paths;
     for (String? path in paths) {
       setState(() {
-        _loadedFiles.add(T_FileView(path: path!, name: libpath.basename(path)));
+        _loadedFiles.add(T_FileView(path: path!, name: path));
       });
     }
   }
