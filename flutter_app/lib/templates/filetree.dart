@@ -32,9 +32,9 @@ import 'package:percent_indicator/percent_indicator.dart';
 // ##################################################
 abstract class T_FileTreeItem extends StatefulWidget {
   // Parameter
-  final String name;
-  final String path;
-  final String namePathPart;
+  final String name; // File name used for view
+  final String path; // Absolute file path used for loading file
+  final String namePathPart; // Path to parent folder if name is given as a path
 
   // Hash algorithm selector key
   final globKey_HashAlgorithm = GlobalKey<T_HashSelector_state>();
@@ -144,7 +144,7 @@ class _T_FolderView_state extends State<T_FolderView> {
   void change_hashAlgorithm(String? selected) {
     // For all sub-elements change hash algorithm to same vale (Sub-folders will automatically do for their sub-elements)
     for (T_FileTreeItem subitem in widget.subitems) {
-      subitem.globKey_HashAlgorithm.currentState?.set(selected);
+      subitem.globKey_HashAlgorithm.currentState!.set(selected);
     }
   }
 }
