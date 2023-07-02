@@ -183,7 +183,9 @@ class _T_FileView_state extends State<T_FileView> {
             Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
             Text(widget.name),
             const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-            Expanded(child: T_HashGenerationView(key: widget.globKey_HashGenerationView, filepath: widget.path)),
+            Expanded(
+                child: T_HashGenerationView(
+                    key: widget.globKey_HashGenerationView, filepath: widget.path, globKey_HashComparisonView: widget.globKey_HashComparisonView)),
             const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
             T_FileHashSelector(
                 key: widget.globKey_HashAlgorithm,
@@ -272,9 +274,10 @@ class T_FileTreeView_state extends State<T_FileTreeView> {
 class T_HashGenerationView extends StatefulWidget {
   // Attributes
   final String filepath;
+  final GlobalKey<T_HashComparisonView_state> globKey_HashComparisonView;
 
   // Constructor
-  const T_HashGenerationView({super.key, required this.filepath});
+  const T_HashGenerationView({super.key, required this.filepath, required this.globKey_HashComparisonView});
 
   @override
   State<StatefulWidget> createState() => T_HashGenerationView_state();
@@ -408,9 +411,8 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
     hasher.close();
     String hashString = hashOut.events.single.toString();
 
-    setState(() {
-      _hashGen = hashString;
-    });
+    _hashGen = hashString;
+    compareHashes(widget.globKey_HashComparisonView.currentState!.get());
   }
 
   // ##################################################
