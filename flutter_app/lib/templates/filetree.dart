@@ -37,6 +37,7 @@ abstract class T_FileTreeItem extends StatefulWidget {
   final String namePathPart; // Path to parent folder if name is given as a path
 
   // Hash algorithm selector key
+  // TODO: Can be made required without default value?
   final globKey_HashAlgorithm = GlobalKey<T_HashSelector_state>();
 
   // Constructor
@@ -154,6 +155,7 @@ class _T_FolderView_state extends State<T_FolderView> {
 // # Single file view
 // ##################################################
 class T_FileView extends T_FileTreeItem {
+  // TODO: Can be made required without default value?
   final globKey_HashGenerationView = GlobalKey<T_HashGenerationView_state>();
   final globKey_HashComparisonView = GlobalKey<T_HashComparisonView_state>();
 
@@ -437,6 +439,7 @@ class T_HashComparisonView extends StatefulWidget {
   T_HashComparisonView({super.key, this.onChanged});
 
   // Hash comparison view key
+  // TODO: Can be made required without default value?
   final globKey_HashCompView = GlobalKey<T_HashComparisonView_state>();
 
   @override
