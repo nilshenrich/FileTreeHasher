@@ -274,10 +274,7 @@ class T_HashGenerationView extends StatefulWidget {
   final String filepath;
 
   // Constructor
-  T_HashGenerationView({super.key, required this.filepath});
-
-  // Hash generation view key
-  final globKey_HashGenView = GlobalKey<T_HashGenerationView_state>();
+  const T_HashGenerationView({super.key, required this.filepath});
 
   @override
   State<StatefulWidget> createState() => T_HashGenerationView_state();
