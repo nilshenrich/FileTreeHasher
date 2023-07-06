@@ -32,7 +32,6 @@ import 'package:path/path.dart' as libpath;
 // @param: [override]
 // @param: [level]
 // ##################################################
-// BUG: File paths (for tree view) are absolute
 void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool override = true, int level = 0}) {
   // Get file socket
   File filesocket = File(storagepath);
