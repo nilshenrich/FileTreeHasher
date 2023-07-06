@@ -72,7 +72,7 @@ C_FileViewHashes? LoadHashfile(String storagepath) {
   // Read hash file
   File filesocket = File(storagepath);
   if (!filesocket.existsSync()) return null;
-  List<String> lines = filesocket.readAsLinesSync(); // TODO: Better read file dynamically
+  List<String> lines = filesocket.readAsLinesSync(); // TODO: Better read file dynamically (https://github.com/nilshenrich/FileTreeHasher/issues/14)
 
   // Iterate over all lines
   // Ignore all lines before the empty line, they are part of the file header
@@ -93,9 +93,8 @@ C_FileViewHashes? LoadHashfile(String storagepath) {
     }
 
     // Get 3 CSV colums from line
-    // TODO: Use typical line endings depending on system
     List<List<String>> csvrow_list = const CsvToListConverter()
-        .convert(line, fieldDelimiter: ",", textDelimiter: '"', textEndDelimiter: '"', eol: "\n", shouldParseNumbers: false);
+        .convert(line, fieldDelimiter: ",", textDelimiter: '"', textEndDelimiter: '"', eol: LineendingChar, shouldParseNumbers: false);
     if (csvrow_list.isEmpty) continue;
     List csvrow = csvrow_list[0];
     if (csvrow.length != 3) continue;
