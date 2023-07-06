@@ -24,17 +24,19 @@ Directory GetHomeDir() {
   // Linux
   if (Platform.isLinux) {
     String username = Platform.environment["USER"]!;
-    return Directory("/home/$username");
+    return Directory("/home/$username/");
   }
 
   // Windows
   if (Platform.isWindows) {
-    return Directory(Platform.environment["USERPROFILE"]!);
+    String userhome = Platform.environment["USERPROFILE"]!;
+    return Directory("$userhome\\");
   }
 
   // MAC-OS
   if (Platform.isMacOS) {
-    return Directory(Platform.environment["HOME"]!);
+    String home = Platform.environment["HOME"]!;
+    return Directory("$home/");
   }
 
   // Unknown OS -> Throw error
