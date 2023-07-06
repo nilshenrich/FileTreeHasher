@@ -20,6 +20,7 @@
 import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
+import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
@@ -54,7 +55,7 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
     newLine += file.algorithm;
     newLine += ",\"";
     newLine += GetRawString(file.file);
-    newLine += "\"\n"; // TODO: Use typical line endings depending on system
+    newLine += "\"$LineendingChar";
     filesocket.writeAsStringSync(newLine, mode: FileMode.writeOnlyAppend);
   }
 }

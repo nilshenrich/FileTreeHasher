@@ -33,7 +33,7 @@ Directory GetHomeDir() {
     return Directory("$userhome\\");
   }
 
-  // MAC-OS
+  // macOS
   if (Platform.isMacOS) {
     String home = Platform.environment["HOME"]!;
     return Directory("$home/");
