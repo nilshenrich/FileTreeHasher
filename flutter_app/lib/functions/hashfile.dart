@@ -97,7 +97,7 @@ C_FileViewHashes? LoadHashfile(String storagepath) {
         .convert(line, fieldDelimiter: ",", textDelimiter: '"', textEndDelimiter: '"', eol: "\n", shouldParseNumbers: false);
     if (csvrow_list.isEmpty) continue;
     List csvrow = csvrow_list[0];
-    if (csvrow.length != 3) ;
+    if (csvrow.length != 3) continue;
     String hashstring = csvrow[0];
     String hashalg = csvrow[1];
     String filepath = csvrow[2];
