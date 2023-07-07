@@ -180,13 +180,12 @@ class T_BodyContent_state extends State<T_BodyContent> {
   //                - For file trees the hash files default location is directly inside the loaded folder
   //                - For single file section the hash files default location is the users home directory
   // ##################################################
-  // BUG: Deletd files and views are shown as a path selector
   // TODO: What if hash generation is ongoing?
   void safeHashFile() {
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
-    for (T_FileTreeView views in _loadedTrees) {
-      dialogRows.add(T_StorageChooserRow(title: views.title, fileTreeViewKey: views.key as GlobalKey<T_FileTreeView_state>));
+    for (T_FileTreeView view in _loadedTrees) {
+      dialogRows.add(T_StorageChooserRow(title: view.title, fileTreeView: view));
     }
     dialogRows.add(T_StorageChooserRow(title: HashfileSingletext));
 
@@ -198,11 +197,10 @@ class T_BodyContent_state extends State<T_BodyContent> {
             for (Widget row in dialogRows) {
               if (row is! T_StorageChooserRow) continue;
               String storagepath = row.getStoragePath();
-              GlobalKey<T_FileTreeView_state>? key = row.fileTreeViewKey;
-              if (key == null) {
+              if (row.fileTreeView == null) {
                 GenerateHashfile(SingleFiles_to_FileViewHashes(_loadedFiles, HashfileSingletext), storagepath);
               } else {
-                T_FileTreeView view = row.fileTreeViewKey!.currentState!.widget;
+                T_FileTreeView view = row.fileTreeView!;
                 GenerateHashfile(FileTreeItems_to_FileViewHashes(view.items, view.title, view.title), storagepath);
               }
             }
@@ -316,7 +314,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void _showNewFolder(String path) {
     setState(() {
-      _loadedTrees.add(T_FileTreeView(key: GlobalKey<T_FileTreeView_state>(), items: _loadFolder(Directory(path)), title: path));
+      _loadedTrees.add(T_FileTreeView(items: _loadFolder(Directory(path)), title: path));
     });
   }
 
@@ -403,11 +401,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
 class T_StorageChooserRow extends StatelessWidget {
   // Attributes
   final String title;
-  final GlobalKey<T_FileTreeView_state>? fileTreeViewKey; // null means single files
+  final T_FileTreeView? fileTreeView; // null means single files
   final TextEditingController _textEditingController = TextEditingController();
 
   // Constructor
-  T_StorageChooserRow({super.key, required this.title, this.fileTreeViewKey});
+  T_StorageChooserRow({super.key, required this.title, this.fileTreeView});
 
   @override
   Widget build(BuildContext context) {
@@ -459,7 +457,6 @@ class T_StorageChooserRow extends StatelessWidget {
 
 // DEV: Example file tree
 T_FileTreeView _exampleFileTree = T_FileTreeView(
-  key: GlobalKey<T_FileTreeView_state>(),
   title: "/root/folder",
   items: [
     T_FolderView(path: "/root/folder/top-folder", name: "top-folder", subitems: [
