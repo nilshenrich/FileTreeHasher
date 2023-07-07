@@ -69,35 +69,32 @@ class _T_FolderView_state extends State<T_FolderView> {
   // States
   bool expanded = true; // Is folder extended?
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
-  bool _visible = true;
 
   @override
   Widget build(BuildContext context) {
-    return _visible
-        ? Column(children: [
-            Row(children: [
-              SizedBox(
-                  width: Style_FileTree_Icon_Width_px,
-                  height: Style_FileTree_Icon_Height_px,
-                  child: IconButton(
-                    icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    padding: EdgeInsets.zero,
-                    onPressed: click_expander,
-                  )),
-              const Icon(Icons.folder),
-              Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
-              Expanded(child: Text(widget.name)),
-              const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-              T_FileHashSelector(key: widget.globKey_HashAlgorithm, onChanged: change_hashAlgorithm),
-              const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-              const SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
-            ]),
-            buildSubitems()
-          ])
-        : const SizedBox.shrink();
+    return Column(children: [
+      Row(children: [
+        SizedBox(
+            width: Style_FileTree_Icon_Width_px,
+            height: Style_FileTree_Icon_Height_px,
+            child: IconButton(
+              icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              padding: EdgeInsets.zero,
+              onPressed: click_expander,
+            )),
+        const Icon(Icons.folder),
+        Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
+        Expanded(child: Text(widget.name)),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        T_FileHashSelector(key: widget.globKey_HashAlgorithm, onChanged: change_hashAlgorithm),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        const SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
+      ]),
+      buildSubitems()
+    ]);
   }
 
   // Sub-items
@@ -157,34 +154,31 @@ class T_FileView extends T_FileTreeItem {
 class _T_FileView_state extends State<T_FileView> {
   // State attributes
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
-  bool _visible = true;
 
   @override
   Widget build(BuildContext context) {
-    return _visible
-        ? Row(children: [
-            const SizedBox(width: Style_FileTree_Icon_Width_px),
-            const Icon(Icons.description),
-            Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
-            Text(widget.name),
-            const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-            Expanded(
-                child: T_HashGenerationView(
-                    key: widget.globKey_HashGenerationView, filepath: widget.path, globKey_HashComparisonView: widget.globKey_HashComparisonView)),
-            const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-            T_FileHashSelector(
-                key: widget.globKey_HashAlgorithm,
-                onChanged: (selected) {
-                  widget.globKey_HashGenerationView.currentState!.generateHash(selected);
-                }),
-            const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-            T_HashComparisonView(
-                key: widget.globKey_HashComparisonView,
-                onChanged: (value) {
-                  widget.globKey_HashGenerationView.currentState!.compareHashes(value);
-                }),
-          ])
-        : const SizedBox.shrink();
+    return Row(children: [
+      const SizedBox(width: Style_FileTree_Icon_Width_px),
+      const Icon(Icons.description),
+      Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
+      Text(widget.name),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      Expanded(
+          child: T_HashGenerationView(
+              key: widget.globKey_HashGenerationView, filepath: widget.path, globKey_HashComparisonView: widget.globKey_HashComparisonView)),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      T_FileHashSelector(
+          key: widget.globKey_HashAlgorithm,
+          onChanged: (selected) {
+            widget.globKey_HashGenerationView.currentState!.generateHash(selected);
+          }),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      T_HashComparisonView(
+          key: widget.globKey_HashComparisonView,
+          onChanged: (value) {
+            widget.globKey_HashGenerationView.currentState!.compareHashes(value);
+          }),
+    ]);
   }
 }
 
@@ -211,22 +205,19 @@ class T_FileTreeView extends StatefulWidget {
 class T_FileTreeView_state extends State<T_FileTreeView> {
   // Is file tree visible
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
-  bool _visible = true;
 
   @override
   Widget build(BuildContext context) {
-    return _visible
-        ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const SizedBox(height: 10),
-            ExpansionTile(
-                maintainState: true,
-                initiallyExpanded: true,
-                leading: const Icon(Icons.folder),
-                title: Text(widget.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                childrenPadding: const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px),
-                children: [const SizedBox(height: 10), Column(children: widget.items), const SizedBox(height: 10)])
-          ])
-        : const SizedBox.shrink();
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const SizedBox(height: 10),
+      ExpansionTile(
+          maintainState: true,
+          initiallyExpanded: true,
+          leading: const Icon(Icons.folder),
+          title: Text(widget.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          childrenPadding: const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px),
+          children: [const SizedBox(height: 10), Column(children: widget.items), const SizedBox(height: 10)])
+    ]);
   }
 }
 
