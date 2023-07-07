@@ -94,21 +94,6 @@ class _T_FolderView_state extends State<T_FolderView> {
               T_FileHashSelector(key: widget.globKey_HashAlgorithm, onChanged: change_hashAlgorithm),
               const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
               const SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
-              SizedBox(
-                height: Style_FileTree_ComparisonInput_Height_px,
-                child: IconButton(
-                    iconSize: Style_FileTree_HashSelector_FontSize_px,
-                    onPressed: () {
-                      setState(() {
-                        _visible = false;
-                      });
-                    },
-                    icon: const Icon(Icons.delete),
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    padding: EdgeInsets.zero),
-              )
             ]),
             buildSubitems()
           ])
@@ -198,21 +183,6 @@ class _T_FileView_state extends State<T_FileView> {
                 onChanged: (value) {
                   widget.globKey_HashGenerationView.currentState!.compareHashes(value);
                 }),
-            SizedBox(
-              height: Style_FileTree_ComparisonInput_Height_px,
-              child: IconButton(
-                  iconSize: Style_FileTree_HashSelector_FontSize_px,
-                  onPressed: () {
-                    setState(() {
-                      _visible = false;
-                    });
-                  },
-                  icon: const Icon(Icons.delete),
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  padding: EdgeInsets.zero),
-            )
           ])
         : const SizedBox.shrink();
   }
@@ -237,6 +207,7 @@ class T_FileTreeView extends StatefulWidget {
 // # STATE
 // # File tree view area
 // ##################################################
+// TODO: View shall be removable
 class T_FileTreeView_state extends State<T_FileTreeView> {
   // Is file tree visible
   // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
@@ -250,14 +221,7 @@ class T_FileTreeView_state extends State<T_FileTreeView> {
             ExpansionTile(
                 maintainState: true,
                 initiallyExpanded: true,
-                leading: const Icon(Icons.folder), // benutzerdefiniertes Icon
-                trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      setState(() {
-                        _visible = false;
-                      });
-                    }),
+                leading: const Icon(Icons.folder),
                 title: Text(widget.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 childrenPadding: const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px),
                 children: [const SizedBox(height: 10), Column(children: widget.items), const SizedBox(height: 10)])
