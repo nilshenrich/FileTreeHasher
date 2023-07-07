@@ -64,11 +64,9 @@ class T_FolderView extends T_FileTreeItem {
 // # STATE
 // # Single folder view state
 // ##################################################
-// TODO: Folder shall be removable
 class _T_FolderView_state extends State<T_FolderView> {
   // States
   bool expanded = true; // Is folder extended?
-  // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
 
   @override
   Widget build(BuildContext context) {
@@ -150,10 +148,8 @@ class T_FileView extends T_FileTreeItem {
 // # STATE
 // # Single file view state
 // ##################################################
-// TODO: File shall be removable
 class _T_FileView_state extends State<T_FileView> {
   // State attributes
-  // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
 
   @override
   Widget build(BuildContext context) {

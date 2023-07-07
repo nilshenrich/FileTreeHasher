@@ -180,7 +180,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
   //                - For file trees the hash files default location is directly inside the loaded folder
   //                - For single file section the hash files default location is the users home directory
   // ##################################################
-  // BUG: Deletd files and views are shown as a path selector
   // TODO: What if hash generation is ongoing?
   void safeHashFile() {
     // Get all file trees and single files into widgets
