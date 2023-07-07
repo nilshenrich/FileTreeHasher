@@ -186,25 +186,12 @@ class _T_FileView_state extends State<T_FileView> {
 // # TEMPLATE
 // # File tree view area
 // ##################################################
-class T_FileTreeView extends StatefulWidget {
+class T_FileTreeView extends StatelessWidget {
   final String title;
   final List<T_FileTreeItem> items;
 
   // Constructor
   const T_FileTreeView({super.key, required this.items, required this.title});
-
-  @override
-  State<StatefulWidget> createState() => T_FileTreeView_state();
-}
-
-// ##################################################
-// # STATE
-// # File tree view area
-// ##################################################
-// TODO: View shall be removable
-class T_FileTreeView_state extends State<T_FileTreeView> {
-  // Is file tree visible
-  // FIXME: View is not fully removed but replaced with placeholder. This could blow up the memory for long usage
 
   @override
   Widget build(BuildContext context) {
@@ -214,9 +201,9 @@ class T_FileTreeView_state extends State<T_FileTreeView> {
           maintainState: true,
           initiallyExpanded: true,
           leading: const Icon(Icons.folder),
-          title: Text(widget.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          title: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           childrenPadding: const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px),
-          children: [const SizedBox(height: 10), Column(children: widget.items), const SizedBox(height: 10)])
+          children: [const SizedBox(height: 10), Column(children: items), const SizedBox(height: 10)])
     ]);
   }
 }
