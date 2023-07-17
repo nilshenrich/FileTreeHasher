@@ -1,7 +1,5 @@
 # File Tree Hasher
 
-\<gif for overview\>
-
 - [Introduction](#introduction)
 - [Quick overview](#quick-overview)
 - [Features](#features)
@@ -100,6 +98,8 @@ Creating a hash list is very easy. As soon as all hashes are generated, the butt
 For verifying files or folders containing files, a previously created hash list can be loaded into the current session. When selecting one ore more hash list files, **File Tree Hasher** automatically finds the matching files if loaded and updates the comparison inputs. If the hash algorithm from the loaded hash list differs from currently used hash algorithm, this hash is regenerated and checked automatically.
 
 ## Gallery
+
+\<No pictures so far\>
 
 ## Release notes
 
