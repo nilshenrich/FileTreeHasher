@@ -1,8 +1,6 @@
 # Build the app for Windows, Linux and macOS
 
 name: build
-permissions:
-  contents: write
 on:
   release:
     types:
@@ -66,12 +64,6 @@ jobs:
           cd flutter_app
           flutter config --enable-linux-desktop
           flutter build linux --release
-      
-      - name: Deploy to GitHub Pages
-        uses: jamesIves/github-pages-deploy-action@v4
-        with:
-          folder: flutter_app/build/linux/x64/release/bundle
-          target-folder: linux
 
   # Build for macOS
   macos:
