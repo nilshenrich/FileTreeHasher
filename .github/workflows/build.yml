@@ -16,12 +16,25 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up flutter environment
+        uses: subosito/flutter-action@v1 # v2 struggles reading version
         with:
-          channel: 'beta'
-      - run: flutter config --enable-windows-desktop
-      - run: flutter build windows --release
+          flutter-version: '3.7.x'
+          channel: 'stable'
+      
+      - name: Resolve dependecies
+        run: |
+          cd flutter_app
+          flutter pub get
+      
+      - name: Build for Windows
+        run: |
+          cd flutter_app
+          flutter config --enable-windows-desktop
+          flutter build windows --release
 
   # Build for Linux
   linux:
@@ -46,10 +59,7 @@ jobs:
           cd flutter_app
           flutter pub get
 
-      - name: Get flutter version
-        run: flutter --version
-
-      - name: Build for linux
+      - name: Build for Linux
         run: |
           cd flutter_app
           flutter config --enable-linux-desktop
@@ -59,10 +69,22 @@ jobs:
   macos:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up flutter environment
+        uses: subosito/flutter-action@v1 # v2 struggles reading version
         with:
+          flutter-version: '3.7.x'
           channel: 'stable'
-          architecture: x64
-      - run: flutter config --enable-macos-desktop
-      - run: flutter build macos --release
+      
+      - name: Resolve dependecies
+        run: |
+          cd flutter_app
+          flutter pub get
+
+      - name: Build for macOS
+        run: |
+          cd flutter_app
+          flutter config --enable-macos-desktop
+          flutter build macos --release
