@@ -2,9 +2,10 @@
 
 name: build
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types:
+      - created
+      - edited
   
   # Allows running this workflow manually on GitHub
   workflow_dispatch:
