@@ -36,6 +36,13 @@ jobs:
           flutter config --enable-windows-desktop
           flutter build windows --release
 
+      - name: Pack bundle to artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle-windows-x64
+          path: flutter_app/build/windows/x64/release/bundle/
+          if-no-files-found: error
+      
   # Build for Linux
   linux:
     runs-on: ubuntu-latest
@@ -64,7 +71,14 @@ jobs:
           cd flutter_app
           flutter config --enable-linux-desktop
           flutter build linux --release
-
+      
+      - name: Pack bundle to artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle-linux-x64
+          path: flutter_app/build/linux/x64/release/bundle/
+          if-no-files-found: error
+      
   # Build for macOS
   macos:
     runs-on: macos-latest
@@ -88,3 +102,11 @@ jobs:
           cd flutter_app
           flutter config --enable-macos-desktop
           flutter build macos --release
+
+      - name: Pack bundle to artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle-macos-x64
+          path: flutter_app/build/macos/x64/release/bundle/
+          if-no-files-found: error
+      
