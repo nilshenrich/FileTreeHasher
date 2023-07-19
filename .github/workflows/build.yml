@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bundle-windows-x64
-          path: flutter_app/build/windows/x64/release/bundle/
+          path: flutter_app\build\windows\runner\Release\
           if-no-files-found: error
       
   # Build for Linux
@@ -107,6 +107,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bundle-macos-x64
-          path: flutter_app/build/macos/x64/release/bundle/
+          path: flutter_app/build/macos/Build/Products/Release/
           if-no-files-found: error
       
