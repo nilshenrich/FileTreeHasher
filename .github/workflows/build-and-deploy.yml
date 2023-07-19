@@ -7,6 +7,11 @@ on:
       - created
       - edited
   
+  # This is needed to test the workflow locally and shall not be triggered on GitHub
+  push:
+    branches:
+      - localaction
+  
   # Allows running this workflow manually on GitHub
   workflow_dispatch:
 
