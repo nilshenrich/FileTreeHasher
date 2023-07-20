@@ -119,6 +119,9 @@ jobs:
   deploy-all:
     runs-on: ubuntu-latest
     needs: [windows, linux, macos]
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{steps.deployment.outputs.page_url}}
