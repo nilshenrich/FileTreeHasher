@@ -149,7 +149,7 @@ class T_FileView extends T_FileTreeItem {
 // # Single file view state
 // ##################################################
 class _T_FileView_state extends State<T_FileView> {
-  // State attributes
+  // No state attributes
 
   @override
   Widget build(BuildContext context) {
