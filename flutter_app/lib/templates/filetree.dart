@@ -327,6 +327,11 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       hasher = sha384.startChunkedConversion(hashOut);
     } else if (alg == E_HashAlgorithms.SHA512.value) {
       hasher = sha512.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.NONE.value) {
+      setState(() {
+        _hashGen = "<No hash to create>";
+      });
+      return;
     } else {
       setState(() {
         _hashGen = "<Can't use hash algorithm '$alg'>";
