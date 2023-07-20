@@ -18,8 +18,8 @@ root_dir=$(git rev-parse --show-toplevel)
 if [[ $current_branch == release/* ]]
 then
     echo "Remove example files from app"
-    ed -i 's/\[_exampleFileTree\]/[]/' flutter_app/lib/templates/contentarea.dart
-    ed -i 's/\[_exampleFile\]/[]/' flutter_app/lib/templates/contentarea.dart
+    sed -i 's/\[_exampleFileTree\]/[]/' flutter_app/lib/templates/contentarea.dart
+    sed -i 's/\[_exampleFile\]/[]/' flutter_app/lib/templates/contentarea.dart
 
     echo "Commit removed example files"
     git add $root_dir
