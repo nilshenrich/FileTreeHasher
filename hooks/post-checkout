@@ -22,7 +22,7 @@ then
     sed -i 's/\[_exampleFile\]/[]/' $root_dir/flutter_app/lib/templates/contentarea.dart
 
     echo "Commit removed example files"
-    git add $root_dir
+    git add $root_dir/flutter_app/lib/templates/contentarea.dart
     git commit -m "<hook> removed example files from release branch"
 fi
 
