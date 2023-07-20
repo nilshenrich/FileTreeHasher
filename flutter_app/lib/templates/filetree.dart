@@ -354,6 +354,9 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       hasher.add(chunk);
 
       // Update progress bar
+      if (!mounted) {
+        return;
+      }
       setState(() {
         _genProgress = bytesRead / totalBytes;
       });
