@@ -12,7 +12,7 @@ root_dir=$(git rev-parse --show-toplevel)
 
 echo "----- POST MERGE -----"
 
-if [[ $branch_name == develop ]]
+if [[ $branch_name == develop && $merged_branch_name == main ]]
 then
     echo "Restore example files to app"
     sed -i 's/_loadedTrees = \[\];/_loadedTrees = [_exampleFileTree];/' $root_dir/flutter_app/lib/templates/contentarea.dart
