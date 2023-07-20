@@ -127,6 +127,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: bundle-linux-x64
+          path: .
       
       - name: DEBUG - Display file tree
         run: ls -R
@@ -139,6 +140,8 @@ jobs:
 
       - name: Upload artifacts to pages
         uses: actions/upload-pages-artifact@v2
+        with:
+          path: .
 
       - name: DEBUG - Display file tree
         run: ls -R
