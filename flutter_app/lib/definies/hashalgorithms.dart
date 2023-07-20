@@ -20,7 +20,8 @@ enum E_HashAlgorithms {
   SHA1("SHA1"),
   SHA256("SHA256"),
   SHA384("SHA384"),
-  SHA512("SHA512");
+  SHA512("SHA512"),
+  NONE("NONE");
 
   // Constructor and value to hold
   const E_HashAlgorithms(this.value);
