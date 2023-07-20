@@ -166,7 +166,9 @@ class _T_FileView_state extends State<T_FileView> {
       T_FileHashSelector(
           key: widget.globKey_HashAlgorithm,
           onChanged: (selected) {
-            widget.globKey_HashGenerationView.currentState!.generateHash(selected);
+            T_HashGenerationView_state hashGen = widget.globKey_HashGenerationView.currentState!;
+            hashGen.abortHashGeneration();
+            hashGen.generateHash(selected);
           }),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       T_HashComparisonView(
@@ -229,6 +231,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // State attributes
   String _hashGen = "";
   double _genProgress = 0;
+  bool _ongoing = false;
   E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
 
   @override
@@ -268,7 +271,6 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
 
   // ##################################################
   // @brief: Compare generated hash with text input
-  // @param: hashGen
   // @param: hashComp
   // ##################################################
   void compareHashes(String hashComp) {
@@ -288,6 +290,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
 
   // ##################################################
   // @brief: Calculate hash and update GUI
+  // @param alg
   // ##################################################
   void generateHash(String? alg) async {
     // -------------------- Read file --------------------
@@ -331,8 +334,16 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       return;
     }
 
+    // -------------------- Start --------------------
+    _ongoing = true;
+
     // Read file step by step and generate hash
     await for (var chunk in file.openRead()) {
+      // Abort process here if flag is unset
+      if (!_ongoing) {
+        return;
+      }
+
       // Generate hash for next file part
       bytesRead += chunk.length;
       hasher.add(chunk);
@@ -343,6 +354,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       });
     }
 
+    _ongoing = false;
     // -------------------- Done --------------------
 
     // Extract hash string
@@ -351,6 +363,19 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
 
     _hashGen = hashString;
     compareHashes(widget.globKey_HashComparisonView.currentState!.get());
+  }
+
+  // ##################################################
+  // @brief: Abort current hash generation
+  // ##################################################
+  void abortHashGeneration() {
+    // Unset flag to mark abortion
+    _ongoing = false;
+
+    // Reset hash generation view
+    setState(() {
+      _hashGen = "<aborted>";
+    });
   }
 
   // ##################################################
