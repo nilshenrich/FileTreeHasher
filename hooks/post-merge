@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Get the current branch name
+branch_name=$(git branch | grep "*" | sed "s/\* //")
+
+# Get the name of the branch that was just merged
+reflog_message=$(git reflog -1)
+merged_branch_name=$(echo $reflog_message | cut -d" " -f 4 | sed "s/://")
+
+# Get root directory
+root_dir=$(git rev-parse --show-toplevel)
+
+echo "----- POST MERGE -----"
+
+if [[ $branch_name == develop && $merged_branch_name == main ]]
+then
+    echo "Restore example files to app"
+    sed -i 's/_loadedTrees = \[\];/_loadedTrees = [_exampleFileTree];/' $root_dir/flutter_app/lib/templates/contentarea.dart
+    sed -i 's/_loadedFiles = \[\];/_loadedFiles = [_exampleFile];/' $root_dir/flutter_app/lib/templates/contentarea.dart
+
+    echo "Commit restored example files"
+    git add $root_dir
+    git commit -m "<hook> restored example files"
+fi
+
+echo "--- POST MERGE END ---"
