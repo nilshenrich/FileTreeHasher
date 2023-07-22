@@ -1,6 +1,6 @@
 ---
 title: Documentation
-author: Nils Henrich
+author: nilshenrich
 date: 2023-07-22 22:04:25 +0200
 pin: true
 ---
