@@ -1,4 +1,6 @@
 ---
 layout: page
-# Index page
+title: File Tree Hasher
 ---
+
+{% include readme-skeleton.md %}
