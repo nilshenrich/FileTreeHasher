@@ -4,3 +4,6 @@ icon: fas fa-book
 order: 2
 permalink: documentation
 ---
+
+![demo](/assets/img/gallery/FTH-intro.gif)
+{% include readme-skeleton.md %}
