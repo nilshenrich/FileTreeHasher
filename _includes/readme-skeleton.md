@@ -13,7 +13,7 @@ I wanted a tool I can give many big files to be hashed (probably using different
 
 You might find this graphical application a bit ugly, simple or unintuitive. That's because as a hacker I put my focus on functionality and reliability more than on styling. If you have any hints for styling improvements to make my app more beautiful, please feel free to let me know.
 
-## Quick overview
+## Usage
 
 This tool called **File Tree Hasher** can load a complete folder with all its containing subfolders and files to generate hashes for all those loaded files. Beside that it can also load single files for hashing.
 
