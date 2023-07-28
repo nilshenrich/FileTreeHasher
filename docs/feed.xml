@@ -1,0 +1,128 @@
+
+
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>http://localhost:4000/FileTreeHasher/</id>
+  <title>File Tree Hasher</title>
+  <subtitle>Cross plattform tool to automatically hash and check single file or whole directory tree</subtitle>
+  <updated>2023-07-28T19:23:19+02:00</updated>
+  <author>
+    <name>Nils Henrich</name>
+    <uri>http://localhost:4000/FileTreeHasher/</uri>
+  </author>
+  <link rel="self" type="application/atom+xml" href="http://localhost:4000/FileTreeHasher/feed.xml"/>
+  <link rel="alternate" type="text/html" hreflang="en"
+    href="http://localhost:4000/FileTreeHasher/"/>
+  <generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator>
+  <rights> © 2023 Nils Henrich </rights>
+  <icon>/FileTreeHasher/assets/img/favicons/favicon.ico</icon>
+  <logo>/FileTreeHasher/assets/img/favicons/favicon-96x96.png</logo>
+
+
+  
+  <entry>
+    <title>Known issues</title>
+    <link href="http://localhost:4000/FileTreeHasher/known-issues" rel="alternate" type="text/html" title="Known issues" />
+    <published>2023-07-28T18:18:12+02:00</published>
+  
+    <updated>2023-07-28T18:19:28+02:00</updated>
+  
+    <id>http://localhost:4000/FileTreeHasher/known-issues</id>
+    <content src="http://localhost:4000/FileTreeHasher/known-issues" />
+    <author>
+      <name>nilshenrich</name>
+    </author>
+
+  
+    
+  
+
+  
+    <summary>
+      
+
+
+
+
+
+      No known issue for now
+
+
+    </summary>
+  
+
+  </entry>
+
+  
+  <entry>
+    <title>Impressions</title>
+    <link href="http://localhost:4000/FileTreeHasher/documentation/impressions" rel="alternate" type="text/html" title="Impressions" />
+    <published>2023-07-28T17:38:44+02:00</published>
+  
+    <updated>2023-07-28T18:18:07+02:00</updated>
+  
+    <id>http://localhost:4000/FileTreeHasher/documentation/impressions</id>
+    <content src="http://localhost:4000/FileTreeHasher/documentation/impressions" />
+    <author>
+      <name>nilshenrich</name>
+    </author>
+
+  
+    
+  
+
+  
+    <summary>
+      
+
+
+
+
+
+      Demo
+
+Short demonstration
+
+    </summary>
+  
+
+  </entry>
+
+  
+  <entry>
+    <title>Quick overview</title>
+    <link href="http://localhost:4000/FileTreeHasher/documentation/quick-overview" rel="alternate" type="text/html" title="Quick overview" />
+    <published>2023-07-22T22:04:25+02:00</published>
+  
+    <updated>2023-07-28T18:18:07+02:00</updated>
+  
+    <id>http://localhost:4000/FileTreeHasher/documentation/quick-overview</id>
+    <content src="http://localhost:4000/FileTreeHasher/documentation/quick-overview" />
+    <author>
+      <name>nilshenrich</name>
+    </author>
+
+  
+    
+  
+
+  
+    <summary>
+      
+
+
+
+
+
+      Introduction
+
+If you are as computer fascinated as I am, you might have the same issue I had:
+
+I created myself a bootable USB stick containing many different operating systems ready for live boot or installation. To do so I had to download all the desired ISO-files from the official download pages. To make sure the files were downloaded properly over my weak home connection, creating and check...
+    </summary>
+  
+
+  </entry>
+
+</feed>
+
+
