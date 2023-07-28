@@ -1,6 +1,6 @@
 self.importScripts('/FileTreeHasher/assets/js/data/swcache.js');
 
-const cacheName = 'chirpy-20230728.192319';
+const cacheName = 'chirpy-20230728.193741';
 
 function verifyDomain(url) {
     for (const domain of allowedDomains) {
