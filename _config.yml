@@ -1,5 +1,7 @@
 # The Site Configuration
 
+destination: ./docs
+
 # Import the theme
 theme: jekyll-theme-chirpy
 

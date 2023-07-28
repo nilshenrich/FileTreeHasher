@@ -1,0 +1,1436 @@
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- `site.alt_lang` can specify a language different from the UI -->
+<html lang="en" 
+  
+    data-mode="dark"
+  
+>
+  <!-- The Head -->
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
+  >
+
+  
+
+  
+
+  
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Quick overview" />
+<meta name="author" content="Nils Henrich" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Introduction If you are as computer fascinated as I am, you might have the same issue I had: I created myself a bootable USB stick containing many different operating systems ready for live boot or installation. To do so I had to download all the desired ISO-files from the official download pages. To make sure the files were downloaded properly over my weak home connection, creating and checking a hash is highly recommended. So I searched the internet for a free tool to generate hashes from files and found so many nice looking tools. So I took one of them and started to hash my downloaded files and checked the hash code. But all tools I found had a common annoying issue to me: I always have to select all files to hash manually and compare the hash code by hand. This can be very annoying when having many files to hash of big size. The facts that OS manufacturers don’t provide hashes from the same algorithm and that hashing files of big size takes a long time made me creating my own file hashing and comparing tool. The goal of this tool is the following: I wanted a tool I can give many big files to be hashed (probably using different hash algorithms), enter the comparison hashes somewhere and let the tool do the whole rest for me, so I can leave my desk for some time and when I’m back I want to see what files are proper or corrupted. You might find this graphical application a bit ugly, simple or unintuitive. That’s because as a hacker I put my focus on functionality and reliability more than on styling. If you have any hints for styling improvements to make my app more beautiful, please feel free to let me know. Usage This tool called File Tree Hasher can load a complete folder with all its containing subfolders and files to generate hashes for all those loaded files. Beside that it can also load single files for hashing. The used hash algorithm can be chosen for each file individually. To have deeper information about hashing and hash algorithms please refer to Hash generation. File hashing is one feature part of File Tree Hasher, the other part is hash comparison including saving and loading hash lists. Each file has a text input where a comparison hash can be entered. Also a hash list can be created for a folder of hashed files. Loading this hash list into comparison view is also possible. This is good for checking file transfer over a network or something like that. Features Hash generation Using File Tree Hasher you are able to generate hash for files of any type and size. The following hash algorithms can be selected: MD5 SHA1 SHA256 SHA384 SHA512 The hash algorithm to use can be selected for each file individually. If a file is added or the hash algorithm is changed, the hash generation starts automatically. It is possible to select a folder from your file system. Doing so, File Tree Hasher loads all files located in the selected folder and its subfolders and generates hashes with selected hash algorithm. Alternatively it is also possible to load one or multiple single files from your file system. Single files are hashed automatically as well on loading or change of hash algorithm. Hash comparison Beside generating hashes from files, File Tree Hasher also provides a text input for each loaded file to paste a comparison hash into. This comparison hash is automatically compared to the generated hash without case sensitivity. If a comparison hash is placed in the comparison input, the generated hash is colored either green or red depending on the comparison result. This feature lets you directly see which hashes match and which don’t. Hash list When it comes to transfering folders, it could be interesting to hasve a list of many files and their hash codes, so a folder copy can be verified easily. That’s why File Tree Hasher comes up with the hash list feature. Hash list format Here you can see an example for a hash list generated for a folder: 1 2 3 4 5 6 7 8 9 10 *** File Tree Hasher *** Author: Nils Henrich Website: https://github.com/nilshenrich/FileTreeHasher Version: &lt;version&gt; /path/to/my/folder da39a3ee5e6b4b0d3255bfef95601890afd80709,sha1,&quot;top-file&quot; d41d8cd98f00b204e9800998ecf8427e,md5,&quot;top-folder/sub-file&quot; e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,sha256,&quot;top-folder/sub-file-2&quot; b2f5ff47436671b6e533d8dc3614845d,md5,&quot;top-folder-2/sub-folder/sub-sub-file&quot; A hash list file has the extension “.hash” and can be opened using a regular text editor or a CSV editor. Using a CSV editor, the following settings should be used for optimal readability: field delimiter: , text delimiter: “ The hash file is made prom two parts: A header with general information about the File Tree Hasher itself and the actual hash information. The hash information always has three columns: generated hash, used hash algorithm, path to hashed file. When creating a hash list for a loaded folder, the absolute file path to this folder is given and for each hashed file the relative file path from top-level folder is defined. When creating a hash list from single files, all files are defined via their absolute file paths. Create a hash list Creating a hash list is very easy. As soon as all hashes are generated, the button for saving hash lists can be clicked. This opens a dialog to select the hash lists storage paths for each loaded folder and for all loaded single files together. By clicking the apply button, all hash lists are created and saved. Load a hash list For verifying files or folders containing files, a previously created hash list can be loaded into the current session. When selecting one ore more hash list files, File Tree Hasher automatically finds the matching files if loaded and updates the comparison inputs. If the hash algorithm from the loaded hash list differs from currently used hash algorithm, this hash is regenerated and checked automatically." />
+<meta property="og:description" content="Introduction If you are as computer fascinated as I am, you might have the same issue I had: I created myself a bootable USB stick containing many different operating systems ready for live boot or installation. To do so I had to download all the desired ISO-files from the official download pages. To make sure the files were downloaded properly over my weak home connection, creating and checking a hash is highly recommended. So I searched the internet for a free tool to generate hashes from files and found so many nice looking tools. So I took one of them and started to hash my downloaded files and checked the hash code. But all tools I found had a common annoying issue to me: I always have to select all files to hash manually and compare the hash code by hand. This can be very annoying when having many files to hash of big size. The facts that OS manufacturers don’t provide hashes from the same algorithm and that hashing files of big size takes a long time made me creating my own file hashing and comparing tool. The goal of this tool is the following: I wanted a tool I can give many big files to be hashed (probably using different hash algorithms), enter the comparison hashes somewhere and let the tool do the whole rest for me, so I can leave my desk for some time and when I’m back I want to see what files are proper or corrupted. You might find this graphical application a bit ugly, simple or unintuitive. That’s because as a hacker I put my focus on functionality and reliability more than on styling. If you have any hints for styling improvements to make my app more beautiful, please feel free to let me know. Usage This tool called File Tree Hasher can load a complete folder with all its containing subfolders and files to generate hashes for all those loaded files. Beside that it can also load single files for hashing. The used hash algorithm can be chosen for each file individually. To have deeper information about hashing and hash algorithms please refer to Hash generation. File hashing is one feature part of File Tree Hasher, the other part is hash comparison including saving and loading hash lists. Each file has a text input where a comparison hash can be entered. Also a hash list can be created for a folder of hashed files. Loading this hash list into comparison view is also possible. This is good for checking file transfer over a network or something like that. Features Hash generation Using File Tree Hasher you are able to generate hash for files of any type and size. The following hash algorithms can be selected: MD5 SHA1 SHA256 SHA384 SHA512 The hash algorithm to use can be selected for each file individually. If a file is added or the hash algorithm is changed, the hash generation starts automatically. It is possible to select a folder from your file system. Doing so, File Tree Hasher loads all files located in the selected folder and its subfolders and generates hashes with selected hash algorithm. Alternatively it is also possible to load one or multiple single files from your file system. Single files are hashed automatically as well on loading or change of hash algorithm. Hash comparison Beside generating hashes from files, File Tree Hasher also provides a text input for each loaded file to paste a comparison hash into. This comparison hash is automatically compared to the generated hash without case sensitivity. If a comparison hash is placed in the comparison input, the generated hash is colored either green or red depending on the comparison result. This feature lets you directly see which hashes match and which don’t. Hash list When it comes to transfering folders, it could be interesting to hasve a list of many files and their hash codes, so a folder copy can be verified easily. That’s why File Tree Hasher comes up with the hash list feature. Hash list format Here you can see an example for a hash list generated for a folder: 1 2 3 4 5 6 7 8 9 10 *** File Tree Hasher *** Author: Nils Henrich Website: https://github.com/nilshenrich/FileTreeHasher Version: &lt;version&gt; /path/to/my/folder da39a3ee5e6b4b0d3255bfef95601890afd80709,sha1,&quot;top-file&quot; d41d8cd98f00b204e9800998ecf8427e,md5,&quot;top-folder/sub-file&quot; e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,sha256,&quot;top-folder/sub-file-2&quot; b2f5ff47436671b6e533d8dc3614845d,md5,&quot;top-folder-2/sub-folder/sub-sub-file&quot; A hash list file has the extension “.hash” and can be opened using a regular text editor or a CSV editor. Using a CSV editor, the following settings should be used for optimal readability: field delimiter: , text delimiter: “ The hash file is made prom two parts: A header with general information about the File Tree Hasher itself and the actual hash information. The hash information always has three columns: generated hash, used hash algorithm, path to hashed file. When creating a hash list for a loaded folder, the absolute file path to this folder is given and for each hashed file the relative file path from top-level folder is defined. When creating a hash list from single files, all files are defined via their absolute file paths. Create a hash list Creating a hash list is very easy. As soon as all hashes are generated, the button for saving hash lists can be clicked. This opens a dialog to select the hash lists storage paths for each loaded folder and for all loaded single files together. By clicking the apply button, all hash lists are created and saved. Load a hash list For verifying files or folders containing files, a previously created hash list can be loaded into the current session. When selecting one ore more hash list files, File Tree Hasher automatically finds the matching files if loaded and updates the comparison inputs. If the hash algorithm from the loaded hash list differs from currently used hash algorithm, this hash is regenerated and checked automatically." />
+<link rel="canonical" href="http://localhost:4000/FileTreeHasher/documentation/quick-overview" />
+<meta property="og:url" content="http://localhost:4000/FileTreeHasher/documentation/quick-overview" />
+<meta property="og:site_name" content="File Tree Hasher" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-07-22T22:04:25+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Quick overview" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Nils Henrich","url":"https://github.com/nilshenrich"},"dateModified":"2023-07-28T18:18:07+02:00","datePublished":"2023-07-22T22:04:25+02:00","description":"Introduction If you are as computer fascinated as I am, you might have the same issue I had: I created myself a bootable USB stick containing many different operating systems ready for live boot or installation. To do so I had to download all the desired ISO-files from the official download pages. To make sure the files were downloaded properly over my weak home connection, creating and checking a hash is highly recommended. So I searched the internet for a free tool to generate hashes from files and found so many nice looking tools. So I took one of them and started to hash my downloaded files and checked the hash code. But all tools I found had a common annoying issue to me: I always have to select all files to hash manually and compare the hash code by hand. This can be very annoying when having many files to hash of big size. The facts that OS manufacturers don’t provide hashes from the same algorithm and that hashing files of big size takes a long time made me creating my own file hashing and comparing tool. The goal of this tool is the following: I wanted a tool I can give many big files to be hashed (probably using different hash algorithms), enter the comparison hashes somewhere and let the tool do the whole rest for me, so I can leave my desk for some time and when I’m back I want to see what files are proper or corrupted. You might find this graphical application a bit ugly, simple or unintuitive. That’s because as a hacker I put my focus on functionality and reliability more than on styling. If you have any hints for styling improvements to make my app more beautiful, please feel free to let me know. Usage This tool called File Tree Hasher can load a complete folder with all its containing subfolders and files to generate hashes for all those loaded files. Beside that it can also load single files for hashing. The used hash algorithm can be chosen for each file individually. To have deeper information about hashing and hash algorithms please refer to Hash generation. File hashing is one feature part of File Tree Hasher, the other part is hash comparison including saving and loading hash lists. Each file has a text input where a comparison hash can be entered. Also a hash list can be created for a folder of hashed files. Loading this hash list into comparison view is also possible. This is good for checking file transfer over a network or something like that. Features Hash generation Using File Tree Hasher you are able to generate hash for files of any type and size. The following hash algorithms can be selected: MD5 SHA1 SHA256 SHA384 SHA512 The hash algorithm to use can be selected for each file individually. If a file is added or the hash algorithm is changed, the hash generation starts automatically. It is possible to select a folder from your file system. Doing so, File Tree Hasher loads all files located in the selected folder and its subfolders and generates hashes with selected hash algorithm. Alternatively it is also possible to load one or multiple single files from your file system. Single files are hashed automatically as well on loading or change of hash algorithm. Hash comparison Beside generating hashes from files, File Tree Hasher also provides a text input for each loaded file to paste a comparison hash into. This comparison hash is automatically compared to the generated hash without case sensitivity. If a comparison hash is placed in the comparison input, the generated hash is colored either green or red depending on the comparison result. This feature lets you directly see which hashes match and which don’t. Hash list When it comes to transfering folders, it could be interesting to hasve a list of many files and their hash codes, so a folder copy can be verified easily. That’s why File Tree Hasher comes up with the hash list feature. Hash list format Here you can see an example for a hash list generated for a folder: 1 2 3 4 5 6 7 8 9 10 *** File Tree Hasher *** Author: Nils Henrich Website: https://github.com/nilshenrich/FileTreeHasher Version: &lt;version&gt; /path/to/my/folder da39a3ee5e6b4b0d3255bfef95601890afd80709,sha1,&quot;top-file&quot; d41d8cd98f00b204e9800998ecf8427e,md5,&quot;top-folder/sub-file&quot; e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,sha256,&quot;top-folder/sub-file-2&quot; b2f5ff47436671b6e533d8dc3614845d,md5,&quot;top-folder-2/sub-folder/sub-sub-file&quot; A hash list file has the extension “.hash” and can be opened using a regular text editor or a CSV editor. Using a CSV editor, the following settings should be used for optimal readability: field delimiter: , text delimiter: “ The hash file is made prom two parts: A header with general information about the File Tree Hasher itself and the actual hash information. The hash information always has three columns: generated hash, used hash algorithm, path to hashed file. When creating a hash list for a loaded folder, the absolute file path to this folder is given and for each hashed file the relative file path from top-level folder is defined. When creating a hash list from single files, all files are defined via their absolute file paths. Create a hash list Creating a hash list is very easy. As soon as all hashes are generated, the button for saving hash lists can be clicked. This opens a dialog to select the hash lists storage paths for each loaded folder and for all loaded single files together. By clicking the apply button, all hash lists are created and saved. Load a hash list For verifying files or folders containing files, a previously created hash list can be loaded into the current session. When selecting one ore more hash list files, File Tree Hasher automatically finds the matching files if loaded and updates the comparison inputs. If the hash algorithm from the loaded hash list differs from currently used hash algorithm, this hash is regenerated and checked automatically.","headline":"Quick overview","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/FileTreeHasher/documentation/quick-overview"},"url":"http://localhost:4000/FileTreeHasher/documentation/quick-overview"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+
+  <title>Quick overview | File Tree Hasher
+  </title>
+
+  <!--
+  The Favicons for Web, Android, Microsoft, and iOS (iPhone and iPad) Apps
+  Generated by: https://realfavicongenerator.net/
+-->
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/FileTreeHasher/assets/img/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/FileTreeHasher/assets/img/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/FileTreeHasher/assets/img/favicons/favicon-16x16.png">
+<link rel="manifest" href="/FileTreeHasher/assets/img/favicons/site.webmanifest">
+<link rel="shortcut icon" href="/FileTreeHasher/assets/img/favicons/favicon.ico">
+<meta name="apple-mobile-web-app-title" content="File Tree Hasher">
+<meta name="application-name" content="File Tree Hasher">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/FileTreeHasher/assets/img/favicons/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+
+  
+    
+      <link rel="preconnect" href="https://fonts.googleapis.com" >
+      <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+    
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin>
+    
+      <link rel="preconnect" href="https://fonts.googleapis.com" >
+      <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+    
+      <link rel="preconnect" href="https://cdn.jsdelivr.net" >
+      <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" >
+    
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  
+
+  <!-- GA -->
+  
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="/FileTreeHasher/assets/css/style.css">
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.21.0/dist/tocbot.min.css">
+  
+
+  
+    <!-- Manific Popup -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css">
+  
+
+  <!-- JavaScript -->
+
+  
+
+  <!-- A placeholder to allow defining custom metadata -->
+
+</head>
+
+
+  <body>
+    <!-- The Side Bar -->
+
+<div id="sidebar" class="d-flex flex-column align-items-end">
+  <div class="profile-wrapper">
+    <a href="/FileTreeHasher/" id="avatar" class="rounded-circle">
+      
+        
+        <img src="/FileTreeHasher/assets/img/avatar.jpg" width="112" height="112" alt="avatar" onerror="this.style.display='none'">
+      
+    </a>
+
+    <div class="site-title">
+      <a href="/FileTreeHasher/">File Tree Hasher</a>
+    </div>
+    <div class="site-subtitle fst-italic">Hash generation and comparison tool</div>
+  </div>
+  <!-- .profile-wrapper -->
+
+  <ul class="nav flex-column flex-grow-1 w-100 ps-0">
+    <!-- home -->
+    <li class="nav-item">
+      <a href="/FileTreeHasher/" class="nav-link">
+        <i class="fa-fw fas fa-home"></i>
+        <span>HOME</span>
+      </a>
+    </li>
+    <!-- the real tabs -->
+    
+      <li class="nav-item">
+        <a href="/FileTreeHasher/downloads" class="nav-link">
+          <i class="fa-fw fas fa-download"></i>
+          
+
+          <span>DOWNLOADS</span>
+        </a>
+      </li>
+      <!-- .nav-item -->
+    
+      <li class="nav-item">
+        <a href="/FileTreeHasher/documentation" class="nav-link">
+          <i class="fa-fw fas fa-book"></i>
+          
+
+          <span>DOCUMENTATION</span>
+        </a>
+      </li>
+      <!-- .nav-item -->
+    
+      <li class="nav-item">
+        <a href="/FileTreeHasher/release-notes" class="nav-link">
+          <i class="fa-fw fas fa-box-archive"></i>
+          
+
+          <span>RELEASE NOTES</span>
+        </a>
+      </li>
+      <!-- .nav-item -->
+    
+      <li class="nav-item">
+        <a href="/FileTreeHasher/known-issues" class="nav-link">
+          <i class="fa-fw fas fa-bug"></i>
+          
+
+          <span>KNOWN ISSUES</span>
+        </a>
+      </li>
+      <!-- .nav-item -->
+    
+      <li class="nav-item">
+        <a href="/FileTreeHasher/about" class="nav-link">
+          <i class="fa-fw fas fa-info-circle"></i>
+          
+
+          <span>ABOUT</span>
+        </a>
+      </li>
+      <!-- .nav-item -->
+    
+  </ul>
+  <!-- ul.nav.flex-column -->
+
+  <div class="sidebar-bottom d-flex flex-wrap  align-items-center w-100">
+    
+
+    
+      
+
+      
+        <a
+          href="https://github.com/nilshenrich"
+          aria-label="github"
+          
+
+          
+            target="_blank"
+            
+          
+
+          
+
+          
+            rel="noopener noreferrer"
+          
+        >
+          <i class="fab fa-github"></i>
+        </a>
+      
+    
+      
+
+      
+        <a
+          href="javascript:location.href = 'mailto:' + ['nilshenrich','web.de'].join('@')"
+          aria-label="email"
+          
+
+          
+
+          
+
+          
+        >
+          <i class="fas fa-envelope"></i>
+        </a>
+      
+    
+      
+
+      
+        <a
+          href="/FileTreeHasher/feed.xml"
+          aria-label="rss"
+          
+
+          
+
+          
+
+          
+        >
+          <i class="fas fa-rss"></i>
+        </a>
+      
+    
+  </div>
+  <!-- .sidebar-bottom -->
+</div>
+<!-- #sidebar -->
+
+
+    <div id="main-wrapper" class="d-flex justify-content-center">
+      <div id="main" class="container px-xxl-5">
+        <!-- The Top Bar -->
+
+<div id="topbar-wrapper">
+  <div
+    id="topbar"
+    class="container d-flex align-items-center justify-content-between h-100"
+  >
+    <span id="breadcrumb">
+      
+
+      
+        
+          
+            <span>
+              <a href="/FileTreeHasher/">
+                Home
+              </a>
+            </span>
+
+          
+        
+          
+        
+          
+            
+              <span>Quick overview</span>
+            
+
+          
+        
+      
+    </span>
+    <!-- endof #breadcrumb -->
+
+    <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i>
+
+    <div id="topbar-title">
+      Post
+    </div>
+
+    <i id="search-trigger" class="fas fa-search fa-fw"></i>
+    <span id="search-wrapper" class="align-items-center">
+      <i class="fas fa-search fa-fw"></i>
+      <input
+        class="form-control"
+        id="search-input"
+        type="search"
+        aria-label="search"
+        autocomplete="off"
+        placeholder="Search..."
+      >
+    </span>
+    <span id="search-cancel">Cancel</span>
+  </div>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+<div class="row">
+  <!-- core -->
+  <div id="core-wrapper" class="col-12 col-lg-11 col-xl-9 pe-xl-4">
+    
+
+    <div class="post px-1 px-md-2">
+      
+
+      
+        
+      
+        <!-- Refactor the HTML structure -->
+
+
+
+<!--
+  In order to allow a wide table to scroll horizontally,
+  we suround the markdown table with `<div class="table-wrapper">` and `</div>`
+-->
+
+
+
+<!--
+  Fixed kramdown code highlight rendering:
+  https://github.com/penibelst/jekyll-compress-html/issues/101
+  https://github.com/penibelst/jekyll-compress-html/issues/71#issuecomment-188144901
+-->
+
+
+
+<!-- Change the icon of checkbox -->
+
+
+<!-- images -->
+
+
+
+
+<!-- Add header for code snippets -->
+
+
+
+<!-- Create heading anchors -->
+
+
+
+
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+
+    
+
+    
+
+  
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+
+    
+
+    
+
+  
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+
+    
+
+    
+
+  
+
+  
+  
+
+  
+
+
+
+
+<!-- return -->
+
+
+
+
+<h1 data-toc-skip>Quick overview</h1>
+
+<div class="post-meta text-muted">
+    <!-- published date -->
+    <span>
+      Posted
+      <!--
+  Date format snippet
+  See: ${JS_ROOT}/utils/locale-dateime.js
+-->
+
+
+
+
+
+<em
+  class=""
+  data-ts="1690056265"
+  data-df="ll"
+  
+    data-bs-toggle="tooltip" data-bs-placement="bottom"
+  
+>
+  Jul 22, 2023
+</em>
+
+    </span>
+
+    <!-- lastmod date -->
+    
+    <span>
+      Updated
+      <!--
+  Date format snippet
+  See: ${JS_ROOT}/utils/locale-dateime.js
+-->
+
+
+
+
+
+<em
+  class=""
+  data-ts="1690561087"
+  data-df="ll"
+  
+    data-bs-toggle="tooltip" data-bs-placement="bottom"
+  
+>
+  Jul 28, 2023
+</em>
+
+    </span>
+    
+
+  
+
+  <div class="d-flex justify-content-between">
+    <!-- author(s) -->
+    <span>
+      
+
+      By
+
+      <em>
+      
+        
+          <a href="https://github.com/nilshenrich">Nils Henrich</a>
+          
+        
+      
+      </em>
+    </span>
+
+    <div>
+      <!-- read time -->
+      <!-- Calculate the post's reading time, and display the word count in tooltip -->
+
+
+
+<!-- words per minute -->
+
+
+
+
+
+
+
+
+
+
+<!-- return element -->
+<span
+  class="readtime"
+  data-bs-toggle="tooltip"
+  data-bs-placement="bottom"
+  title="979 words"
+>
+  <em>5 min</em> read</span>
+
+    </div>
+
+  </div> <!-- .d-flex -->
+
+</div> <!-- .post-meta -->
+
+<div class="post-content">
+  <h2 id="introduction"><span class="me-2">Introduction</span><a href="#introduction" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+
+<p>If you are as computer fascinated as I am, you might have the same issue I had:</p>
+
+<p>I created myself a bootable USB stick containing many different operating systems ready for live boot or installation. To do so I had to download all the desired ISO-files from the official download pages. To make sure the files were downloaded properly over my weak home connection, creating and checking a hash is highly recommended. So I searched the internet for a free tool to generate hashes from files and found so many nice looking tools. So I took one of them and started to hash my downloaded files and checked the hash code.</p>
+
+<p>But all tools I found had a common annoying issue to me:</p>
+
+<p>I always have to select all files to hash manually and compare the hash code by hand. This can be very annoying when having many files to hash of big size. The facts that OS manufacturers don’t provide hashes from the same algorithm and that hashing files of big size takes a long time made me creating my own file hashing and comparing tool.</p>
+
+<p>The goal of this tool is the following:<br />
+I wanted a tool I can give many big files to be hashed (probably using different hash algorithms), enter the comparison hashes somewhere and let the tool do the whole rest for me, so I can leave my desk for some time and when I’m back I want to see what files are proper or corrupted.</p>
+
+<p>You might find this graphical application a bit ugly, simple or unintuitive. That’s because as a hacker I put my focus on functionality and reliability more than on styling. If you have any hints for styling improvements to make my app more beautiful, please feel free to let me know.</p>
+
+<h2 id="usage"><span class="me-2">Usage</span><a href="#usage" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+
+<p>This tool called <strong>File Tree Hasher</strong> can load a complete folder with all its containing subfolders and files to generate hashes for all those loaded files. Beside that it can also load single files for hashing.</p>
+
+<p>The used hash algorithm can be chosen for each file individually. To have deeper information about hashing and hash algorithms please refer to <a href="#hash-generation">Hash generation</a>.</p>
+
+<p>File hashing is one feature part of <strong>File Tree Hasher</strong>, the other part is hash comparison including saving and loading hash lists. Each file has a text input where a comparison hash can be entered. Also a hash list can be created for a folder of hashed files. Loading this hash list into comparison view is also possible. This is good for checking file transfer over a network or something like that.</p>
+
+<h2 id="features"><span class="me-2">Features</span><a href="#features" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+
+<h3 id="hash-generation"><span class="me-2">Hash generation</span><a href="#hash-generation" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+
+<p>Using <strong>File Tree Hasher</strong> you are able to generate hash for files of any type and size. The following hash algorithms can be selected:</p>
+<ul>
+  <li>MD5</li>
+  <li>SHA1</li>
+  <li>SHA256</li>
+  <li>SHA384</li>
+  <li>SHA512</li>
+</ul>
+
+<p>The hash algorithm to use can be selected for each file individually.<br />
+If a file is added or the hash algorithm is changed, the hash generation starts automatically.</p>
+
+<p>It is possible to select a folder from your file system. Doing so, <strong>File Tree Hasher</strong> loads all files located in the selected folder and its subfolders and generates hashes with selected hash algorithm.</p>
+
+<p>Alternatively it is also possible to load one or multiple single files from your file system. Single files are hashed automatically as well on loading or change of hash algorithm.</p>
+
+<h3 id="hash-comparison"><span class="me-2">Hash comparison</span><a href="#hash-comparison" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+
+<p>Beside generating hashes from files, <strong>File Tree Hasher</strong> also provides a text input for each loaded file to paste a comparison hash into. This comparison hash is automatically compared to the generated hash without case sensitivity.</p>
+
+<p>If a comparison hash is placed in the comparison input, the generated hash is colored either green or red depending on the comparison result. This feature lets you directly see which hashes match and which don’t.</p>
+
+<h3 id="hash-list"><span class="me-2">Hash list</span><a href="#hash-list" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+
+<p>When it comes to transfering folders, it could be interesting to hasve a list of many files and their hash codes, so a folder copy can be verified easily.</p>
+
+<p>That’s why <strong>File Tree Hasher</strong> comes up with the hash list feature.</p>
+
+<h4 id="hash-list-format"><span class="me-2">Hash list format</span><a href="#hash-list-format" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+
+<p>Here you can see an example for a hash list generated for a folder:</p>
+<div class="language-plaintext highlighter-rouge"><div class="code-header">
+        <span data-label-text="Plaintext"><i class="fas fa-code fa-fw small"></i></span>
+      <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>*** File Tree Hasher ***
+Author: Nils Henrich
+Website: https://github.com/nilshenrich/FileTreeHasher
+Version: &lt;version&gt;
+
+/path/to/my/folder
+da39a3ee5e6b4b0d3255bfef95601890afd80709,sha1,"top-file"
+d41d8cd98f00b204e9800998ecf8427e,md5,"top-folder/sub-file"
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,sha256,"top-folder/sub-file-2"
+b2f5ff47436671b6e533d8dc3614845d,md5,"top-folder-2/sub-folder/sub-sub-file"
+</pre></td></tr></tbody></table></code></div></div>
+
+<p>A hash list file has the extension “.hash” and can be opened using a regular text editor or a CSV editor. Using a CSV editor, the following settings should be used for optimal readability:</p>
+<ul>
+  <li>field delimiter: <strong>,</strong></li>
+  <li>text delimiter: <strong>“</strong></li>
+</ul>
+
+<p>The hash file is made prom two parts: A header with general information about the <strong>File Tree Hasher</strong> itself and the actual hash information. The hash information always has three columns: generated hash, used hash algorithm, path to hashed file.</p>
+
+<p>When creating a hash list for a loaded folder, the absolute file path to this folder is given and for each hashed file the relative file path from top-level folder is defined.</p>
+
+<p>When creating a hash list from single files, all files are defined via their absolute file paths.</p>
+
+<h4 id="create-a-hash-list"><span class="me-2">Create a hash list</span><a href="#create-a-hash-list" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+
+<p>Creating a hash list is very easy. As soon as all hashes are generated, the button for saving hash lists can be clicked. This opens a dialog to select the hash lists storage paths for each loaded folder and for all loaded single files together. By clicking the apply button, all hash lists are created and saved.</p>
+
+<h4 id="load-a-hash-list"><span class="me-2">Load a hash list</span><a href="#load-a-hash-list" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
+
+<p>For verifying files or folders containing files, a previously created hash list can be loaded into the current session. When selecting one ore more hash list files, <strong>File Tree Hasher</strong> automatically finds the matching files if loaded and updates the comparison inputs. If the hash algorithm from the loaded hash list differs from currently used hash algorithm, this hash is regenerated and checked automatically.</p>
+
+
+</div>
+
+<div class="post-tail-wrapper text-muted">
+
+  <!-- categories -->
+  
+
+  <!-- tags -->
+  
+
+  <div class="post-tail-bottom
+    d-flex justify-content-between align-items-center mt-3 pt-5 pb-2">
+    <div class="license-wrapper">
+
+      
+
+        
+
+        This post is licensed under 
+        <a href="https://creativecommons.org/licenses/by/4.0/">
+          CC BY 4.0
+        </a>
+         by the author.
+
+      
+    </div>
+
+    <!-- Post sharing snippet -->
+
+<div class="share-wrapper">
+  <span class="share-label text-muted me-1">Share</span>
+  <span class="share-icons">
+    
+    
+    
+
+    
+      
+      <a
+        href="https://twitter.com/intent/tweet?text=Quick%20overview%20-%20File%20Tree%20Hasher&url=http%3A%2F%2Flocalhost%3A4000%2FFileTreeHasher%2Fdocumentation%2Fquick-overview"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Twitter"
+        target="_blank"
+        rel="noopener"
+        aria-label="Twitter"
+      >
+        <i class="fa-fw fab fa-twitter"></i>
+      </a>
+    
+      
+      <a
+        href="https://www.facebook.com/sharer/sharer.php?title=Quick%20overview%20-%20File%20Tree%20Hasher&u=http%3A%2F%2Flocalhost%3A4000%2FFileTreeHasher%2Fdocumentation%2Fquick-overview"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Facebook"
+        target="_blank"
+        rel="noopener"
+        aria-label="Facebook"
+      >
+        <i class="fa-fw fab fa-facebook-square"></i>
+      </a>
+    
+      
+      <a
+        href="https://t.me/share/url?url=http%3A%2F%2Flocalhost%3A4000%2FFileTreeHasher%2Fdocumentation%2Fquick-overview&text=Quick%20overview%20-%20File%20Tree%20Hasher"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Telegram"
+        target="_blank"
+        rel="noopener"
+        aria-label="Telegram"
+      >
+        <i class="fa-fw fab fa-telegram"></i>
+      </a>
+    
+
+    <i
+      id="copy-link"
+      class="fa-fw fas fa-link small"
+      data-bs-toggle="tooltip"
+      data-bs-placement="top"
+      title="Copy link"
+      data-title-succeed="Link copied successfully!"
+    >
+    </i>
+  </span>
+</div>
+
+
+  </div><!-- .post-tail-bottom -->
+
+</div><!-- div.post-tail-wrapper -->
+
+
+      
+    
+      
+    </div>
+  </div>
+  <!-- #core-wrapper -->
+
+  <!-- panel -->
+  <div id="panel-wrapper" class="col-xl-3 ps-2 text-muted">
+    <div class="access">
+      <!-- Get the last 5 posts from lastmod list. -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div id="access-lastmod" class="post">
+    <div class="panel-heading">Recently Updated</div>
+    <ul class="post-content list-unstyled ps-0 pb-1 ms-1 mt-2">
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/FileTreeHasher/known-issues">Known issues</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/FileTreeHasher/documentation/quick-overview">Quick overview</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/FileTreeHasher/documentation/impressions">Impressions</a>
+        </li>
+      
+    </ul>
+  </div>
+  <!-- #access-lastmod -->
+
+
+      <!-- The trending tags list -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+      
+      
+
+
+
+  <div id="toc-wrapper" class="ps-0 pe-4 mb-5">
+    <div class="panel-heading ps-3 pt-2 mb-2">Contents</div>
+    <nav id="toc"></nav>
+  </div>
+
+
+    
+  </div>
+</div>
+
+<!-- tail -->
+
+  <div class="row">
+    <div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 px-3 pe-xl-4 mt-5">
+      
+        
+        <!--
+  Recommend the other 3 posts according to the tags and categories of the current post,
+  if the number is not enough, use the other latest posts to supplement.
+-->
+
+<!-- The total size of related posts -->
+
+
+<!-- An random integer that bigger than 0 -->
+
+
+<!-- Equals to TAG_SCORE / {max_categories_hierarchy} -->
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+
+
+
+
+<!-- Fill with the other newlest posts -->
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+      
+    
+  
+    
+    
+      
+      
+        
+        
+        
+      
+    
+  
+    
+    
+  
+
+
+
+  <div id="related-posts" class="mb-2 mb-sm-4">
+    <h3 class="pt-2 mb-4 ms-1" data-toc-skip>
+      Further Reading
+    </h3>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-4">
+      
+        
+        
+        <div class="col">
+          <a href="/FileTreeHasher/known-issues" class="card post-preview h-100">
+            <div class="card-body">
+              <!--
+  Date format snippet
+  See: ${JS_ROOT}/utils/locale-dateime.js
+-->
+
+
+
+
+
+<em
+  class="small"
+  data-ts="1690561092"
+  data-df="ll"
+  
+>
+  Jul 28, 2023
+</em>
+
+              <h4 class="pt-0 my-2" data-toc-skip>Known issues</h4>
+              <div class="text-muted small">
+                <p>
+                  
+
+
+
+
+
+                  {% include known-issues.md %}
+
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      
+        
+        
+        <div class="col">
+          <a href="/FileTreeHasher/documentation/impressions" class="card post-preview h-100">
+            <div class="card-body">
+              <!--
+  Date format snippet
+  See: ${JS_ROOT}/utils/locale-dateime.js
+-->
+
+
+
+
+
+<em
+  class="small"
+  data-ts="1690558724"
+  data-df="ll"
+  
+>
+  Jul 28, 2023
+</em>
+
+              <h4 class="pt-0 my-2" data-toc-skip>Impressions</h4>
+              <div class="text-muted small">
+                <p>
+                  
+
+
+
+
+
+                  Demo
+
+Short demonstration
+
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      
+    </div>
+    <!-- .card-deck -->
+  </div>
+  <!-- #related-posts -->
+
+
+      
+        
+        <!-- Navigation buttons at the bottom of the post. -->
+
+<div class="post-navigation d-flex justify-content-between">
+  
+    <div
+      class="btn btn-outline-primary disabled"
+      prompt="Older"
+    >
+      <p>-</p>
+    </div>
+  
+
+  
+    <a
+      href="/FileTreeHasher/documentation/impressions"
+      class="btn btn-outline-primary"
+      prompt="Newer"
+    >
+      <p>Impressions</p>
+    </a>
+  
+</div>
+
+      
+        
+        <!--  The comments switcher -->
+
+
+      
+    </div>
+  </div>
+
+
+        <!-- The Search results -->
+
+<div id="search-result-wrapper" class="d-flex justify-content-center unloaded">
+  <div class="col-11 post-content">
+    <div id="search-hints">
+      <!-- The trending tags list -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    <div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div>
+  </div>
+</div>
+
+      </div>
+    </div>
+
+    <!-- The Footer -->
+
+<footer>
+  <div class="container px-lg-4">
+    <div class="d-flex justify-content-center align-items-center text-muted mx-md-3">
+      <p>Using the <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> theme <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a>
+      </p>
+
+      <p>©
+        2023
+        <a href="https://github.com/nilshenrich">Nils Henrich</a>.
+        
+          <span
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author."
+          >Some rights reserved.</span>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+
+
+    <div id="mask"></div>
+
+    <button id="back-to-top" aria-label="back-to-top" class="btn btn-lg btn-box-shadow">
+      <i class="fas fa-angle-up"></i>
+    </button>
+
+    
+      <div
+        id="notification"
+        class="toast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        data-bs-animation="true"
+        data-bs-autohide="false"
+      >
+        <div class="toast-header">
+          <button
+            type="button"
+            class="btn-close ms-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body text-center pt-0">
+          <p class="px-2 mb-3">A new version of content is available.</p>
+          <button type="button" class="btn btn-primary" aria-label="Update">
+            Update
+          </button>
+        </div>
+      </div>
+    
+
+    <!-- JS selector for site. -->
+
+<!-- commons -->
+
+
+
+<!-- layout specified -->
+
+
+  
+
+  
+    <!-- image lazy-loading & popup & clipboard -->
+    
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+
+
+  <script src="https://cdn.jsdelivr.net/combine/npm/jquery@3.7.0/dist/jquery.min.js,npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js,npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js,npm/lazysizes@5.3.2/lazysizes.min.js,npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js,npm/clipboard@2.0.11/dist/clipboard.min.js,npm/dayjs@1.11.7/dayjs.min.js,npm/dayjs@1.11.7/locale/en.min.js,npm/dayjs@1.11.7/plugin/relativeTime.min.js,npm/dayjs@1.11.7/plugin/localizedFormat.min.js,npm/tocbot@4.21.0/dist/tocbot.min.js"></script>
+
+
+
+
+
+
+<script defer src="/FileTreeHasher/assets/js/dist/post.min.js"></script>
+
+
+
+
+
+
+    
+
+    <!--
+  Jekyll Simple Search loader
+  See: <https://github.com/christian-fei/Simple-Jekyll-Search>
+-->
+
+
+
+
+
+<script>
+  /* Note: dependent library will be loaded in `js-selector.html` */
+  SimpleJekyllSearch({
+    searchInput: document.getElementById('search-input'),
+    resultsContainer: document.getElementById('search-results'),
+    json: '/FileTreeHasher/assets/js/data/search.json',
+    searchResultTemplate: '<div class="px-1 px-sm-2 px-lg-4 px-xl-0">  <a href="{url}">{title}</a>  <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">    {categories}    {tags}  </div>  <p>{snippet}</p></div>',
+    noResultsText: '<p class="mt-5"></p>',
+    templateMiddleware: function(prop, value, template) {
+      if (prop === 'categories') {
+        if (value === '') {
+          return `${value}`;
+        } else {
+          return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+        }
+      }
+
+      if (prop === 'tags') {
+        if (value === '') {
+          return `${value}`;
+        } else {
+          return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+        }
+      }
+    }
+  });
+</script>
+
+  </body>
+</html>
+
