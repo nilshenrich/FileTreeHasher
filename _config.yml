@@ -17,7 +17,7 @@ lang: en
 
 title: File Tree Hasher # the main title
 
-tagline: Hash generation and comparing tool # it will display as the sub-title
+tagline: Hash generation and comparison tool # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   Cross plattform tool to automatically hash and check single file or whole directory tree

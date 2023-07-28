@@ -6,7 +6,9 @@ layout: page
 
 <div>
 
-    {% for post in site.posts %}
+    {% assign sorted_posts = site.posts | sort: 'order' %}
+
+    {% for post in sorted_posts %}
     {% if post.path contains '/documentation/' %}
     <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
     {% endif %}
