@@ -7,4 +7,6 @@ permalink: documentation/impressions
 pin: false
 ---
 
+## Demo
 ![demo](/assets/img/gallery/FTH-intro.gif)
+<sup>Short demonstration</sup>
