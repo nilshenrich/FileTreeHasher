@@ -123,6 +123,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       
+      - name: Clean repository (only website to be left)
+        run: |
+          mv website/ /
+          git rm -rf .
+          git clean -fxd
+          mv /website/* .
+      
       # - name: Download all artifacts
       #   uses: actions/download-artifact@v3
       #   with:
@@ -137,6 +144,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           jekyll_src: 'website'
           target_branch: 'deploy-test'
-
-      - name: DEBUG - Display file tree
-        run: ls -R
