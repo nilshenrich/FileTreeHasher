@@ -2,7 +2,7 @@
 title: Known issues
 author: nilshenrich
 date: 2023-07-28 18:18:12 +0200
-permalink: known-issues
+permalink: known-issues/
 pin: true
 ---
 

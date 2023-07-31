@@ -2,7 +2,7 @@
 layout: page
 icon: fas fa-info-circle
 order: 5
-permalink: about
+permalink: about/
 ---
 
 **File Tree Hasher** is an open source desktop tool to generate and compare hashes for multiple files and directory structures.\
