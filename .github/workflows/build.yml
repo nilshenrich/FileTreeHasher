@@ -114,3 +114,26 @@ jobs:
           name: bundle-macos-x64
           path: flutter_app/build/macos/Build/Products/Release/
           if-no-files-found: error
+
+  # Update page and deploy builds
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [windows, linux, macos]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: bundle-linux-x64
+          path: .
+      
+      # TODO: Add artifacts to download page
+
+      - name: Build website using jekyll
+        uses: helaili/jekyll-action@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          jekyll_src: 'website'
+          target_branch: 'deploy-test'
