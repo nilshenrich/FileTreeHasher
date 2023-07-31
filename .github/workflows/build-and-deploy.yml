@@ -125,10 +125,10 @@ jobs:
       
       - name: Clean repository (only website to be left)
         run: |
-          mv website/ /
+          mv website/ ../
           git rm -rf .
           git clean -fxd
-          mv /website/* .
+          mv ../website/* .
       
       # - name: Download all artifacts
       #   uses: actions/download-artifact@v3
