@@ -21,7 +21,11 @@ layout: page
 <!-- Generate download links automatically from title -->
 
 <!-- Optional page content defined in page itself -->
+{% assign stripped = content | strip_newlines %}
+{% if stripped != "" %}
+<h2>Description</h2>
 <div class="post-content">
     {{ content }}
 </div>
+{% endif %}
 <!-- Optional page content defined in page itself -->
