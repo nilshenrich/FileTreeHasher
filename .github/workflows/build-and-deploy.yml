@@ -116,7 +116,6 @@ jobs:
           if-no-files-found: error
 
   # Update page and deploy builds
-  # TODO: Old bundles are removed as the commit is overridden
   deploy:
     runs-on: ubuntu-latest
     needs: [windows, linux, macos]
@@ -132,6 +131,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ../bundles
+
+      - name: Add download page for bundles
+        run: bash AddBundleDownload.sh ${{ steps.get-tag-name.outputs.tag }} ../bundles ${{ steps.get-release-description.outputs.description }}
+
+      - name: Push new website to current branch
+        run: |
+          git add .
+          git commit -m "<GitHub Action> Deploy version ${{ steps.get-tag-name.outputs.tag }}"
+          git push origin
+
       - name: Clean repository (only website to be left)
         run: |
           mv website/ ../
@@ -139,14 +152,6 @@ jobs:
           git clean -fxd
           mv ../website/* .
       
-      - name: Download all artifacts
-        uses: actions/download-artifact@v3
-        with:
-          path: ./bundles
-      
-      - name: Add download page for bundles
-        run: bash AddBundleDownload.sh ${{ steps.get-tag-name.outputs.tag }} ./bundles ${{ steps.get-release-description.outputs.description }}
-
       - name: Build website using jekyll
         uses: helaili/jekyll-action@v2
         with:

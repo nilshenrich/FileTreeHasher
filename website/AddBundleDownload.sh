@@ -16,8 +16,7 @@ currentTime=`date +%H:%M:%S`
 timeZone=`date +%z`
 
 # # Create new folder for version
-# postDir="_posts/downloads"
-postDir="."
+postDir="_posts/downloads"
 assetsDir="assets/downloads/$version"
 mkdir -p $postDir
 mkdir -p $assetsDir
