@@ -135,6 +135,28 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: ../bundles
+      
+      - name: Zip artifact linux
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r ../bundles/bundle-linux-x64.zip -d ../bundles/bundle-linux-x64
+
+      - name: Zip artifact windows
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r ../bundles/bundle-windows-x64.zip -d ../bundles/bundle-windows-x64
+
+      - name: Zip artifact macos
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r ../bundles/bundle-macos-x64.zip -d ../bundles/bundle-macos-x64
+      
+      - name: Remove artifact folders
+        run: |
+          rm -r bundle-linux-x64/
+          rm -r bundle-windows-x64/
+          rm -r bundle-macos-x64/
+        working-directory: ../bundles
 
       - name: Add download page for bundles
         run: bash AddBundleDownload.sh ${{ steps.get-tag-name.outputs.tag }} ../../bundles ${{ steps.get-release-description.outputs.description }}
