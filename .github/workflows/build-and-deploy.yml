@@ -138,11 +138,9 @@ jobs:
           git clean -fxd
           mv ../website/* .
       
-      # TODO: Do for all 3 platforms
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
-          name: bundle-linux-x64
           path: ./bundles
       
       - name: Add download page for bundles
