@@ -136,23 +136,14 @@ jobs:
         with:
           path: ../bundles
       
-      - name: Zip artifact linux
+      - name: Install zipping tool
         uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r ../bundles/bundle-linux-x64.zip -d ../bundles/bundle-linux-x64
-
-      - name: Zip artifact windows
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r ../bundles/bundle-windows-x64.zip -d ../bundles/bundle-windows-x64
-
-      - name: Zip artifact macos
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r ../bundles/bundle-macos-x64.zip -d ../bundles/bundle-macos-x64
       
-      - name: Remove artifact folders
+      - name: Zip all artifact
         run: |
+          zip -qq -r bundle-linux-x64.zip -d bundle-linux-x64/*
+          zip -qq -r bundle-windows-x64.zip -d bundle-windows-x64/*
+          zip -qq -r bundle-macos-x64.zip -d bundle-macos-x64/*
           rm -r bundle-linux-x64/
           rm -r bundle-windows-x64/
           rm -r bundle-macos-x64/
