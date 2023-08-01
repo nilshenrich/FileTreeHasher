@@ -141,9 +141,9 @@ jobs:
       
       - name: Zip all artifact
         run: |
-          zip -qq -r bundle-linux-x64.zip -d bundle-linux-x64/*
-          zip -qq -r bundle-windows-x64.zip -d bundle-windows-x64/*
-          zip -qq -r bundle-macos-x64.zip -d bundle-macos-x64/*
+          zip -qq -r bundle-linux-x64.zip bundle-linux-x64/*
+          zip -qq -r bundle-windows-x64.zip bundle-windows-x64/*
+          zip -qq -r bundle-macos-x64.zip bundle-macos-x64/*
           rm -r bundle-linux-x64/
           rm -r bundle-windows-x64/
           rm -r bundle-macos-x64/
