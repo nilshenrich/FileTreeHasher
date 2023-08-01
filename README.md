@@ -1,16 +1,17 @@
 # File Tree Hasher
 
-![Intro](https://raw.githubusercontent.com/nilshenrich/FileTreeHasher/master/docs/gallery/FTH-intro.gif)
+![Intro](https://raw.githubusercontent.com/nilshenrich/FileTreeHasher/master/website/assets/gallery/FTH-intro.gif)
 
-- [Introduction](#introduction)
-- [Quick overview](#quick-overview)
-- [Features](#features)
+- [File Tree Hasher](#file-tree-hasher)
+  - [Introduction](#introduction)
+  - [Quick overview](#quick-overview)
+  - [Features](#features)
     - [Hash generation](#hash-generation)
     - [Hash comparison](#hash-comparison)
     - [Hash list](#hash-list)
-- [Gallery](#gallery)
-- [Release notes](#release-notes)
-- [Known issues](#known-issues)
+  - [Gallery](#gallery)
+  - [Release notes](#release-notes)
+  - [Known issues](#known-issues)
 
 ## Introduction
 
