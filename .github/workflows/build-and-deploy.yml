@@ -116,6 +116,7 @@ jobs:
           if-no-files-found: error
 
   # Update page and deploy builds
+  # TODO: Old bundles are removed as the commit is overridden
   deploy:
     runs-on: ubuntu-latest
     needs: [windows, linux, macos]
@@ -144,8 +145,7 @@ jobs:
           path: ./bundles
       
       - name: Add download page for bundles
-        run: AddBundleDownload.sh ${{ steps.get-tag-name.outputs.tag }} ../bundles ${{ steps.get-release-description.outputs.description }}
-        working-directory: ./website
+        run: bash AddBundleDownload.sh ${{ steps.get-tag-name.outputs.tag }} ./bundles ${{ steps.get-release-description.outputs.description }}
 
       - name: Build website using jekyll
         uses: helaili/jekyll-action@v2
