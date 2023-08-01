@@ -1,6 +1,6 @@
 # Build the app for Windows, Linux and macOS
 
-name: build
+name: build-and-deploy
 on:
   release:
     types:
@@ -137,7 +137,8 @@ jobs:
           path: ../bundles
 
       - name: Add download page for bundles
-        run: bash AddBundleDownload.sh ${{ steps.get-tag-name.outputs.tag }} ../bundles ${{ steps.get-release-description.outputs.description }}
+        run: bash AddBundleDownload.sh ${{ steps.get-tag-name.outputs.tag }} ../../bundles ${{ steps.get-release-description.outputs.description }}
+        working-directory: ./website
 
       - name: Push new website to current branch
         run: |
