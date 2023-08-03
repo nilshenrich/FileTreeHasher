@@ -2,17 +2,17 @@
 
 name: build
 on:
-  release:
-    types:
-      - created
-      - edited
-
-  # This is needed to test the workflow locally and shall not be triggered on GitHub
   push:
+    tags:
+      - 'v*'
+
+    # This is needed to test the workflow locally and shall not be triggered on GitHub
+    # TODO: Remove
     branches:
       - localaction
 
   # Allows running this workflow manually on GitHub
+  # TODO: Remove
   workflow_dispatch:
 
 jobs:
