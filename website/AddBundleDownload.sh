@@ -6,7 +6,7 @@
 #   - description text
 
 # Get version, bundles and description from parameters
-version=$1
+version="${1//\//_}"    # Replace / with _
 bundlesDir=$2
 description=$3
 
