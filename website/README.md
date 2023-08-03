@@ -1,7 +1,5 @@
 # File Tree Hasher
 
-![Intro](https://raw.githubusercontent.com/nilshenrich/FileTreeHasher/master/website/assets/gallery/FTH-intro.gif)
-
 - [File Tree Hasher](#file-tree-hasher)
   - [Introduction](#introduction)
   - [Quick overview](#quick-overview)

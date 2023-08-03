@@ -1,0 +1,31 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+<!-- Page title including subtitle -->
+<h1 data-toc-skip>{{ page.title }}</h1>
+<div class="post-meta text-muted">
+    <span>{{ page.subtitle }}</span>
+</div>
+<!-- Page title including subtitle -->
+
+<!-- Generate download links automatically from title -->
+<h2>Download links</h2>
+<ul>
+    <li><a href="../../assets/downloads/{{ page.title }}/bundle-linux-x64.zip">Linux (x64)</a></li>
+    <li><a href="../../assets/downloads/{{ page.title }}/bundle-windows-x64.zip">Windows (x64)</a></li>
+    <li><a href="../../assets/downloads/{{ page.title }}/bundle-macos-x64.zip">macOS (x64)</a></li>
+</ul>
+<!-- Generate download links automatically from title -->
+
+<!-- Optional page content defined in page itself -->
+{% assign stripped = content | strip_newlines %}
+{% if stripped != "" %}
+<h2>Description</h2>
+<div class="post-content">
+    {{ content }}
+</div>
+{% endif %}
+<!-- Optional page content defined in page itself -->

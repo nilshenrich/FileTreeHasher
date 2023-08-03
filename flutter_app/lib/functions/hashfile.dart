@@ -21,6 +21,7 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
+import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
@@ -49,6 +50,9 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
     GenerateHashfile(folder, storagepath, override: false, level: level + 1);
   }
   for (C_FileHashPair file in fileviewhashes.files) {
+    // If no hash algorithm is selected, skip this file
+    if (file.algorithm == E_HashAlgorithms.NONE.value) continue;
+
     String newLine = "";
     newLine += file.hash ?? "<no hash>";
     newLine += ",";

@@ -1,18 +1,3 @@
-# File Tree Hasher
-
-![Intro](https://raw.githubusercontent.com/nilshenrich/FileTreeHasher/master/website/assets/gallery/FTH-intro.gif)
-
-- [File Tree Hasher](#file-tree-hasher)
-  - [Introduction](#introduction)
-  - [Quick overview](#quick-overview)
-  - [Features](#features)
-    - [Hash generation](#hash-generation)
-    - [Hash comparison](#hash-comparison)
-    - [Hash list](#hash-list)
-  - [Gallery](#gallery)
-  - [Release notes](#release-notes)
-  - [Known issues](#known-issues)
-
 ## Introduction
 
 If you are as computer fascinated as I am, you might have the same issue I had:
@@ -28,7 +13,7 @@ I wanted a tool I can give many big files to be hashed (probably using different
 
 You might find this graphical application a bit ugly, simple or unintuitive. That's because as a hacker I put my focus on functionality and reliability more than on styling. If you have any hints for styling improvements to make my app more beautiful, please feel free to let me know.
 
-## Quick overview
+## Usage
 
 This tool called **File Tree Hasher** can load a complete folder with all its containing subfolders and files to generate hashes for all those loaded files. Beside that it can also load single files for hashing.
 
@@ -99,11 +84,3 @@ Creating a hash list is very easy. As soon as all hashes are generated, the butt
 #### Load a hash list
 
 For verifying files or folders containing files, a previously created hash list can be loaded into the current session. When selecting one ore more hash list files, **File Tree Hasher** automatically finds the matching files if loaded and updates the comparison inputs. If the hash algorithm from the loaded hash list differs from currently used hash algorithm, this hash is regenerated and checked automatically.
-
-## Gallery
-
-\<No pictures so far\>
-
-## Release notes
-
-## Known issues
