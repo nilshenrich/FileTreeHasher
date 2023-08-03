@@ -139,7 +139,7 @@ jobs:
       - name: Install zipping tool
         uses: montudor/action-zip@v1
       
-      - name: Zip all artifact
+      - name: Zip all artifacts
         run: |
           zip -qq -r bundle-linux-x64.zip bundle-linux-x64/*
           zip -qq -r bundle-windows-x64.zip bundle-windows-x64/*
@@ -155,6 +155,8 @@ jobs:
 
       - name: Push new website to current branch
         run: |
+          git config --global user.email "nilshenrich@web.de"
+          git config --global user.name "Nils Henrich - deploy workflow"
           git add .
           git commit -m "<GitHub Action> Deploy version ${{ steps.get-tag-name.outputs.tag }}"
           git push origin
