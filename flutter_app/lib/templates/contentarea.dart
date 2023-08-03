@@ -94,8 +94,8 @@ class T_BodyContent extends StatefulWidget {
 // ##################################################
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
-  final List<T_FileTreeView> _loadedTrees = [_exampleFileTree];
-  final List<T_FileView> _loadedFiles = [_exampleFile];
+  final List<T_FileTreeView> _loadedTrees = [];
+  final List<T_FileView> _loadedFiles = [];
 
   @override
   Widget build(BuildContext context) {
