@@ -2,7 +2,7 @@
 // # @file headercontroller.dart
 // # @author Nils Henrich
 // # @brief Template for general control section sitting in the header bar
-// # @version 0.0.0+1
+// # @version 0.0.0+2
 // # @date 2023-03-29
 // #
 // # @copyright Copyright (c) 2023
@@ -36,11 +36,7 @@ class T_HeaderControlSection extends StatelessWidget {
         children: <Widget>[
           // ---------- Section heading ----------
           Text(headingText, style: const TextStyle(fontSize: 22)),
-          const Divider(
-              thickness: 1.0,
-              color: Colors.black,
-              indent: 10.0,
-              endIndent: 10.0),
+          const Divider(thickness: 1.0, color: Colors.black, indent: 10.0, endIndent: 10.0),
           // ---------- Section buttons ----------
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -2,7 +2,7 @@
 // # @file contentarea.dart
 // # @author Nils Henrich
 // # @brief Big content clusters like header bar or body
-// # @version 0.0.0+1
+// # @version 0.0.0+2
 // # @date 2023-03-30
 // #
 // # @copyright Copyright (c) 2023
