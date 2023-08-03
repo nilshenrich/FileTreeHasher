@@ -6,15 +6,6 @@ on:
     tags:
       - 'v*'
 
-    # This is needed to test the workflow locally and shall not be triggered on GitHub
-    # TODO: Remove
-    branches:
-      - localaction
-
-  # Allows running this workflow manually on GitHub
-  # TODO: Remove
-  workflow_dispatch:
-
 jobs:
 
   # Build for Windows
