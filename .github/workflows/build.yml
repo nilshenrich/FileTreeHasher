@@ -6,12 +6,12 @@ on:
     types:
       - created
       - edited
-  
+
   # This is needed to test the workflow locally and shall not be triggered on GitHub
   push:
     branches:
       - localaction
-  
+
   # Allows running this workflow manually on GitHub
   workflow_dispatch:
 
@@ -23,18 +23,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
       - name: Set up flutter environment
         uses: subosito/flutter-action@v1 # v2 struggles reading version
         with:
           flutter-version: '3.7.x'
           channel: 'stable'
-      
+
       - name: Resolve dependecies
         run: |
           cd flutter_app
           flutter pub get
-      
+
       - name: Build for Windows
         run: |
           cd flutter_app
@@ -47,7 +47,7 @@ jobs:
           name: bundle-windows-x64
           path: flutter_app\build\windows\runner\Release\
           if-no-files-found: error
-      
+
   # Build for Linux
   linux:
     runs-on: ubuntu-latest
@@ -59,13 +59,13 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
       - name: Set up flutter environment
         uses: subosito/flutter-action@v1 # v2 struggles reading version
         with:
           flutter-version: '3.7.x'
           channel: 'stable'
-      
+
       - name: Resolve dependecies
         run: |
           cd flutter_app
@@ -76,27 +76,27 @@ jobs:
           cd flutter_app
           flutter config --enable-linux-desktop
           flutter build linux --release
-      
+
       - name: Pack bundle to artifact
         uses: actions/upload-artifact@v3
         with:
           name: bundle-linux-x64
           path: flutter_app/build/linux/x64/release/bundle/
           if-no-files-found: error
-      
+
   # Build for macOS
   macos:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
       - name: Set up flutter environment
         uses: subosito/flutter-action@v1 # v2 struggles reading version
         with:
           flutter-version: '3.7.x'
           channel: 'stable'
-      
+
       - name: Resolve dependecies
         run: |
           cd flutter_app
@@ -116,29 +116,29 @@ jobs:
           if-no-files-found: error
 
   # Update page and deploy builds
-  deploy:
+  website:
     runs-on: ubuntu-latest
     needs: [windows, linux, macos]
     steps:
       - name: Get tag name
         id: get-tag-name
         run: echo "::set-output name=tag::${{ github.ref_name }}"
-      
+
       - name: Get release description
         id: get-release-description
         run: echo "::set-output name=description::${{ github.event.release.body }}"
-      
+
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
           path: ../bundles
-      
+
       - name: Install zipping tool
         uses: montudor/action-zip@v1
-      
+
       - name: Zip all artifacts
         run: |
           zip -qq -r bundle-linux-x64.zip bundle-linux-x64/*
@@ -167,9 +167,9 @@ jobs:
           git rm -rf .
           git clean -fxd
           mv ../website/* .
-      
+
       - name: Build website using jekyll
         uses: helaili/jekyll-action@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target_branch: 'deploy-test'  # TODO: Use gh-pages
+          target_branch: 'gh-pages'
