@@ -155,6 +155,8 @@ jobs:
 
       - name: Push new website to current branch
         run: |
+          git config --global user.email "nilshenrich@web.de"
+          git config --global user.name "Nils Henrich - deploy workflow"
           git add .
           git commit -m "<GitHub Action> Deploy version ${{ steps.get-tag-name.outputs.tag }}"
           git push origin
