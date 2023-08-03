@@ -1,6 +1,6 @@
 # Build the app for Windows, Linux and macOS
 
-name: build-and-deploy
+name: build
 on:
   release:
     types:
