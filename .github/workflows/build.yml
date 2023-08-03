@@ -113,8 +113,10 @@ jobs:
     steps:
       - name: Get tag name and message
         id: get-tag-info
+        env:
+          GITHUB_TAG: ${{ github.ref }}
         run: |
-          name=${GITHUB_REF##*/}
+          name=${GITHUB_REF}
           message=$(git show -s --format=%B $name)
 
       - name: Checkout repository
