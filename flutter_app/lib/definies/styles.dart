@@ -2,7 +2,7 @@
 // # @file styles.dart
 // # @author Nils Henrich
 // # @brief General widget styles
-// # @version 0.0.0+1
+// # @version 0.0.0+2
 // # @date 2023-04-03
 // #
 // # @copyright Copyright (c) 2023
@@ -39,10 +39,7 @@ const double Style_FileTree_ComparisonInput_Width_px = 200;
 const double Style_FileTree_ComparisonInput_Height_px = 20;
 const TextStyle Style_FileTree_ComparisonInput_Text = TextStyle(fontSize: 14);
 const InputDecoration Style_FileTree_ComparisonInput_Decoration =
-    InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: "Comparison hash",
-        contentPadding: EdgeInsets.symmetric(horizontal: 8));
+    InputDecoration(border: OutlineInputBorder(), labelText: "Comparison hash", contentPadding: EdgeInsets.symmetric(horizontal: 8));
 
 // Sub-item
 const double Style_FileTree_SubItem_ShiftRight_px = 20;
@@ -51,8 +48,7 @@ const double Style_FileTree_SubItem_ShiftRight_px = 20;
 const double Style_FileTree_Item_ElementSpaces_px = 10;
 
 // Text style for generated hash
-const TextStyle Style_FileTree_HashGen_Text =
-    TextStyle(color: Colors.grey, overflow: TextOverflow.ellipsis);
+const TextStyle Style_FileTree_HashGen_Text = TextStyle(color: Colors.grey, overflow: TextOverflow.ellipsis);
 const Map<E_HashComparisonResult, Color> Style_FileTree_HashComp_Colors = {
   E_HashComparisonResult.none: Colors.transparent,
   E_HashComparisonResult.equal: Colors.lightGreenAccent,
