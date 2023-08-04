@@ -114,7 +114,7 @@ jobs:
       - name: Get tag name and message
         id: get-tag-info
         run: |
-          name=${GITHUB_REF##*/}
+          name=${{ github.ref_name }}
           message=$(git show -s --format=%B $name)
 
       - name: Checkout repository
