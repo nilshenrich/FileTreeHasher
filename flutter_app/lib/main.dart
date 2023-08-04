@@ -2,7 +2,7 @@
 // # @file main.dart
 // # @author Nils Henrich
 // # @brief App entry point
-// # @version 0.0.0+2
+// # @version 0.0.0+3
 // # @date 2023-03-19
 // #
 // # @copyright Copyright (c) 2023
