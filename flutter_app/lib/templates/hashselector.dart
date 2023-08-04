@@ -3,7 +3,7 @@
 // # @author Nils Henrich
 // # @brief Template for hash selection drop-down menu.
 // #        Globally in header bar or special in file tree
-// # @version 0.0.0+3
+// # @version 0.0.0+6
 // # @date 2023-04-03
 // #
 // # @copyright Copyright (c) 2023
