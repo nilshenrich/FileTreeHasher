@@ -13,7 +13,7 @@ echo "----- POST CHECKOUT -----"
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 
 # Get root directory
-root_dir="$GIT_DIR/.."
+root_dir="$(readlink -nf .)/../../"
 
 if [[ $current_branch == release/* ]]
 then

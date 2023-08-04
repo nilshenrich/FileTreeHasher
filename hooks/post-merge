@@ -8,7 +8,7 @@ reflog_message=$(git reflog -1 --all)
 merged_branch_name=$(echo $reflog_message | cut -d" " -f 2 | sed "s/@.*//" | sed "s/.*\///")
 
 # Get root directory
-root_dir="$GIT_DIR/.."
+root_dir="$(readlink -nf .)/../../"
 
 echo "----- POST MERGE -----"
 
