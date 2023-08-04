@@ -33,12 +33,12 @@ filename="$postDir/$currentDate-$version.md"
 # Create new bundle file
 echo -e """---
 layout: bundle
-title: $version
-subtitle: $description
+title: '$version'
+subtitle: '$description'
 author: nilshenrich
 date: $currentDate $currentTime $timeZone
 order: $(($NumPrev + 1))
-permalink: downloads/$version/
+permalink: 'downloads/$version/'
 pin: false
 ---
 $description""" > $filename
