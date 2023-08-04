@@ -31,9 +31,11 @@ mv $bundlesDir/bundle-* $assetsDir/
 filename="$postDir/$currentDate-$version.md"
 
 # Get subtitle from description (First line without single quotes)
-subtitle=`echo "${description}" | head -1`
+subtitle=`echo "$description" | head -1`
 
-# TODO: Transform description: Add \ before single line breaks (Don't touch double line breaks)
+# Transform description: Add \ before single line breaks
+# TODO: Don't touch double line breaks
+content=`echo "$description" | sed ':a;N;$!ba;s/\n/\\\n/g'`
 
 # Create new bundle file
 echo -e """---
@@ -46,4 +48,4 @@ order: $(($NumPrev + 1))
 permalink: 'downloads/$version/'
 pin: false
 ---
-$description""" > $filename
+$content""" > $filename
