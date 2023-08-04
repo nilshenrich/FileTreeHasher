@@ -120,7 +120,7 @@ jobs:
 
       - name: Get tag message
         id: get-tag-message
-        run: echo "out=$(git tag -l --format='%(contents)'  ${{ steps.get-tag-name.outputs.out }})" >> "$GITHUB_OUTPUT"
+        run: echo "out=$(git tag -l --format='%(contents)' ${{ steps.get-tag-name.outputs.out }})" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repository on develop
         uses: actions/checkout@v3
@@ -146,7 +146,7 @@ jobs:
         working-directory: ../bundles
 
       - name: Add download page for bundles
-        run: bash AddBundleDownload.sh ${{ steps.get-tag-name.outputs.out }} ../../bundles "${{ steps.get-tag-message.outputs.out }}"
+        run: bash AddBundleDownload.sh "${{ steps.get-tag-name.outputs.out }}" ../../bundles "${{ steps.get-tag-message.outputs.out }}"
         working-directory: ./website
 
       - name: Push new website to current branch
