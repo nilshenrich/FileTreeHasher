@@ -114,11 +114,13 @@ jobs:
       - name: Checkout repository on tag
         uses: actions/checkout@v3
 
-      - name: Get tag name and message
-        id: get-tag-info
-        run: |
-          name=${{ github.ref_name }}
-          message=$(git tag -l --format='%(contents)'  $name)
+      - name: Get tag name
+        id: get-tag-name
+        run: echo "out=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+
+      - name: Get tag message
+        id: get-tag-message
+        run: echo "out=$(git tag -l --format='%(contents)'  ${{ steps.get-tag-name.outputs.out }})" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repository on develop
         uses: actions/checkout@v3
@@ -144,7 +146,7 @@ jobs:
         working-directory: ../bundles
 
       - name: Add download page for bundles
-        run: bash AddBundleDownload.sh ${{ steps.get-tag-info.outputs.name }} ../../bundles "${{ steps.get-tag-info.outputs.message }}"
+        run: bash AddBundleDownload.sh ${{ steps.get-tag-name.outputs.out }} ../../bundles "${{ steps.get-tag-message.outputs.out }}"
         working-directory: ./website
 
       - name: Push new website to current branch
@@ -152,7 +154,7 @@ jobs:
           git config --global user.email "nilshenrich@web.de"
           git config --global user.name "Nils Henrich - deploy workflow"
           git add .
-          git commit -m "<GitHub Action> Deploy version ${{ steps.get-tag-info.outputs.name }}"
+          git commit -m "<GitHub Action> Deploy version ${{ steps.get-tag-name.outputs.out }}"
           git push origin
 
       - name: Clean repository (only website to be left)
