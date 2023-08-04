@@ -30,15 +30,22 @@ mv $bundlesDir/bundle-* $assetsDir/
 # Create file name from date and version
 filename="$postDir/$currentDate-$version.md"
 
+# Get subtitle from description (First line without single quotes)
+subtitle=`echo "$description" | head -1`
+
+# Transform description: Add \ before single line breaks
+# TODO: Don't touch double line breaks
+content=`echo "$description" | sed ':a;N;$!ba;s/\n/\\\n/g'`
+
 # Create new bundle file
 echo -e """---
 layout: bundle
-title: $version
-subtitle: $description
+title: '$version'
+subtitle: '$subtitle'
 author: nilshenrich
 date: $currentDate $currentTime $timeZone
 order: $(($NumPrev + 1))
-permalink: downloads/$version/
+permalink: 'downloads/$version/'
 pin: false
 ---
-$description""" > $filename
+$content""" > $filename
