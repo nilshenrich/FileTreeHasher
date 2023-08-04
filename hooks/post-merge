@@ -8,9 +8,9 @@ reflog_message=$(git reflog -1 --all)
 merged_branch_name=$(echo $reflog_message | cut -d" " -f 2 | sed "s/@.*//" | sed "s/.*\///")
 
 # Get root directory
-root_dir=$(git rev-parse --show-toplevel)
+root_dir="$GIT_DIR/../"
 
-echo "----- POST COMMIT -----"
+echo "----- POST MERGE -----"
 
 if [[ $branch_name == develop && $merged_branch_name == main ]]
 then
@@ -23,4 +23,4 @@ then
     git commit -m "<hook> restored example files"
 fi
 
-echo "--- POST COMMIT END ---"
+echo "--- POST MERGE END ---"
