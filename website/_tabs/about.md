@@ -1,7 +1,7 @@
 ---
 layout: page
 icon: fas fa-info-circle
-order: 5
+order: 4
 permalink: about/
 ---
 
