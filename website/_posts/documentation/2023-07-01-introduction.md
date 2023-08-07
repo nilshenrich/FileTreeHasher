@@ -1,5 +1,4 @@
 ---
-# TODO: #hash-generation link does not work here
 layout: post
 title: Introduction
 author: nilshenrich
@@ -28,6 +27,6 @@ You might find this graphical application a bit ugly, simple or unintuitive. Tha
 
 This tool called **File Tree Hasher** can load a complete folder with all its containing subfolders and files to generate hashes for all those loaded files. Beside that it can also load single files for hashing.
 
-The used hash algorithm can be chosen for each file individually. To have deeper information about hashing and hash algorithms please refer to [Hash generation](#hash-generation).
+The used hash algorithm can be chosen for each file individually. To have deeper information about hashing and hash algorithms please refer to [Hash generation](../user-manual/#hash-generation).
 
 File hashing is one feature part of **File Tree Hasher**, the other part is hash comparison including saving and loading hash lists. Each file has a text input where a comparison hash can be entered. Also a hash list can be created for a folder of hashed files. Loading this hash list into comparison view is also possible. This is good for checking file transfer over a network or something like that.
