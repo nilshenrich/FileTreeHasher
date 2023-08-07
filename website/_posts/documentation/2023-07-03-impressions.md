@@ -1,4 +1,5 @@
 ---
+# TODO: Make demo gif show on post link on home
 layout: post
 title: Impressions
 author: nilshenrich
