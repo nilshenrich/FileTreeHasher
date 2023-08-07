@@ -21,9 +21,6 @@ assetsDir="assets/downloads/$version"
 mkdir -p $postDir
 mkdir -p $assetsDir
 
-# Count number of previous releases
-NumPrev=`ls $postDir | wc -l`
-
 # Move bundles to assets
 mv $bundlesDir/bundle-* $assetsDir/
 
@@ -44,7 +41,6 @@ title: '$version'
 subtitle: '$subtitle'
 author: nilshenrich
 date: $currentDate $currentTime $timeZone
-order: $(($NumPrev + 1))
 permalink: 'downloads/$version/'
 pin: false
 ---
