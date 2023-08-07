@@ -9,7 +9,7 @@ layout: page
 
 <div id="archives" class="pl-xl-3">
 
-    {% assign sorted_posts = site.posts | sort: 'date' %}
+    {% assign sorted_posts = site.posts | sort: 'date' | reverse %}
 
     {% for post in sorted_posts %}
     {% if post.path contains '/downloads/' %}
