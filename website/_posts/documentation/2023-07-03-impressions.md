@@ -7,8 +7,7 @@ date: 2023-07-03 16:00:00 +0200
 order: 3
 permalink: documentation/impressions/
 pin: true
+image:
+    path: /assets/img/gallery/FTH-intro.gif
+    alt: <Demo video>
 ---
-
-## Demo
-![demo](/assets/img/gallery/FTH-intro.gif)
-<sup>Short demonstration</sup>
