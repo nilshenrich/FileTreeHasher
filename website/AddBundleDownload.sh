@@ -28,7 +28,7 @@ mv $bundlesDir/bundle-* $assetsDir/
 filename="$postDir/$currentDate-$version.md"
 
 # Get subtitle from description (First line without single quotes)
-subtitle=`echo "$description" | head -1`
+subtitle=`echo -e "$description" | head -1`
 
 # Transform description: Add \ before single line breaks
 echo -e """$description""" > description-temp.txt
@@ -40,7 +40,7 @@ rm description-temp.txt
 echo -e """---
 layout: bundle
 title: '$version'
-subtitle: 'subtitle'
+subtitle: $subtitle
 author: nilshenrich
 date: $currentDate $currentTime $timeZone
 permalink: 'downloads/$version/'
