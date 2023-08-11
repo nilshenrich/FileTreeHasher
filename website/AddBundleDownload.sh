@@ -21,9 +21,6 @@ assetsDir="assets/downloads/$version"
 mkdir -p $postDir
 mkdir -p $assetsDir
 
-# Count number of previous releases
-NumPrev=`ls $postDir | wc -l`
-
 # Move bundles to assets
 mv $bundlesDir/bundle-* $assetsDir/
 
@@ -31,21 +28,24 @@ mv $bundlesDir/bundle-* $assetsDir/
 filename="$postDir/$currentDate-$version.md"
 
 # Get subtitle from description (First line without single quotes)
-subtitle=`echo "$description" | head -1`
+subtitle=`echo -e "$description" | head -1`
 
 # Transform description: Add \ before single line breaks
-# TODO: Don't touch double line breaks
-content=`echo "$description" | sed ':a;N;$!ba;s/\n/\\\n/g'`
+echo -e """$description""" > description-temp.txt
+sed -i -E ':a;N;$!ba;s/([^\n])\n([^\n])/\1\\\n\2/g' description-temp.txt
+content=`cat description-temp.txt`
+rm description-temp.txt
 
 # Create new bundle file
 echo -e """---
 layout: bundle
 title: '$version'
-subtitle: '$subtitle'
+subtitle: $subtitle
 author: nilshenrich
 date: $currentDate $currentTime $timeZone
-order: $(($NumPrev + 1))
 permalink: 'downloads/$version/'
 pin: false
 ---
-$content""" > $filename
+
+$content
+""" > $filename

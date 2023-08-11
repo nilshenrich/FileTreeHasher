@@ -12,7 +12,7 @@ layout: page
     {% assign sorted_posts = site.posts | sort: 'date' | reverse %}
 
     {% for post in sorted_posts %}
-    {% if post.path contains '/downloads/' %}
+    {% if post.path contains '/release-notes/' %}
 
     {% capture cur_year %}{{ post.date | date: "%Y" }}{% endcapture %}
 
