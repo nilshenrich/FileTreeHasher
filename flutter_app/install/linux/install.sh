@@ -14,6 +14,9 @@ binname="file_tree_hasher"
 appname="filetreehasher"
 installpath="/opt/$appname"
 
+# Get version number
+version=`cat $currentDir/../../build/linux/x64/release/bundle/data/flutter_assets/version.json | jq -r '.version'`
+
 # Create installation directory
 mkdir -p $installpath
 
@@ -29,4 +32,10 @@ chown -R root:root $installpath/
 # Create symbolic link to binary folder
 ln -s $installpath/$appname /usr/local/bin/$appname
 
+# Create desktop entry
+# TODO: Copy icon to bundle when building
+desktopentry="[Desktop Entry]\nVersion=$version\nType=Application\nName=File Tree Hasher\nExec=$installpath/$appname\nIcon=$installpath/favicon.png\nTerminal=false\nCategories=Utility;"
+echo -e $desktopentry | tee /usr/share/applications/$appname.desktop > /dev/null
+
+# Done
 echo "Installation done. Start using command $appname"

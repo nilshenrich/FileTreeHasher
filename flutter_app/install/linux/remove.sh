@@ -10,6 +10,9 @@ fi
 appname="filetreehasher"
 installpath="/opt/$appname"
 
+# Remove desktop entry
+rm -f /usr/share/applications/$appname.desktop
+
 # Remove symbolic link
 rm -f /usr/local/bin/$appname
 
