@@ -40,7 +40,6 @@ jobs:
           if-no-files-found: error
 
   # Build for Linux
-  # TODO: Add icon to bundle
   linux:
     runs-on: ubuntu-latest
     steps:
