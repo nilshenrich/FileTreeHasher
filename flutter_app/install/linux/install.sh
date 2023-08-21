@@ -26,7 +26,7 @@ cp -r $currentDir/../../build/linux/x64/release/bundle/* $installpath/
 # Rename binary file
 mv $installpath/$binname $installpath/$appname
 
-# Set permissions # TODO: rwx rights?
+# Set permissions
 chown -R root:root $installpath/
 
 # Create symbolic link to binary folder
