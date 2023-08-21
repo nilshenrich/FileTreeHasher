@@ -33,7 +33,7 @@ chown -R root:root $installpath/
 ln -s $installpath/$appname /usr/local/bin/$appname
 
 # Create desktop entry
-# TODO: Copy icon to bundle when building
+convert $currentDir/../../assets/img/logo.png -resize 256x256 $installpath/favicon.png
 desktopentry="[Desktop Entry]\nVersion=$version\nType=Application\nName=File Tree Hasher\nExec=$installpath/$appname\nIcon=$installpath/favicon.png\nTerminal=false\nCategories=Utility;"
 echo -e $desktopentry | tee /usr/share/applications/$appname.desktop > /dev/null
 
