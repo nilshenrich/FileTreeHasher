@@ -32,11 +32,16 @@ jobs:
           flutter config --enable-windows-desktop
           flutter build windows --release
 
+      - name: Create Setup.exe to upload
+        run: |
+          'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' .\flutter_app\install\windows\setupscript.iss
+        shell: powershell
+
       - name: Pack bundle to artifact
         uses: actions/upload-artifact@v3
         with:
-          name: bundle-windows-x64
-          path: flutter_app\build\windows\runner\Release\
+          name: FileTreeHasher-windows-x64
+          path: .\flutter_app\install\windows\FileTreeHasher-Setup.exe
           if-no-files-found: error
 
   # Build for Linux
@@ -68,11 +73,17 @@ jobs:
           flutter config --enable-linux-desktop
           flutter build linux --release
 
+      - name: Create install folder to upload
+        run: |
+          mkdir /FileTreeHasher-linux-x64
+          mv flutter_app/build/linux/x64/release/bundle /FileTreeHasher-linux-x64/
+          cp flutter_app/install/linux/install.sh /FileTreeHasher-linux-x64/
+
       - name: Pack bundle to artifact
         uses: actions/upload-artifact@v3
         with:
-          name: bundle-linux-x64
-          path: flutter_app/build/linux/x64/release/bundle/
+          name: FileTreeHasher-linux-x64
+          path: /FileTreeHasher-linux-x64/
           if-no-files-found: error
 
   # Build for macOS
@@ -102,7 +113,7 @@ jobs:
       - name: Pack bundle to artifact
         uses: actions/upload-artifact@v3
         with:
-          name: bundle-macos-x64
+          name: FileTreeHasher-macos-x64
           path: flutter_app/build/macos/Build/Products/Release/
           if-no-files-found: error
 
@@ -137,12 +148,12 @@ jobs:
 
       - name: Zip all artifacts
         run: |
-          zip -qq -r bundle-linux-x64.zip bundle-linux-x64/*
-          zip -qq -r bundle-windows-x64.zip bundle-windows-x64/*
-          zip -qq -r bundle-macos-x64.zip bundle-macos-x64/*
-          rm -r bundle-linux-x64/
-          rm -r bundle-windows-x64/
-          rm -r bundle-macos-x64/
+          zip -qq -r FileTreeHasher-linux-x64.zip FileTreeHasher-linux-x64/*
+          zip -qq -r FileTreeHasher-windows-x64.zip FileTreeHasher-windows-x64/*
+          zip -qq -r FileTreeHasher-macos-x64.zip FileTreeHasher-macos-x64/*
+          rm -r FileTreeHasher-linux-x64/
+          rm -r FileTreeHasher-windows-x64/
+          rm -r FileTreeHasher-macos-x64/
         working-directory: ../bundles
 
       - name: Add download page for bundles
