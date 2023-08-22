@@ -114,7 +114,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: FileTreeHasher-macos-x64
-          path: flutter_app/build/macos/Build/Products/Release/
+          path: flutter_app/build/macos/Build/Products/Release/file_tree_hasher.app/
           if-no-files-found: error
 
   # Update page and deploy builds
