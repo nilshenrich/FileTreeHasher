@@ -14,9 +14,6 @@ binname="file_tree_hasher"
 appname="filetreehasher"
 installpath="/opt/$appname"
 
-# Get version number
-version=`cat $currentDir/../../build/linux/x64/release/bundle/data/flutter_assets/version.json | jq -r '.version'`
-
 # Create installation directory
 mkdir -p $installpath
 
@@ -32,10 +29,18 @@ chown -R root:root $installpath/
 # Create symbolic link to binary folder
 ln -s $installpath/$appname /usr/local/bin/$appname
 
-# Create desktop entry
+# Create desktop entry by copying the desktop file
 convert $currentDir/../../assets/img/logo.png -resize 256x256 $installpath/favicon.png
-desktopentry="[Desktop Entry]\nVersion=$version\nType=Application\nName=File Tree Hasher\nExec=$installpath/$appname\nIcon=$installpath/favicon.png\nTerminal=false\nCategories=Utility;"
-echo -e $desktopentry | tee /usr/share/applications/$appname.desktop > /dev/null
+echo -e """[Desktop Entry]
+Type=Application
+Name=File Tree Hasher
+GenericName=File hashing and comparing tool
+Icon=$installpath/favicon.png
+Comment=Load a whole folder or multiple single files, generate all file hashes recurvely, compare in a file tree and store or load hash lists
+Exec=$installpath/$appname
+Terminal=false
+Categories=Utility;
+""" > /usr/share/applications/$appname.desktop
 
 # Done
 echo "Installation done. Start using command $appname"
