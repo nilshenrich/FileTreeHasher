@@ -1,5 +1,4 @@
 ---
-# TODO: More details
 layout: post
 title: User Manual
 author: nilshenrich
@@ -19,6 +18,7 @@ Using **File Tree Hasher** you are able to generate hash for files of any type a
 - SHA256
 - SHA384
 - SHA512
+- no hash
 
 The hash algorithm to use can be selected for each file individually.\
 If a file is added or the hash algorithm is changed, the hash generation starts automatically.
