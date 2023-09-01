@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Don't use this hook
+echo "Dont' use post-merge"
+exit 0
+
 # Get the current branch name
 branch_name=$(git branch | grep "*" | sed "s/\* //")
 

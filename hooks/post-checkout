@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Don't use this hook
+echo "Dont' use post-checkout"
+exit 0
+
 branch_switched=$3
 
 if [[ $branch_switched != '1' ]]
