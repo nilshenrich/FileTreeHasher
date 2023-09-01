@@ -44,7 +44,8 @@ google_analytics:
   id: # fill in your Google Analytics ID
 
 # Prefer color scheme setting.
-theme_mode: dark # [light|dark]
+# Set no preferred theme to use systems default and to add a toggle button
+theme_mode: # [light|dark]
 
 # The CDN endpoint for images.
 # Notice that once it is assigned, the CDN url
