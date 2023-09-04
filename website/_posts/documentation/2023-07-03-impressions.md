@@ -7,6 +7,6 @@ order: 3
 permalink: documentation/impressions/
 pin: true
 image:
-    path: /assets/img/gallery/FTH-intro.gif
+    path: /assets/img/gallery/FTH-intro.gif # TODO: Create
     alt: <Demo video>
 ---
