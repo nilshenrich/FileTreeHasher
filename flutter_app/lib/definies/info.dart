@@ -14,7 +14,8 @@
 // ##################################################
 // # Hash file header block containing general info
 // ##################################################
-String HashFileHeader = """*** File Tree Hasher ***
+const String HashFileHeader = """*** File Tree Hasher ***
 Author: Nils Henrich
-Website: https://github.com/nilshenrich/FileTreeHasher
+Website: https://nilshenrich.github.io/FileTreeHasher/
+Source code: https://github.com/nilshenrich/FileTreeHasher
 Version: 1.0.0""";
