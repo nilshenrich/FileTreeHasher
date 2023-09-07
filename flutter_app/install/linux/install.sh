@@ -23,8 +23,15 @@ cp -r $currentDir/../../build/linux/x64/release/bundle/* $installpath/
 # Rename binary file
 mv $installpath/$binname $installpath/$appname
 
-# Set permissions
+# Set permissions:
+# Owner:    root
+# Folders:  rwx|w-x|r-x 755
+# Files:    rw-|r--|r-- 644
+# binary:   rwx|r-x|r-x 755
 chown -R root:root $installpath/
+find $installpath -type d -exec chmod 755 {} \;
+find $installpath -type f -exec chmod 644 {} \;
+chmod 755 $installpath/$appname
 
 # Create symbolic link to binary folder
 ln -s $installpath/$appname /usr/local/bin/$appname
