@@ -6,7 +6,6 @@ date: 2023-07-03 16:00:00 +0200
 order: 3
 permalink: documentation/impressions/
 pin: true
-image:
-    path: /assets/img/gallery/FTH-intro.gif # TODO: Create
-    alt: <Demo video>
 ---
+
+[![Demo video](/assets/gallery/img/demo.png)](../../assets/gallery/vid/demo.mp4)
