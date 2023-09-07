@@ -19,7 +19,7 @@ jobs:
 
     - name: Get tag message
       id: get-tag-message
-      run: echo "out=$(git tag -l --format='%(contents)' ${{ steps.get-tag-name.outputs.out }})" >> "$GITHUB_OUTPUT"
+      run: git tag -l --format='%(contents)' ${{ steps.get-tag-name.outputs.out }} > tag-msg.txt
 
     - name: Create Release
       uses: actions/create-release@v1
@@ -28,6 +28,6 @@ jobs:
       with:
         tag_name: ${{ steps.get-tag-name.outputs.out }}
         release_name: ${{ steps.get-tag-name.outputs.out }}
-        body: ${{ steps.get-tag-message.outputs.out }}
+        body: $(cat tag-msg.txt)
         draft: false
         prerelease: false
