@@ -41,40 +41,43 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        flexibleSpace: Row(children: <Widget>[
-      // -------------------- Section: File tree --------------------
-      T_HeaderControlSection(headingText: "File tree control", items: [
-        // ---------- Button: load file tree ----------
-        IconButton(onPressed: BodyContent.currentState!.selectNewFolder, icon: const Icon(Icons.drive_folder_upload), tooltip: "Load file tree"),
-        // ---------- Button: Load single file ----------
-        IconButton(onPressed: BodyContent.currentState!.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single file(s)"),
-        // ---------- Button: clear all ----------
-        IconButton(
-            onPressed: BodyContent.currentState!.clearContent,
-            icon: const Icon(Icons.delete_forever_outlined),
-            tooltip: "Clear all loaded files and file trees")
-      ]),
-      // -------------------- Section: Hash algorithm --------------------
-      T_HeaderControlSection(headingText: "Algorithm selection", items: [
-        T_GlobalHashSelector(onChanged: (selected) {
-          SelectedGlobalHashAlg = selected;
-          BodyContent.currentState!.updateHashAlg(selected);
-        })
-      ]),
-      // -------------------- Section: Comparison --------------------
-      T_HeaderControlSection(headingText: "Comparison", items: [
-        IconButton(onPressed: BodyContent.currentState!.loadHashfile, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file(s)"),
-        IconButton(onPressed: BodyContent.currentState!.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file(s)"),
-        IconButton(
-            onPressed: BodyContent.currentState!.clearComparisonInputs,
-            icon: const Icon(Icons.delete_forever_outlined),
-            tooltip: "Clear comparison strings")
+        flexibleSpace: Column(children: [
+      const SizedBox(height: 10),
+      Row(children: <Widget>[
+        // -------------------- Section: File tree --------------------
+        T_HeaderControlSection(headingText: "File tree control", items: [
+          // ---------- Button: load file tree ----------
+          IconButton(onPressed: BodyContent.currentState!.selectNewFolder, icon: const Icon(Icons.drive_folder_upload), tooltip: "Load file tree"),
+          // ---------- Button: Load single file ----------
+          IconButton(onPressed: BodyContent.currentState!.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single file(s)"),
+          // ---------- Button: clear all ----------
+          IconButton(
+              onPressed: BodyContent.currentState!.clearContent,
+              icon: const Icon(Icons.delete_forever_outlined),
+              tooltip: "Clear all loaded files and file trees")
+        ]),
+        // -------------------- Section: Hash algorithm --------------------
+        T_HeaderControlSection(headingText: "Algorithm selection", items: [
+          T_GlobalHashSelector(onChanged: (selected) {
+            SelectedGlobalHashAlg = selected;
+            BodyContent.currentState!.updateHashAlg(selected);
+          })
+        ]),
+        // -------------------- Section: Comparison --------------------
+        T_HeaderControlSection(headingText: "Comparison", items: [
+          IconButton(onPressed: BodyContent.currentState!.loadHashfile, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file(s)"),
+          IconButton(onPressed: BodyContent.currentState!.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file(s)"),
+          IconButton(
+              onPressed: BodyContent.currentState!.clearComparisonInputs,
+              icon: const Icon(Icons.delete_forever_outlined),
+              tooltip: "Clear comparison strings")
+        ])
       ])
     ]));
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(89); // TODO: Set auto height
+  Size get preferredSize => const Size.fromHeight(100);
 }
 
 // ##################################################
