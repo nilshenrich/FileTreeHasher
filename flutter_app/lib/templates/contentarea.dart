@@ -2,7 +2,7 @@
 // # @file contentarea.dart
 // # @author Nils Henrich
 // # @brief Big content clusters like header bar or body
-// # @version 0.0.0+6
+// # @version 1.0.0
 // # @date 2023-03-30
 // #
 // # @copyright Copyright (c) 2023
@@ -41,40 +41,43 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        flexibleSpace: Row(children: <Widget>[
-      // -------------------- Section: File tree --------------------
-      T_HeaderControlSection(headingText: "File tree control", items: [
-        // ---------- Button: load file tree ----------
-        IconButton(onPressed: BodyContent.currentState!.selectNewFolder, icon: const Icon(Icons.drive_folder_upload), tooltip: "Load file tree"),
-        // ---------- Button: Load single file ----------
-        IconButton(onPressed: BodyContent.currentState!.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single files"),
-        // ---------- Button: clear all ----------
-        IconButton(
-            onPressed: BodyContent.currentState!.clearContent,
-            icon: const Icon(Icons.delete_forever_outlined),
-            tooltip: "Clear all loaded files and file trees")
-      ]),
-      // -------------------- Section: Hash algorithm --------------------
-      T_HeaderControlSection(headingText: "Algorithm selection", items: [
-        T_GlobalHashSelector(onChanged: (selected) {
-          SelectedGlobalHashAlg = selected;
-          BodyContent.currentState!.updateHashAlg(selected);
-        })
-      ]),
-      // -------------------- Section: Comparison --------------------
-      T_HeaderControlSection(headingText: "Comparison", items: [
-        IconButton(onPressed: BodyContent.currentState!.loadHashfile, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file"),
-        IconButton(onPressed: BodyContent.currentState!.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file"),
-        IconButton(
-            onPressed: BodyContent.currentState!.clearComparisonInputs,
-            icon: const Icon(Icons.delete_forever_outlined),
-            tooltip: "Clear comparison strings")
+        flexibleSpace: Column(children: [
+      const SizedBox(height: 10),
+      Row(children: <Widget>[
+        // -------------------- Section: File tree --------------------
+        T_HeaderControlSection(headingText: "File tree control", items: [
+          // ---------- Button: load file tree ----------
+          IconButton(onPressed: BodyContent.currentState!.selectNewFolder, icon: const Icon(Icons.drive_folder_upload), tooltip: "Load file tree"),
+          // ---------- Button: Load single file ----------
+          IconButton(onPressed: BodyContent.currentState!.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single file(s)"),
+          // ---------- Button: clear all ----------
+          IconButton(
+              onPressed: BodyContent.currentState!.clearContent,
+              icon: const Icon(Icons.delete_forever_outlined),
+              tooltip: "Clear all loaded files and file trees")
+        ]),
+        // -------------------- Section: Hash algorithm --------------------
+        T_HeaderControlSection(headingText: "Algorithm selection", items: [
+          T_GlobalHashSelector(onChanged: (selected) {
+            SelectedGlobalHashAlg = selected;
+            BodyContent.currentState!.updateHashAlg(selected);
+          })
+        ]),
+        // -------------------- Section: Comparison --------------------
+        T_HeaderControlSection(headingText: "Comparison", items: [
+          IconButton(onPressed: BodyContent.currentState!.loadHashfile, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file(s)"),
+          IconButton(onPressed: BodyContent.currentState!.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file(s)"),
+          IconButton(
+              onPressed: BodyContent.currentState!.clearComparisonInputs,
+              icon: const Icon(Icons.delete_forever_outlined),
+              tooltip: "Clear comparison strings")
+        ])
       ])
     ]));
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(89); // TODO: Set auto height
+  Size get preferredSize => const Size.fromHeight(100);
 }
 
 // ##################################################
@@ -457,20 +460,20 @@ class T_StorageChooserRow extends StatelessWidget {
 }
 
 // DEV: Example file tree
-T_FileTreeView _exampleFileTree = T_FileTreeView(
-  title: "/root/folder",
-  items: [
-    T_FolderView(path: "/root/folder/top-folder", name: "top-folder", subitems: [
-      T_FolderView(path: "/root/folder/top-folder/sub-folder", name: "sub-folder", subitems: [
-        T_FolderView(path: "/root/folder/top-folder/sub-folder/sub-sub-folder", name: "sub-sub-folder"),
-        T_FileView(path: "/root/folder/top-folder/sub-folder/sub-sub-file", name: "sub-sub-file")
-      ]),
-      T_FolderView(path: "/root/folder/top-folder/sub-folder-with-long-name", name: "sub-folder-with-long-name"),
-      T_FileView(path: "/root/folder/top-folder/sub-file", name: "sub-file"),
-      T_FileView(path: "/root/folder/top-folder/sub-file-with-long-name", name: "sub-file-with-long-name")
-    ]),
-    T_FolderView(path: "/root/folder/folder-with-long-name", name: "folder-with-long-name"),
-    T_FileView(path: "/root/folder/top-file", name: "top-file")
-  ],
-);
-T_FileView _exampleFile = T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");
+// T_FileTreeView _exampleFileTree = T_FileTreeView(
+//   title: "/root/folder",
+//   items: [
+//     T_FolderView(path: "/root/folder/top-folder", name: "top-folder", subitems: [
+//       T_FolderView(path: "/root/folder/top-folder/sub-folder", name: "sub-folder", subitems: [
+//         T_FolderView(path: "/root/folder/top-folder/sub-folder/sub-sub-folder", name: "sub-sub-folder"),
+//         T_FileView(path: "/root/folder/top-folder/sub-folder/sub-sub-file", name: "sub-sub-file")
+//       ]),
+//       T_FolderView(path: "/root/folder/top-folder/sub-folder-with-long-name", name: "sub-folder-with-long-name"),
+//       T_FileView(path: "/root/folder/top-folder/sub-file", name: "sub-file"),
+//       T_FileView(path: "/root/folder/top-folder/sub-file-with-long-name", name: "sub-file-with-long-name")
+//     ]),
+//     T_FolderView(path: "/root/folder/folder-with-long-name", name: "folder-with-long-name"),
+//     T_FileView(path: "/root/folder/top-file", name: "top-file")
+//   ],
+// );
+// T_FileView _exampleFile = T_FileView(path: "/root/folder/file.txt", name: "/root/folder/file.txt");

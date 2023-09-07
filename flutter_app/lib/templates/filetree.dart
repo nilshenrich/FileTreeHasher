@@ -2,7 +2,7 @@
 // # @file filetree.dart
 // # @author Nils Henrich
 // # @brief Templates for loaded file, file tree and corresponding hashing and comparison funcionality
-// # @version 0.0.0+6
+// # @version 1.0.0
 // # @date 2023-03-30
 // #
 // # @copyright Copyright (c) 2023
@@ -307,6 +307,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
 
     // Reset old hash
     setState(() {
+      _genProgress = 0;
       _hashGen = "";
     });
 
