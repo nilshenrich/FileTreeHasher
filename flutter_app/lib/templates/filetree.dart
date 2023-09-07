@@ -307,6 +307,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
 
     // Reset old hash
     setState(() {
+      _genProgress = 0;
       _hashGen = "";
     });
 
