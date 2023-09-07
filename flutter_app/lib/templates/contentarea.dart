@@ -47,7 +47,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
         // ---------- Button: load file tree ----------
         IconButton(onPressed: BodyContent.currentState!.selectNewFolder, icon: const Icon(Icons.drive_folder_upload), tooltip: "Load file tree"),
         // ---------- Button: Load single file ----------
-        IconButton(onPressed: BodyContent.currentState!.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single files"),
+        IconButton(onPressed: BodyContent.currentState!.selectNewFiles, icon: const Icon(Icons.upload_file), tooltip: "Load single file(s)"),
         // ---------- Button: clear all ----------
         IconButton(
             onPressed: BodyContent.currentState!.clearContent,
@@ -63,8 +63,8 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
       ]),
       // -------------------- Section: Comparison --------------------
       T_HeaderControlSection(headingText: "Comparison", items: [
-        IconButton(onPressed: BodyContent.currentState!.loadHashfile, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file"),
-        IconButton(onPressed: BodyContent.currentState!.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file"),
+        IconButton(onPressed: BodyContent.currentState!.loadHashfile, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file(s)"),
+        IconButton(onPressed: BodyContent.currentState!.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file(s)"),
         IconButton(
             onPressed: BodyContent.currentState!.clearComparisonInputs,
             icon: const Icon(Icons.delete_forever_outlined),
