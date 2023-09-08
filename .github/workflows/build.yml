@@ -75,15 +75,15 @@ jobs:
 
       - name: Create install folder to upload
         run: |
-          mkdir /FileTreeHasher-linux-x64
-          mv flutter_app/build/linux/x64/release/bundle /FileTreeHasher-linux-x64/
-          cp flutter_app/install/linux/install.sh /FileTreeHasher-linux-x64/
+          mkdir ./FileTreeHasher-linux-x64
+          mv flutter_app/build/linux/x64/release/bundle ./FileTreeHasher-linux-x64/
+          cp flutter_app/install/linux/install.sh ./FileTreeHasher-linux-x64/
 
       - name: Pack bundle to artifact
         uses: actions/upload-artifact@v3
         with:
           name: FileTreeHasher-linux-x64
-          path: /FileTreeHasher-linux-x64/
+          path: ./FileTreeHasher-linux-x64/
           if-no-files-found: error
 
   # Build for macOS
