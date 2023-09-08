@@ -1,5 +1,5 @@
 #define MyAppName "File Tree Hasher"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.0+1"
 #define MyAppPublisher "Nils Henrich"
 #define MyAppURL "https://nilshenrich.github.io/FileTreeHasher/"
 #define MyAppExeName "file_tree_hasher.exe"
@@ -19,7 +19,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 ;ChangesAssociations=yes
 DisableProgramGroupPage=yes
-LicenseFile=..\..\..\LICENSE.txt
+LicenseFile=..\..\..\LICENSE
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=.
