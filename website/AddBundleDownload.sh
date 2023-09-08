@@ -40,7 +40,7 @@ rm description-temp.txt
 echo -e """---
 layout: bundle
 title: '$version'
-subtitle: $subtitle
+subtitle: '$subtitle'
 author: nilshenrich
 date: $currentDate $currentTime $timeZone
 permalink: 'downloads/$version/'
