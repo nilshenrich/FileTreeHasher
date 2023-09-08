@@ -8,7 +8,7 @@
 //          <absolute view path (or distinctive text for single files)>
 //          abcde,md5,"top-file"
 //          abcde,sha1,"top-folder/sub-file"
-// # @version 1.0.0+3
+// # @version 1.0.0+4
 // # @date 2023-06-16
 // #
 // # @copyright Copyright (c) 2023
