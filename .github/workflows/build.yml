@@ -110,6 +110,7 @@ jobs:
           flutter config --enable-macos-desktop
           flutter build macos --release
 
+      # TODO: Zip shall contain the file_tree_hasher.app folder
       - name: Pack bundle to artifact
         uses: actions/upload-artifact@v3
         with:
