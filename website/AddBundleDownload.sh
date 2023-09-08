@@ -22,7 +22,7 @@ mkdir -p $postDir
 mkdir -p $assetsDir
 
 # Move bundles to assets
-mv $bundlesDir/bundle-* $assetsDir/
+mv $bundlesDir/FileTreeHasher-* $assetsDir/
 
 # Create file name from date and version
 filename="$postDir/$currentDate-$version.md"
@@ -40,7 +40,7 @@ rm description-temp.txt
 echo -e """---
 layout: bundle
 title: '$version'
-subtitle: $subtitle
+subtitle: '$subtitle'
 author: nilshenrich
 date: $currentDate $currentTime $timeZone
 permalink: 'downloads/$version/'
