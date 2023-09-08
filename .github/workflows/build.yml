@@ -34,7 +34,7 @@ jobs:
 
       - name: Create Setup.exe to upload
         run: |
-          'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' .\flutter_app\install\windows\setupscript.iss
+          & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' .\flutter_app\install\windows\setupscript.iss
         shell: powershell
 
       - name: Pack bundle to artifact
