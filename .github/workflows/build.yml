@@ -190,6 +190,13 @@ jobs:
           git commit -m "<GitHub Action> Deploy version ${{ steps.get-tag-name.outputs.out }}"
           git push origin
 
+      - name: Clean repository (only website to be left)
+        run: |
+          mv website/ ../
+          git rm -rf .
+          git clean -fxd
+          mv ../website/* .
+
       - name: Build website using jekyll
         uses: helaili/jekyll-action@v2
         with:
