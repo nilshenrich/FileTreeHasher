@@ -192,12 +192,12 @@ jobs:
 
       - name: Clean repository (only website to be left)
         run: |
+          rm website/AddBundleDownload.sh
           mv website/ ../
           git rm -rf .
           git clean -fxd
           mv ../website/* .
-          rm AddBundleDownload.sh
-
+          
       - name: Build website using jekyll
         uses: helaili/jekyll-action@v2
         with:
