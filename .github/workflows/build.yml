@@ -196,6 +196,7 @@ jobs:
           git rm -rf .
           git clean -fxd
           mv ../website/* .
+          rm AddBundleDownload.sh
 
       - name: Build website using jekyll
         uses: helaili/jekyll-action@v2
