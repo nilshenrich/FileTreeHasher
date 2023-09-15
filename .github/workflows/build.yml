@@ -138,11 +138,6 @@ jobs:
           echo "$TAG_MSG" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Checkout repository on develop
-        uses: actions/checkout@v3
-        with:
-          ref: develop
-
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
@@ -165,20 +160,35 @@ jobs:
         run: bash AddBundleDownload.sh "${{ steps.get-tag-name.outputs.out }}" ../../bundles "${{ env.TAG_MSG }}"
         working-directory: ./website
 
-      - name: Push new website to current branch
+      - name: Buffer newly created website part
+        run: mv website/ ../
+
+      - name: Checkout current gh-pages
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+
+      - name: Buffer all historical downloads
+        run: |
+          mv assets/downloads/* ../website/assets/downloads/
+
+      - name: Checkout repository on develop
+        uses: actions/checkout@v3
+        with:
+          ref: develop
+
+      - name: Restore all buffered website (including downloads)
+        run: |
+          rm -r ./website/
+          mv ../website/ .
+
+      - name: Push new website to develop (excluding downloads)
         run: |
           git config --global user.email "nilshenrich@web.de"
           git config --global user.name "Nils Henrich - deploy workflow"
-          git add .
+          git add -- . ':!website/assets/downloads/'
           git commit -m "<GitHub Action> Deploy version ${{ steps.get-tag-name.outputs.out }}"
           git push origin
-
-      - name: Clean repository (only website to be left)
-        run: |
-          mv website/ ../
-          git rm -rf .
-          git clean -fxd
-          mv ../website/* .
 
       - name: Build website using jekyll
         uses: helaili/jekyll-action@v2
