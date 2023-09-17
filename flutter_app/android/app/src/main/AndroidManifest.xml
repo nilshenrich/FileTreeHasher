@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.file_tree_hasher">
    <application
-        android:label="file_tree_hasher"
+        android:label="File Tree Hasher"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
