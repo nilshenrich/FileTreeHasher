@@ -299,16 +299,19 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       // throw FileSystemException("File ${widget.filepath} does not exist");
       setState(() {
         _hashGen = "<Can't find file in file system>";
+        _genProgress = 0;
+        _comparisonResult = E_HashComparisonResult.none;
       });
       return;
     }
 
     // -------------------- Generate hash --------------------
 
-    // Reset old hash
+    // Reset old hash and comparison
     setState(() {
       _genProgress = 0;
       _hashGen = "";
+      _comparisonResult = E_HashComparisonResult.none;
     });
 
     // File size and processed size for progress calculation
