@@ -25,6 +25,7 @@ class FileTreeHasher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      restorationScopeId: 'app',
       title: 'File Tree Hasher',
       home: ControlHeader(),
     );
