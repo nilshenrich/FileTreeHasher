@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Don't use this hook
-echo "Dont' use post-checkout"
-exit 0
-
 branch_switched=$3
 
 if [[ $branch_switched != '1' ]]
@@ -19,15 +15,21 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 # Get root directory
 root_dir=$(readlink -nf .)
 
+##################################################
+# Checked out a release branch
+##################################################
 if [[ $current_branch == release/* ]]
 then
-    echo "Remove example files from app"
-    sed -i 's/\[_exampleFileTree\]/[]/' $root_dir/flutter_app/lib/templates/contentarea.dart
-    sed -i 's/\[_exampleFile\]/[]/' $root_dir/flutter_app/lib/templates/contentarea.dart
-
-    echo "Commit removed example files"
-    git add $root_dir/flutter_app/lib/templates/contentarea.dart
-    git commit -m "<hook> removed example files from release branch"
+    # ---------- Update version ----------
+    version=$(echo $current_branch | sed "s/release\///g")
+    find $root_dir/flutter_app/lib/ -type f -exec sed -i -E "s/^\/\/\s*(#|)\s*@version\s*[1234567890\.\+]+$/\/\/ # @version $version/g" {} \;
+    # TODO: Do in:
+    #       pubspec.yaml
+    #       setupscript.iss
+    #       info.dart (In hash file template)
+    # TODO: Create commit
+else
+    echo "Nothing to be done for branch '$current_branch'"
 fi
 
 echo "--- POST CHECKOUT END ---"

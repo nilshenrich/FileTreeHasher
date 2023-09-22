@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Don't use this hook
-echo "Dont' use post-merge"
-exit 0
-
 # Get the current branch name
 branch_name=$(git branch | grep "*" | sed "s/\* //")
 
@@ -14,13 +10,7 @@ echo "----- POST MERGE -----"
 
 if [[ $branch_name == develop ]]
 then
-    echo "Restore example files to app"
-    sed -i 's/_loadedTrees = \[\];/_loadedTrees = [_exampleFileTree];/' $root_dir/flutter_app/lib/templates/contentarea.dart
-    sed -i 's/_loadedFiles = \[\];/_loadedFiles = [_exampleFile];/' $root_dir/flutter_app/lib/templates/contentarea.dart
-
-    echo "Commit restored example files"
-    git add $root_dir/flutter_app/lib/templates/contentarea.dart
-    git commit -m "<hook> restored example files"
+    # ---------- Nothing to be done ----------
 fi
 
 echo "--- POST MERGE END ---"
