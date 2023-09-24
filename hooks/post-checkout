@@ -23,11 +23,11 @@ then
     # ---------- Update version ----------
     version=$(echo $current_branch | sed "s/release\///g")
     find $root_dir/flutter_app/lib/ -type f -exec sed -i -E "s/^\/\/\s*(#|)\s*@version\s*[1234567890\.\+]+$/\/\/ # @version $version/g" {} \;
-    # TODO: Do in:
-    #       pubspec.yaml
-    #       setupscript.iss
-    #       info.dart (In hash file template)
-    # TODO: Create commit
+    sed -i -E "s/^version:\s*[1234567890\.\+]+$/version: $version/g" $root_dir/flutter_app/pubspec.yaml
+    sed -i -E "s/^#define\s+MyAppVersion\s*\"[1234567890\.\+]+\"/#define MyAppVersion \"$version\"/g" $root_dir/flutter_app/install/windows/setupscript.iss
+    sed -i -E "s/^Version:\s*[1234567890\.\+]+/Version: $version/g" $root_dir/flutter_app/lib/definies/info.dart
+    git add $root_dir/flutter_app
+    git commit -m "<hook> Update to version $version"
 else
     echo "Nothing to be done for branch '$current_branch'"
 fi
