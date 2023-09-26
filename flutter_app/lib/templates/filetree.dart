@@ -2,7 +2,7 @@
 // # @file filetree.dart
 // # @author Nils Henrich
 // # @brief Templates for loaded file, file tree and corresponding hashing and comparison funcionality
-// # @version 1.0.0+4
+// # @version 1.0.1
 // # @date 2023-03-30
 // #
 // # @copyright Copyright (c) 2023
@@ -299,16 +299,19 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       // throw FileSystemException("File ${widget.filepath} does not exist");
       setState(() {
         _hashGen = "<Can't find file in file system>";
+        _genProgress = 0;
+        _comparisonResult = E_HashComparisonResult.none;
       });
       return;
     }
 
     // -------------------- Generate hash --------------------
 
-    // Reset old hash
+    // Reset old hash and comparison
     setState(() {
       _genProgress = 0;
       _hashGen = "";
+      _comparisonResult = E_HashComparisonResult.none;
     });
 
     // File size and processed size for progress calculation

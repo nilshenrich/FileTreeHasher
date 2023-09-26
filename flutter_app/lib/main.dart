@@ -2,7 +2,7 @@
 // # @file main.dart
 // # @author Nils Henrich
 // # @brief App entry point
-// # @version 1.0.0+4
+// # @version 1.0.1
 // # @date 2023-03-19
 // #
 // # @copyright Copyright (c) 2023
@@ -25,6 +25,7 @@ class FileTreeHasher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      restorationScopeId: 'app',
       title: 'File Tree Hasher',
       home: ControlHeader(),
     );

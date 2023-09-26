@@ -1,6 +1,6 @@
 {
-    "name": "file_tree_hasher",
-    "short_name": "file_tree_hasher",
+    "name": "File Tree Hasher",
+    "short_name": "File Tree Hasher",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
