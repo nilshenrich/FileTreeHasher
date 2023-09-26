@@ -2,7 +2,7 @@
 // # @file general.dart
 // # @author Nils Henrich
 // # @brief Collection of general functions and algorithms
-// # @version 1.0.1+1
+// # @version 1.0.1+2
 // # @date 2023-04-22
 // #
 // # @copyright Copyright (c) 2023
