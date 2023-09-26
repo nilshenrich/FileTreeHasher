@@ -146,6 +146,13 @@ jobs:
       - name: Install zipping tool
         uses: montudor/action-zip@v1
 
+      # BUG: MacOS empty app
+      - name: MacOS empty fake app
+        run: |
+          mkdir FileTreeHasher-macos-x64
+          echo "App not built" > FileTreeHasher-macos-x64/noapp
+        working-directory: ../bundles
+
       - name: Zip all artifacts
         run: |
           zip -qq -r FileTreeHasher-linux-x64.zip FileTreeHasher-linux-x64/*
