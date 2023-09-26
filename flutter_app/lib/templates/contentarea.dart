@@ -103,9 +103,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      const ContentDivider_folders(),
+      ContentDivider_folders(visible: _loadedTrees.isNotEmpty),
       Column(children: _loadedTrees),
-      const ContentDivider_files(),
+      ContentDivider_files(visible: _loadedFiles.isNotEmpty),
       Row(children: [Flexible(child: Column(children: _loadedFiles)), const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)])
     ]);
   }
