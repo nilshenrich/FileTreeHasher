@@ -191,7 +191,24 @@ class T_BodyContent_state extends State<T_BodyContent> {
     for (T_FileTreeView view in _loadedTrees) {
       dialogRows.add(T_StorageChooserRow(title: view.title, fileTreeView: view));
     }
-    dialogRows.add(T_StorageChooserRow(title: HashfileSingletext));
+    if (_loadedFiles.isNotEmpty) {
+      dialogRows.add(T_StorageChooserRow(title: HashfileSingletext));
+    }
+    if (dialogRows.isEmpty) {
+      showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(title: const Text("Nothing to be saved"), actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("OK"))
+            ]);
+          });
+      return;
+    }
 
     // Add exit buttons at the end
     dialogRows.add(Row(children: [
