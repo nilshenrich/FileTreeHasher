@@ -2,7 +2,7 @@
 // # @file datatypes.dart
 // # @author Nils Henrich
 // # @brief Definition of useful datatypes usable in entire project
-// # @version 1.0.1+1
+// # @version 1.0.1+2
 // # @date 2023-05-15
 // #
 // # @copyright Copyright (c) 2023
