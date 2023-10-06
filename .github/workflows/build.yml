@@ -110,11 +110,16 @@ jobs:
           flutter config --enable-macos-desktop
           flutter build macos --release
 
+      - name: Move application into parent folder
+        run: |
+          mkdir file_tree_hasher
+          mv flutter_app/build/macos/Build/Products/Release/File\ Tree\ Hasher.app file_tree_hasher/
+
       - name: Pack bundle to artifact
         uses: actions/upload-artifact@v3
         with:
           name: FileTreeHasher-macos-x64
-          path: flutter_app/build/macos/Build/Products/Release/File\ Tree\ Hasher.app/
+          path: file_tree_hasher/
           if-no-files-found: error
 
   # Update page and deploy builds
