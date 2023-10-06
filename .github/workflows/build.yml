@@ -114,8 +114,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: FileTreeHasher-macos-x64
-          path: flutter_app/build/macos/Build/Products/Release/file_tree_hasher.app/
-          if-no-files-found: warn # BUG: Build failed
+          path: flutter_app/build/macos/Build/Products/Release/
+          if-no-files-found: error
 
   # Update page and deploy builds
   website:
@@ -144,13 +144,6 @@ jobs:
 
       - name: Install zipping tool
         uses: montudor/action-zip@v1
-
-      # BUG: MacOS empty app
-      - name: MacOS empty fake app
-        run: |
-          mkdir FileTreeHasher-macos-x64
-          echo "App not built" > FileTreeHasher-macos-x64/noapp
-        working-directory: ../bundles
 
       - name: Zip all artifacts
         run: |
