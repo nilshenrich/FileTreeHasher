@@ -1,5 +1,5 @@
 name: file_tree_hasher
-description: A new Flutter project.
+description: Hash generation and comparison tool
 publish_to: "none"
 version: 1.0.1+4
 
