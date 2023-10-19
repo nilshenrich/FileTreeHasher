@@ -364,9 +364,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
       if (item is File) {
         // Add file element to list
         T_FileView file = T_FileView(path: item.path, name: GetFileName(item.path));
-        setState(() {
-          itemsList.add(file);
-        });
+        itemsList.add(file);
       }
     }
   }
