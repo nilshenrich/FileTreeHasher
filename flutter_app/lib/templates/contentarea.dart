@@ -339,7 +339,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
     setState(() {
       _loadedTrees.add(newTree);
     });
-    _loadFolder(Directory(path), newTree.items);
+    // _loadFolder(Directory(path), newTree.items);
+    _loadedTrees.add(T_FileTreeView(items: [], title: "!! This should not appear !!"));
   }
 
   // ##################################################
@@ -352,7 +353,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
     // Loop over all files and subdirectories
     for (FileSystemEntity item in items) {
-      sleep(Duration(milliseconds: 500));
+      // sleep(Duration(milliseconds: 500));
       // For subfolders
       // if (item is Directory) {
       //   // Load all sub items of this subfolder and add to list
