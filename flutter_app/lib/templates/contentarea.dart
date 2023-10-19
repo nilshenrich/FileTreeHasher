@@ -118,6 +118,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // -------------------- Select folder from system --------------------
     // TODO: Multiple folders could be selected (Button description to be adapted). Think that is not possible for folders
     String? filetreePath = await FilePicker.platform.getDirectoryPath(initialDirectory: GetHomeDir().path);
+    filetreePath = "/home/nils/Dokumente/testfiles"; // DEV: Use predefined path for debugging
     if (filetreePath == null) {
       return;
     }
