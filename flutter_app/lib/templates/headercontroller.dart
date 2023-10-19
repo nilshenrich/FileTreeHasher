@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 // ##################################################
 // # TEMPLATE
 // # Control section in header bar
-// # This section is made of an overall heading and some items aranged horizontally
+// # This section is made of an overall heading and some items arranged horizontally
 // ##################################################
 class T_HeaderControlSection extends StatelessWidget {
   final String headingText;
