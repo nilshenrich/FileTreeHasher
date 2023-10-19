@@ -335,9 +335,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @param: path
   // ##################################################
   void _showNewFolder(String path) {
+    T_FileTreeView newTree = T_FileTreeView(items: [], title: path);
     setState(() {
-      _loadedTrees.add(T_FileTreeView(items: _loadFolder(Directory(path)), title: path));
+      _loadedTrees.add(newTree);
     });
+    _loadFolder(Directory(path), newTree.items);
   }
 
   // ##################################################
@@ -345,27 +347,28 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @param: rootFolder
   // @return list of items
   // ##################################################
-  List<T_FileTreeItem> _loadFolder(Directory rootFolder) {
-    List<T_FileTreeItem> itemsList = [];
+  void _loadFolder(Directory rootFolder, List<T_FileTreeItem> itemsList) {
     List<FileSystemEntity> items = rootFolder.listSync();
 
     // Loop over all files and subdirectories
     for (FileSystemEntity item in items) {
+      sleep(Duration(milliseconds: 500));
       // For subfolders
-      if (item is Directory) {
-        // Load all sub items of this subfolder and add to list
-        T_FolderView subfolder = T_FolderView(path: item.path, name: GetFileName(item.path), subitems: _loadFolder(item));
-        itemsList.add(subfolder);
-      }
+      // if (item is Directory) {
+      //   // Load all sub items of this subfolder and add to list
+      //   T_FolderView subfolder = T_FolderView(path: item.path, name: GetFileName(item.path), subitems: _loadFolder(item));
+      //   itemsList.add(subfolder);
+      // }
 
       // For files
-      else if (item is File) {
+      if (item is File) {
         // Add file element to list
         T_FileView file = T_FileView(path: item.path, name: GetFileName(item.path));
-        itemsList.add(file);
+        setState(() {
+          itemsList.add(file);
+        });
       }
     }
-    return itemsList;
   }
 
   // ##################################################
