@@ -98,14 +98,10 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @brief: Let user select a folder to show file tree of.
   //         The new tree view is added to the view under new expandable
   // ##################################################
-  void selectNewFolder() async {
+  void selectNewFolder() {
     // -------------------- Select folder from system --------------------
     // TODO: Multiple folders could be selected (Button description to be adapted). Think that is not possible for folders
-    String? filetreePath = await FilePicker.platform.getDirectoryPath(initialDirectory: GetHomeDir().path);
-    filetreePath = "/home/nils/Dokumente/testfiles"; // DEV: Use predefined path for debugging
-    if (filetreePath == null) {
-      return;
-    }
+    String filetreePath = "/home/nils/Dokumente/testfiles"; // DEV: Use predefined path for debugging
 
     // -------------------- Show selected folder as tree view --------------------
     _showNewFolder(filetreePath);
@@ -130,6 +126,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     setState(() {
       _loadedTrees.add(newTree);
     });
+    sleep(Duration(seconds: 1));
     // _loadFolder(Directory(path), newTree.items);
     _loadedTrees.add(Text("!! This should not appear !!"));
   }
