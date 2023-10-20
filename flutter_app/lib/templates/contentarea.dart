@@ -98,13 +98,20 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @brief: Let user select a folder to show file tree of.
   //         The new tree view is added to the view under new expandable
   // ##################################################
-  void selectNewFolder() {
+  void selectNewFolder() async {
     // -------------------- Select folder from system --------------------
     // TODO: Multiple folders could be selected (Button description to be adapted). Think that is not possible for folders
     String filetreePath = "/home/nils/Dokumente/testfiles"; // DEV: Use predefined path for debugging
 
     // -------------------- Show selected folder as tree view --------------------
-    _showNewFolder(filetreePath);
+    // _showNewFolder(filetreePath);
+    Text newTree = Text("This should be added");
+    setState(() {
+      _loadedTrees.add(newTree);
+    });
+    sleep(Duration(seconds: 4));
+    // _loadFolder(Directory(path), newTree.items);
+    _loadedTrees.add(Text("!! This should not appear !!"));
   }
 
   // ##################################################
@@ -126,7 +133,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     setState(() {
       _loadedTrees.add(newTree);
     });
-    sleep(Duration(seconds: 1));
+    sleep(Duration(seconds: 4));
     // _loadFolder(Directory(path), newTree.items);
     _loadedTrees.add(Text("!! This should not appear !!"));
   }
