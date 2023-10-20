@@ -109,7 +109,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
     setState(() {
       _loadedTrees.add(newTree);
     });
-    sleep(Duration(seconds: 4));
+    // sleep(Duration(seconds: 4));
+    await Future.delayed(Duration(seconds: 4));
     // _loadFolder(Directory(path), newTree.items);
     _loadedTrees.add(Text("!! This should not appear !!"));
   }
