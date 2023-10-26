@@ -126,9 +126,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // -------------------- Show selected folder as tree view --------------------
     T_FileTreeView newTree = T_FileTreeView(items: [], title: filetreePath);
     _loadedTrees.add(newTree);
-    setState(() {
-      _loadFolder(Directory(filetreePath!), newTree.items);
-    });
+    _loadFolder(Directory(filetreePath), newTree.items);
   }
 
   // ##################################################
@@ -339,13 +337,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @param: rootFolder
   // @return list of items
   // ##################################################
-  void _loadFolder(Directory rootFolder, List<T_FileTreeItem> itemsList) {
+  void _loadFolder(Directory rootFolder, List<T_FileTreeItem> itemsList) async {
     List<FileSystemEntity> items = rootFolder.listSync();
 
     // Loop over all files and subdirectories
     for (FileSystemEntity item in items) {
-      sleep(Duration(seconds: 2)); // DEV: To see updating on GUI step by step
-
       // For subfolders
       if (item is Directory) {
         // Load all sub items of this subfolder and add to list
@@ -357,7 +353,12 @@ class T_BodyContent_state extends State<T_BodyContent> {
       else if (item is File) {
         // Add file element to list
         T_FileView file = T_FileView(path: item.path, name: GetFileName(item.path));
-        itemsList.add(file);
+        setState(() {
+          itemsList.add(file);
+        });
+
+        // sleep(Duration(seconds: 2)); // DEV: To see updating on GUI step by step
+        await Future.delayed(Duration(seconds: 2));
       }
     }
     return;
