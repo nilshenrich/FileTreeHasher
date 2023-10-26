@@ -124,7 +124,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
-    _showNewFolder(filetreePath);
+    setState(() {
+      _loadedTrees.add(T_FileTreeView(items: _loadFolder(Directory(filetreePath!)), title: filetreePath));
+    });
   }
 
   // ##################################################
@@ -328,16 +330,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
     for (T_FileView item in _loadedFiles) {
       item.globKey_HashComparisonView.currentState!.set("");
     }
-  }
-
-  // ##################################################
-  // @brief: Show file tree from a given path
-  // @param: path
-  // ##################################################
-  void _showNewFolder(String path) {
-    setState(() {
-      _loadedTrees.add(T_FileTreeView(items: _loadFolder(Directory(path)), title: path));
-    });
   }
 
   // ##################################################
