@@ -343,11 +343,13 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
     // Loop over all files and subdirectories
     for (FileSystemEntity item in items) {
+      sleep(Duration(seconds: 2)); // DEV: To see updating on GUI step by step
+
       // For subfolders
       if (item is Directory) {
         // Load all sub items of this subfolder and add to list
-        T_FolderView subfolder = T_FolderView(path: item.path, name: GetFileName(item.path), subitems: _loadFolder(item));
-        itemsList.add(subfolder);
+        // T_FolderView subfolder = T_FolderView(path: item.path, name: GetFileName(item.path), subitems: _loadFolder(item));
+        // itemsList.add(subfolder);
       }
 
       // For files
