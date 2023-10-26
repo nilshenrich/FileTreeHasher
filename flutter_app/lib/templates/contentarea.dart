@@ -124,8 +124,10 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
+    T_FileTreeView newTree = T_FileTreeView(items: [], title: filetreePath);
+    _loadedTrees.add(newTree);
     setState(() {
-      _loadedTrees.add(T_FileTreeView(items: _loadFolder(Directory(filetreePath!)), title: filetreePath));
+      _loadFolder(Directory(filetreePath!), newTree.items);
     });
   }
 
@@ -337,8 +339,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @param: rootFolder
   // @return list of items
   // ##################################################
-  List<T_FileTreeItem> _loadFolder(Directory rootFolder) {
-    List<T_FileTreeItem> itemsList = [];
+  void _loadFolder(Directory rootFolder, List<T_FileTreeItem> itemsList) {
     List<FileSystemEntity> items = rootFolder.listSync();
 
     // Loop over all files and subdirectories
@@ -359,7 +360,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
         itemsList.add(file);
       }
     }
-    return itemsList;
+    return;
   }
 
   // ##################################################
