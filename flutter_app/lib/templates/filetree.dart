@@ -96,6 +96,7 @@ class _T_FolderView_state extends State<T_FolderView> {
   }
 
   // Sub-items
+  // TODO: Can be implemented directly without function
   Offstage buildSubitems() {
     return Offstage(
         offstage: !expanded,
@@ -184,13 +185,18 @@ class _T_FileView_state extends State<T_FileView> {
 // # TEMPLATE
 // # File tree view area
 // ##################################################
-class T_FileTreeView extends StatelessWidget {
+class T_FileTreeView extends StatefulWidget {
   final String title;
   final List<T_FileTreeItem> items;
 
   // Constructor
   const T_FileTreeView({super.key, required this.items, required this.title});
 
+  @override
+  State<T_FileTreeView> createState() => T_FileTreeView_state();
+}
+
+class T_FileTreeView_state extends State<T_FileTreeView> {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -199,10 +205,20 @@ class T_FileTreeView extends StatelessWidget {
           maintainState: true,
           initiallyExpanded: true,
           leading: const Icon(Icons.folder),
-          title: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          title: Text(widget.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           childrenPadding: const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px),
-          children: [const SizedBox(height: 10), Column(children: items), const SizedBox(height: 10)])
+          children: [const SizedBox(height: 10), Column(children: widget.items), const SizedBox(height: 10)])
     ]);
+  }
+
+  // ##################################################
+  // @brief: Add an item
+  // @param: item
+  // ##################################################
+  void add(T_FileTreeItem item) {
+    setState(() {
+      widget.items.add(item);
+    });
   }
 }
 

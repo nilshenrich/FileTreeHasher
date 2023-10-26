@@ -333,11 +333,27 @@ class T_BodyContent_state extends State<T_BodyContent> {
   }
 
   // ##################################################
+  // @brief: Load top level folders and files into the file tree view
+  // @param: rootFolder
+  // @param: treeview
+  // ##################################################
+  void _loadTreeTop(Directory rootFolder, GlobalKey<T_FileTreeView_state> treeview) async {
+    await for (FileSystemEntity item in rootFolder.list()) {
+      if (item is File) {
+        T_FileView file = T_FileView(path: item.path, name: GetFileName(item.path));
+        setState(() {
+          treeview.currentState!.add(file);
+        });
+      }
+    }
+  }
+
+  // ##################################################
   // @brief: Load folders and files and add to given list
   // @param: rootFolder
   // @return list of items
   // ##################################################
-  void _loadFolder(Directory rootFolder, List<T_FileTreeItem> itemsList) async {
+  void _loadFolder(Directory rootFolder, List<T_FileTreeItem> itemsList) {
     List<FileSystemEntity> items = rootFolder.listSync();
 
     // Loop over all files and subdirectories
@@ -358,7 +374,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
         });
 
         // sleep(Duration(seconds: 2)); // DEV: To see updating on GUI step by step
-        await Future.delayed(Duration(seconds: 2));
+        // await Future.delayed(Duration(seconds: 2));
       }
     }
     return;
