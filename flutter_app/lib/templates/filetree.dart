@@ -189,10 +189,14 @@ class T_FileTreeView extends T_FolderView {
   T_FileTreeView({super.key, required super.path, super.subitems = const []}) : super(name: path);
 
   @override
-  State<T_FileTreeView> createState() => _T_FileTreeViewState();
+  State<T_FileTreeView> createState() => _T_FileTreeView_state();
 }
 
-class _T_FileTreeViewState extends State<T_FileTreeView> {
+// ##################################################
+// # STATE
+// # File tree view area
+// ##################################################
+class _T_FileTreeView_state extends State<T_FileTreeView> {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
