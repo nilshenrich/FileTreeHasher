@@ -124,9 +124,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
-    T_FileTreeView newTree = T_FileTreeView(items: [], title: filetreePath);
+    T_FileTreeView newTree = T_FileTreeView(subitems: [], path: filetreePath);
     _loadedTrees.add(newTree);
-    _loadFolder(Directory(filetreePath), newTree.items);
+    _loadFolder(Directory(filetreePath), newTree.subitems);
   }
 
   // ##################################################
@@ -166,7 +166,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void updateHashAlg(String? selected) {
     for (T_FileTreeView view in _loadedTrees) {
-      for (T_FileTreeItem item in view.items) {
+      for (T_FileTreeItem item in view.subitems) {
         item.globKey_HashAlgorithm.currentState!.set(selected);
       }
     }
@@ -192,7 +192,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
     for (T_FileTreeView view in _loadedTrees) {
-      dialogRows.add(T_StorageChooserRow(title: view.title, fileTreeView: view));
+      dialogRows.add(T_StorageChooserRow(title: view.path, fileTreeView: view));
     }
     if (_loadedFiles.isNotEmpty) {
       dialogRows.add(T_StorageChooserRow(title: HashfileSingletext));
@@ -225,7 +225,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
                 GenerateHashfile(SingleFiles_to_FileViewHashes(_loadedFiles, HashfileSingletext), storagepath);
               } else {
                 T_FileTreeView view = row.fileTreeView!;
-                GenerateHashfile(FileTreeItems_to_FileViewHashes(view.items, view.title, view.title), storagepath);
+                GenerateHashfile(FileTreeItems_to_FileViewHashes(view.subitems, view.path, view.path), storagepath);
               }
             }
             Navigator.pop(context);
@@ -291,7 +291,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
         // Find matching file tree view
         T_FileTreeView? matchingview;
         for (T_FileTreeView view in _loadedTrees) {
-          if (view.title == viewpath) matchingview = view;
+          if (view.path == viewpath) matchingview = view;
         }
         if (matchingview == null) {
           continue;
@@ -303,7 +303,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
           List<String> pathparts = libpath.split(hashpair.file);
           List<String> folders = pathparts.sublist(0, pathparts.length - 1);
           String file = pathparts.last;
-          T_FileView? matchingFileview = _getMatchingFileview(matchingview.items, folders, file);
+          T_FileView? matchingFileview = _getMatchingFileview(matchingview.subitems, folders, file);
           if (matchingFileview == null) {
             continue;
           }
@@ -319,7 +319,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void clearComparisonInputs() {
     for (T_FileTreeView view in _loadedTrees) {
-      for (T_FileTreeItem item in view.items) {
+      for (T_FileTreeItem item in view.subitems) {
         if (item is T_FileView) {
           item.globKey_HashComparisonView.currentState!.set("");
         } else if (item is T_FolderView) {

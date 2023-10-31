@@ -185,12 +185,9 @@ class _T_FileView_state extends State<T_FileView> {
 // # TEMPLATE
 // # File tree view area
 // ##################################################
-class T_FileTreeView extends StatefulWidget {
-  final String title;
-  final List<T_FileTreeItem> items;
-
+class T_FileTreeView extends T_FolderView {
   // Constructor
-  const T_FileTreeView({super.key, required this.items, required this.title});
+  T_FileTreeView({super.key, required super.path, super.subitems = const []}) : super(name: path);
 
   @override
   State<T_FileTreeView> createState() => T_FileTreeView_state();
@@ -205,9 +202,9 @@ class T_FileTreeView_state extends State<T_FileTreeView> {
           maintainState: true,
           initiallyExpanded: true,
           leading: const Icon(Icons.folder),
-          title: Text(widget.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          title: Text(widget.path, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           childrenPadding: const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px),
-          children: [const SizedBox(height: 10), Column(children: widget.items), const SizedBox(height: 10)])
+          children: [const SizedBox(height: 10), Column(children: widget.subitems), const SizedBox(height: 10)])
     ]);
   }
 
@@ -217,7 +214,7 @@ class T_FileTreeView_state extends State<T_FileTreeView> {
   // ##################################################
   void add(T_FileTreeItem item) {
     setState(() {
-      widget.items.add(item);
+      widget.subitems.add(item);
     });
   }
 }
