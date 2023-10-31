@@ -184,13 +184,15 @@ class _T_FileView_state extends State<T_FileView> {
 // # TEMPLATE
 // # File tree view area
 // ##################################################
-class T_FileTreeView extends StatelessWidget {
-  final String title;
-  final List<T_FileTreeItem> items;
-
+class T_FileTreeView extends T_FolderView {
   // Constructor
-  const T_FileTreeView({super.key, required this.items, required this.title});
+  T_FileTreeView({super.key, required super.path, super.subitems = const []}) : super(name: path);
 
+  @override
+  State<T_FileTreeView> createState() => _T_FileTreeViewState();
+}
+
+class _T_FileTreeViewState extends State<T_FileTreeView> {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -199,9 +201,9 @@ class T_FileTreeView extends StatelessWidget {
           maintainState: true,
           initiallyExpanded: true,
           leading: const Icon(Icons.folder),
-          title: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          title: Text(widget.path, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           childrenPadding: const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px),
-          children: [const SizedBox(height: 10), Column(children: items), const SizedBox(height: 10)])
+          children: [const SizedBox(height: 10), Column(children: widget.subitems), const SizedBox(height: 10)])
     ]);
   }
 }
