@@ -57,14 +57,14 @@ class T_FolderView extends T_FileTreeItem {
   T_FolderView({super.key, required super.path, required super.name, this.subitems = const []});
 
   @override
-  State<StatefulWidget> createState() => _T_FolderView_state();
+  State<StatefulWidget> createState() => T_FolderView_state();
 }
 
 // ##################################################
 // # STATE
 // # Single folder view state
 // ##################################################
-class _T_FolderView_state extends State<T_FolderView> {
+class T_FolderView_state extends State<T_FolderView> {
   // States
   bool expanded = true; // Is folder extended?
 
@@ -128,6 +128,12 @@ class _T_FolderView_state extends State<T_FolderView> {
       subitem.globKey_HashAlgorithm.currentState!.set(selected);
     }
   }
+
+  // ##################################################
+  // @brief: Load all subitems from file system and add to GUI
+  //         For subfolders start this process recursively
+  // ##################################################
+  void loadSubitems() {}
 }
 
 // ##################################################

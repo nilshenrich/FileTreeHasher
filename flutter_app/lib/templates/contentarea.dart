@@ -124,9 +124,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
-    T_FileTreeView newTree = T_FileTreeView(subitems: [], path: filetreePath);
-    _loadedTrees.add(newTree);
-    _loadFolder(Directory(filetreePath), newTree.subitems);
+    T_FileTreeView newTree = T_FileTreeView(path: filetreePath);
+    setState(() {
+      _loadedTrees.add(newTree);
+    });
+    // TODO: Call tree load here
   }
 
   // ##################################################
@@ -330,54 +332,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
     for (T_FileView item in _loadedFiles) {
       item.globKey_HashComparisonView.currentState!.set("");
     }
-  }
-
-  // ##################################################
-  // @brief: Load top level folders and files into the file tree view
-  // @param: rootFolder
-  // @param: treeview
-  // ##################################################
-  void _loadTreeTop(Directory rootFolder, GlobalKey<T_FileTreeView_state> treeview) async {
-    await for (FileSystemEntity item in rootFolder.list()) {
-      if (item is File) {
-        T_FileView file = T_FileView(path: item.path, name: GetFileName(item.path));
-        setState(() {
-          treeview.currentState!.add(file);
-        });
-      }
-    }
-  }
-
-  // ##################################################
-  // @brief: Load folders and files and add to given list
-  // @param: rootFolder
-  // @return list of items
-  // ##################################################
-  void _loadFolder(Directory rootFolder, List<T_FileTreeItem> itemsList) {
-    List<FileSystemEntity> items = rootFolder.listSync();
-
-    // Loop over all files and subdirectories
-    for (FileSystemEntity item in items) {
-      // For subfolders
-      if (item is Directory) {
-        // Load all sub items of this subfolder and add to list
-        // T_FolderView subfolder = T_FolderView(path: item.path, name: GetFileName(item.path), subitems: _loadFolder(item));
-        // itemsList.add(subfolder);
-      }
-
-      // For files
-      else if (item is File) {
-        // Add file element to list
-        T_FileView file = T_FileView(path: item.path, name: GetFileName(item.path));
-        setState(() {
-          itemsList.add(file);
-        });
-
-        // sleep(Duration(seconds: 2)); // DEV: To see updating on GUI step by step
-        // await Future.delayed(Duration(seconds: 2));
-      }
-    }
-    return;
   }
 
   // ##################################################
