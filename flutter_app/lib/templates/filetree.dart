@@ -27,6 +27,26 @@ import 'package:flutter/services.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 // ##################################################
+// # PROVIDER
+// # Provide loaded folder
+// # DEV: Just folder name
+// ##################################################
+class P_FileTree extends ChangeNotifier {
+  // Loaded folder path
+  String loadedFolder;
+
+  // Constructor
+  P_FileTree({this.loadedFolder = "<nothing loaded>"});
+
+  // Change folder path
+  // DEV: Just change name
+  void changeFolder(String path) async {
+    loadedFolder = path;
+    notifyListeners();
+  }
+}
+
+// ##################################################
 // # TEMPLATE
 // # Hash generation view
 // # This widget can be inserted into file view to show hash calculation progress or generated hash comparison

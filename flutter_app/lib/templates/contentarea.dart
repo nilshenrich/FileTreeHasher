@@ -25,6 +25,7 @@ import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
 import 'package:path/path.dart' as libpath;
+import 'package:provider/provider.dart';
 
 // ##################################################
 // # Body content
@@ -102,6 +103,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      // DEV: Show folder
+      Text(context.watch<P_FileTree>().loadedFolder)
+
       // TODO: Restore code
     ]);
   }
@@ -120,6 +124,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
+    // DEV: Set folder name
+    context.read<P_FileTree>().changeFolder(filetreePath);
+
     // TODO: Restore code
   }
 
