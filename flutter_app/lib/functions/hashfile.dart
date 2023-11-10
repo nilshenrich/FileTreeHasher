@@ -122,19 +122,7 @@ C_FileViewHashes? LoadHashfile(String storagepath) {
 // @param: name
 // @return: C_FileViewHashes
 // ##################################################
-C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTreeItem> items, String name, String rootpath) {
-  List<C_FileViewHashes> folders = [];
-  List<C_FileHashPair> files = [];
-  for (T_FileTreeItem item in items) {
-    String relpath = libpath.relative(item.path, from: rootpath);
-    if (item is T_FolderView) {
-      folders.add(FileTreeItems_to_FileViewHashes(item.subitems, item.path, rootpath));
-    } else if (item is T_FileView) {
-      files.add(C_FileHashPair(relpath, item.globKey_HashGenerationView.currentState!.HashGen, item.globKey_HashAlgorithm.currentState!.get()!));
-    }
-  }
-  return C_FileViewHashes(name, files, folders);
-}
+// TODO: Restore code
 
 // ##################################################
 // @brief: Transform a given list of single files into a C_FileViewHashes
@@ -142,10 +130,4 @@ C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTreeItem> items, Str
 // @param: name
 // @return: C_FileViewHashes
 // ##################################################
-C_FileViewHashes SingleFiles_to_FileViewHashes(List<T_FileView> fileViews, String name) {
-  List<C_FileHashPair> files = [];
-  for (T_FileView file in fileViews) {
-    files.add(C_FileHashPair(file.path, file.globKey_HashGenerationView.currentState!.HashGen, file.globKey_HashAlgorithm.currentState!.get()!));
-  }
-  return C_FileViewHashes(name, files, []);
-}
+// TODO: Restore code
