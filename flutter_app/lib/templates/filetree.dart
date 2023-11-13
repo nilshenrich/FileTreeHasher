@@ -32,17 +32,33 @@ import 'package:percent_indicator/percent_indicator.dart';
 // # DEV: Just folder name
 // ##################################################
 class P_FileTree extends ChangeNotifier {
-  // Loaded folder path
-  String loadedFolder;
+  // List of loaded file trees
+  List<T_FileTreeItem> loadedTrees = [];
 
   // Constructor
-  P_FileTree({this.loadedFolder = "<nothing loaded>"});
+  P_FileTree();
 
-  // Change folder path
-  // DEV: Just change name
-  void changeFolder(String path) async {
-    loadedFolder = path;
+  // Load file tree to GUI
+  void loadFileTree(String path) {
+    loadedTrees.add(T_FileTreeItem(name: path));
     notifyListeners();
+  }
+}
+
+// ##################################################
+// # TEMPLATE
+// # Single tree view item (header, folder or file)
+// ##################################################
+class T_FileTreeItem extends StatelessWidget {
+  // Parameter
+  final String name; // Elements name (to be shown in GUI)
+
+  // Constructor
+  const T_FileTreeItem({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text("My name is $name");
   }
 }
 

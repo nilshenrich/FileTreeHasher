@@ -102,12 +102,13 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      // DEV: Show folder
-      Text(context.watch<P_FileTree>().loadedFolder)
+    return Column(
+        children:
+            // DEV: Show folder
+            context.watch<P_FileTree>().loadedTrees
 
-      // TODO: Restore code
-    ]);
+        // TODO: Restore code
+        );
   }
 
   // ##################################################
@@ -125,7 +126,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
     // -------------------- Show selected folder as tree view --------------------
     // DEV: Set folder name
-    context.read<P_FileTree>().changeFolder(filetreePath);
+    context.read<P_FileTree>().loadFileTree(filetreePath);
 
     // TODO: Restore code
   }
