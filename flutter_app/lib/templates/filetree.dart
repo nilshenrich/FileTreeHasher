@@ -33,14 +33,15 @@ import 'package:percent_indicator/percent_indicator.dart';
 // ##################################################
 class P_FileTree extends ChangeNotifier {
   // List of loaded file trees
-  List<T_FileTreeItem> loadedTrees = [];
+  List<T_TreeItem> loadedTrees = [];
 
   // Constructor
   P_FileTree();
 
   // Load file tree to GUI
   void loadFileTree(String path) {
-    loadedTrees.add(T_FileTreeItem(name: path));
+    loadedTrees.add(T_TreeHeader(path: path));
+    loadedTrees.add(T_FolderItem(path: path)); // DEV: Just to have both underneath each other
     notifyListeners();
   }
 }
@@ -49,17 +50,64 @@ class P_FileTree extends ChangeNotifier {
 // # TEMPLATE
 // # Single tree view item (header, folder or file)
 // ##################################################
-class T_FileTreeItem extends StatelessWidget {
+abstract class T_TreeItem extends StatelessWidget {
   // Parameter
   final String name; // Elements name (to be shown in GUI)
+  final String path; // Elements absolute system path (used for hash generation and shown in tree header)
 
   // Constructor
-  const T_FileTreeItem({super.key, required this.name});
+  T_TreeItem({super.key, required this.path}) : name = GetFileName(path);
+}
+
+// ##################################################
+// # TEMPLATE
+// # Single folder
+// ##################################################
+class T_FolderItem extends T_TreeItem {
+  // Style parameters
+  Widget? get _style_leading => null;
+  bool get _style_pathAsName => false;
+  TextStyle get _style_textStyle => const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black);
+  EdgeInsetsGeometry get _style_childrenPadding => const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px);
+  double get _style_marginTop => 0;
+
+  // Constructor
+  T_FolderItem({super.key, required super.path});
 
   @override
   Widget build(BuildContext context) {
-    return Text("My name is $name");
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SizedBox(height: _style_marginTop),
+      ExpansionTile(
+          maintainState: true,
+          initiallyExpanded: true,
+          leading: _style_leading,
+          title: Text(_style_pathAsName ? path : name, style: _style_textStyle),
+          childrenPadding: _style_childrenPadding,
+          children: [])
+    ]);
   }
+}
+
+// ##################################################
+// # TEMPLATE
+// # File tree header
+// ##################################################
+class T_TreeHeader extends T_FolderItem {
+  // Override style parameters
+  @override
+  Widget? get _style_leading => const Icon((Icons.folder));
+  @override
+  bool get _style_pathAsName => true;
+  @override
+  TextStyle get _style_textStyle => const TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+  @override
+  EdgeInsetsGeometry get _style_childrenPadding => const EdgeInsets.symmetric(horizontal: 0);
+  @override
+  double get _style_marginTop => 10;
+
+  // Constructor
+  T_TreeHeader({required super.path});
 }
 
 // ##################################################
