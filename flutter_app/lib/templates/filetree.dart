@@ -13,6 +13,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
@@ -27,95 +28,144 @@ import 'package:flutter/services.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 // ##################################################
-// # TEMPLATE
-// # Single file tree element (folder or file)
+// # PROVIDER
+// # Provide loaded folders
 // ##################################################
-abstract class T_FileTreeItem extends StatefulWidget {
+class P_FileTrees extends ChangeNotifier {
+  // List of loaded file trees
+  List<T_FileTree> loadedTrees = [];
+
+  // Constructor
+  P_FileTrees();
+
+  // ##################################################
+  // @brief: Load a file tree from system to GUI
+  // @param: path
+  // ##################################################
+  void loadFileTree(String path) {
+    // -------------------- Add new tree header item --------------------
+    T_FileTree headerItem = T_FileTree(path: path, children: [], showFullPath: true);
+    loadedTrees.add(headerItem);
+    notifyListeners();
+    _loadSubitems(headerItem);
+  }
+
+  // ##################################################
+  // @brief: Remove all loaded file trees
+  // ##################################################
+  void clear() {
+    loadedTrees.clear();
+    notifyListeners();
+  }
+
+  // ##################################################
+  // @brief: Recursively load sub-items to an existing folder
+  // @param: parentFolder
+  // ##################################################
+  void _loadSubitems(T_FolderItem parentFolder) async {
+    // -------------------- Get all direct child items from system and add recursively --------------------
+    Directory rootDir = Directory(parentFolder.path);
+    List<FileSystemEntity> systemItems = rootDir.listSync();
+    for (FileSystemEntity item in systemItems) {
+      await Future.delayed(Duration.zero); // Needed to have items live updated
+      // await Future.delayed(Duration(seconds: 1)); // Needed to have items live updated
+
+      // ---------- Item is a file ----------
+      if (item is File) {
+        T_FileItem file = T_FileItem(path: item.path);
+        parentFolder.add(file);
+        notifyListeners();
+      }
+      // ---------- Item is directory ----------
+      else if (item is Directory) {
+        T_FolderItem folder = T_FolderItem(path: item.path, children: []);
+        parentFolder.add(folder);
+        notifyListeners();
+
+        // Recurse on sub-folder
+        _loadSubitems(folder);
+      }
+    }
+  }
+}
+
+// ##################################################
+// # PROVIDER
+// # Prover loaded single files
+// ##################################################
+class P_SingleFiles extends ChangeNotifier {
+  // List of loaded files
+  List<T_FileItem> loadedFiles = [];
+
+  // Constructor
+  P_SingleFiles();
+
+  // ##################################################
+  // @brief: Load files from system to GUI
+  // @param: paths
+  // ##################################################
+  void loadFiles(List<String?> paths) {
+    for (String? path in paths) {
+      if (path == null) continue;
+      loadedFiles.add(T_FileItem(path: path, showFullPath: true));
+      notifyListeners();
+    }
+  }
+
+  // ##################################################
+  // @brief: Remove all loaded files
+  // ##################################################
+  void clear() {
+    loadedFiles.clear();
+    notifyListeners();
+  }
+}
+
+// ##################################################
+// # TEMPLATE
+// # Single tree view item (header, folder or file)
+// ##################################################
+abstract class T_TreeItem extends StatelessWidget {
   // Parameter
-  final String name; // File name used for view
-  final String path; // Absolute file path used for loading file
-  final String namePathPart; // Path to parent folder if name is given as a path
+  final bool showFullPath;
+  final String name; // Elements name (to be shown in GUI)
+  final String path; // Elements absolute system path (used for hash generation and shown in tree header)
+  final String parent; // Elements parents absolute system path
 
   // Hash algorithm selector key
   final globKey_HashAlgorithm = GlobalKey<T_HashSelector_state>();
 
   // Constructor
-  T_FileTreeItem({super.key, required name, required this.path})
-      : name = GetFileName(name),
-        namePathPart = GetParentPath(name);
+  T_TreeItem({super.key, required this.path, required this.showFullPath})
+      : name = GetFileName(path),
+        parent = showFullPath ? GetParentPath(path) : "";
 }
 
 // ##################################################
 // # TEMPLATE
-// # Single folder view
+// # Single folder
 // ##################################################
-class T_FolderView extends T_FileTreeItem {
+class T_FolderItem extends T_TreeItem {
   // Parameter
-  final List<T_FileTreeItem> subitems;
+  final List<T_TreeItem> children;
 
   // Constructor
-  T_FolderView({super.key, required super.path, required super.name, this.subitems = const []});
-
-  @override
-  State<StatefulWidget> createState() => T_FolderView_state();
-}
-
-// ##################################################
-// # STATE
-// # Single folder view state
-// ##################################################
-class T_FolderView_state extends State<T_FolderView> {
-  // States
-  bool expanded = true; // Is folder extended?
+  T_FolderItem({super.key, required super.path, required this.children, super.showFullPath = false});
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Row(children: [
-        SizedBox(
-            width: Style_FileTree_Icon_Width_px,
-            height: Style_FileTree_Icon_Height_px,
-            child: IconButton(
-              icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              padding: EdgeInsets.zero,
-              onPressed: click_expander,
-            )),
-        const Icon(Icons.folder),
-        Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
-        Expanded(child: Text(widget.name)),
-        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-        T_FileHashSelector(key: widget.globKey_HashAlgorithm, onChanged: change_hashAlgorithm),
-        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-        const SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
-      ]),
-      buildSubitems()
-    ]);
+    return T_Expandable(headerRow: [
+      const Icon(Icons.folder),
+      Text(parent, style: Style_FileTree_Text_ParentPath),
+      Expanded(child: Text(name)),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      T_FileHashSelector(key: globKey_HashAlgorithm, onChanged: change_hashAlgorithm),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
+    ], children: children);
   }
 
-  // Sub-items
-  // TODO: Can be implemented directly without function
-  Offstage buildSubitems() {
-    return Offstage(
-        offstage: !expanded,
-        child: Row(children: [const SizedBox(width: Style_FileTree_SubItem_ShiftRight_px), Expanded(child: Column(children: widget.subitems))]));
-  }
-
-  // ##################################################
-  // # Event handlers
-  // ##################################################
-
-  // ##################################################
-  // @brief: Click handler: Expander button
-  //         Expand or collapse this folder and rotate expasion icon respectively
-  // ##################################################
-  void click_expander() {
-    setState(() {
-      expanded = !expanded;
-    });
-  }
+  void add(T_TreeItem item) => children.add(item);
 
   // ##################################################
   // @brief: Change handler: Selected hash algorithm has changed
@@ -124,104 +174,57 @@ class T_FolderView_state extends State<T_FolderView> {
   // ##################################################
   void change_hashAlgorithm(String? selected) {
     // For all sub-elements change hash algorithm to same vale (Sub-folders will automatically do for their sub-elements)
-    for (T_FileTreeItem subitem in widget.subitems) {
+    for (T_TreeItem subitem in children) {
       subitem.globKey_HashAlgorithm.currentState!.set(selected);
     }
   }
-
-  // ##################################################
-  // @brief: Load all subitems from file system and add to GUI
-  //         For subfolders start this process recursively
-  // ##################################################
-  void loadSubitems() {}
 }
 
 // ##################################################
 // # TEMPLATE
-// # Single file view
+// # File tree
 // ##################################################
-class T_FileView extends T_FileTreeItem {
+class T_FileTree extends T_FolderItem {
+  // Constructor
+  T_FileTree({super.key, required super.path, required super.children, super.showFullPath = false});
+}
+
+// ##################################################
+// # TEMPLATE
+// # Single file
+// ##################################################
+class T_FileItem extends T_TreeItem {
+  // Hash generation and comparison keys
   final globKey_HashGenerationView = GlobalKey<T_HashGenerationView_state>();
   final globKey_HashComparisonView = GlobalKey<T_HashComparisonView_state>();
 
   // Constructor
-  T_FileView({super.key, required super.path, required super.name});
-
-  @override
-  State<StatefulWidget> createState() => _T_FileView_state();
-}
-
-// ##################################################
-// # STATE
-// # Single file view state
-// ##################################################
-class _T_FileView_state extends State<T_FileView> {
-  // No state attributes
+  T_FileItem({super.key, required super.path, super.showFullPath = false});
 
   @override
   Widget build(BuildContext context) {
     return Row(children: [
       const SizedBox(width: Style_FileTree_Icon_Width_px),
       const Icon(Icons.description),
-      Text(widget.namePathPart, style: Style_FileTree_Text_ParentPath),
-      Text(widget.name),
+      Text(parent, style: Style_FileTree_Text_ParentPath),
+      Text(name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      Expanded(
-          child: T_HashGenerationView(
-              key: widget.globKey_HashGenerationView, filepath: widget.path, globKey_HashComparisonView: widget.globKey_HashComparisonView)),
+      Expanded(child: T_HashGenerationView(key: globKey_HashGenerationView, filepath: path, globKey_HashComparisonView: globKey_HashComparisonView)),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       T_FileHashSelector(
-          key: widget.globKey_HashAlgorithm,
+          key: globKey_HashAlgorithm,
           onChanged: (selected) {
-            T_HashGenerationView_state hashGen = widget.globKey_HashGenerationView.currentState!;
+            T_HashGenerationView_state hashGen = globKey_HashGenerationView.currentState!;
             hashGen.abortHashGeneration();
             hashGen.generateHash(selected);
           }),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       T_HashComparisonView(
-          key: widget.globKey_HashComparisonView,
+          key: globKey_HashComparisonView,
           onChanged: (value) {
-            widget.globKey_HashGenerationView.currentState!.compareHashes(value);
-          }),
+            globKey_HashGenerationView.currentState!.compareHashes(value);
+          })
     ]);
-  }
-}
-
-// ##################################################
-// # TEMPLATE
-// # File tree view area
-// ##################################################
-class T_FileTreeView extends T_FolderView {
-  // Constructor
-  T_FileTreeView({super.key, required super.path, super.subitems = const []}) : super(name: path);
-
-  @override
-  State<T_FileTreeView> createState() => T_FileTreeView_state();
-}
-
-class T_FileTreeView_state extends State<T_FileTreeView> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const SizedBox(height: 10),
-      ExpansionTile(
-          maintainState: true,
-          initiallyExpanded: true,
-          leading: const Icon(Icons.folder),
-          title: Text(widget.path, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          childrenPadding: const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px),
-          children: [const SizedBox(height: 10), Column(children: widget.subitems), const SizedBox(height: 10)])
-    ]);
-  }
-
-  // ##################################################
-  // @brief: Add an item
-  // @param: item
-  // ##################################################
-  void add(T_FileTreeItem item) {
-    setState(() {
-      widget.subitems.add(item);
-    });
   }
 }
 
@@ -482,5 +485,70 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
       _hashComp = val;
     });
     _onChange(val);
+  }
+}
+
+// ##################################################
+// # TEMPLATE
+// # Expandable area
+// ##################################################
+class T_Expandable extends StatefulWidget {
+  // Parameter
+  final List<Widget> headerRow;
+  final List<Widget> children;
+
+  // Constructor
+  const T_Expandable({super.key, required this.headerRow, required this.children});
+
+  @override
+  State<T_Expandable> createState() => _T_ExpandableState();
+}
+
+// ##################################################
+// # STATE
+// # Expandable area
+// ##################################################
+class _T_ExpandableState extends State<T_Expandable> {
+  // State parameter
+  bool expanded = true;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> widgetRow = [
+      SizedBox(
+          width: Style_FileTree_Icon_Width_px,
+          height: Style_FileTree_Icon_Height_px,
+          child: IconButton(
+            icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
+            hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            padding: EdgeInsets.zero,
+            onPressed: toggle,
+          )),
+    ];
+    widgetRow.addAll(widget.headerRow);
+    return Column(children: [
+      Row(children: widgetRow),
+      Offstage(
+          offstage: !expanded,
+          child: Row(children: [
+            SizedBox(width: Style_FileTree_SubItem_ShiftRight_px),
+            Expanded(
+              child: Column(
+                children: widget.children,
+              ),
+            )
+          ]))
+    ]);
+  }
+
+  // ##################################################
+  // @brief: Toggle content area
+  // ##################################################
+  void toggle() {
+    setState(() {
+      expanded = !expanded;
+    });
   }
 }
