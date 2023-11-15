@@ -34,7 +34,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 // ##################################################
 class P_FileTree extends ChangeNotifier {
   // List of loaded file trees
-  List<T_TreeItem> loadedTrees = [];
+  List<T_TreeHeader> loadedTrees = [];
 
   // Constructor
   P_FileTree();
