@@ -34,7 +34,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 // ##################################################
 class P_FileTree extends ChangeNotifier {
   // List of loaded file trees
-  List<T_TreeHeader> loadedTrees = [];
+  List<T_FileTree> loadedTrees = [];
 
   // Constructor
   P_FileTree();
@@ -45,7 +45,7 @@ class P_FileTree extends ChangeNotifier {
   // ##################################################
   void loadFileTree(String path) {
     // -------------------- Add new tree header item --------------------
-    T_TreeHeader headerItem = T_TreeHeader(path: path, children: [], showFullPath: true);
+    T_FileTree headerItem = T_FileTree(path: path, children: [], showFullPath: true);
     loadedTrees.add(headerItem);
     notifyListeners();
     _loadSubitems(headerItem);
@@ -127,11 +127,11 @@ class T_FolderItem extends T_TreeItem {
 
 // ##################################################
 // # TEMPLATE
-// # File tree header
+// # File tree
 // ##################################################
-class T_TreeHeader extends T_FolderItem {
+class T_FileTree extends T_FolderItem {
   // Constructor
-  T_TreeHeader({super.key, required super.path, required super.children, super.showFullPath = false});
+  T_FileTree({super.key, required super.path, required super.children, super.showFullPath = false});
 }
 
 // ##################################################
