@@ -41,16 +41,29 @@ class P_FileTree extends ChangeNotifier {
 
   // Load file tree to GUI
   void loadFileTree(String path) async {
-    loadedTrees.add(T_TreeHeader(path: path));
+    // -------------------- Add new tree header item --------------------
+    T_TreeHeader headerItem = T_TreeHeader(path: path, children: []);
+    loadedTrees.add(headerItem);
     notifyListeners();
 
-    // -------------------- Get all direct child items from system --------------------
+    // -------------------- Get all direct child items from system and add recursively --------------------
     Directory rootDir = Directory(path);
     List<FileSystemEntity> systemItems = rootDir.listSync();
     for (FileSystemEntity item in systemItems) {
       await Future.delayed(Duration.zero); // Needed to have items live updated
       String itemName = GetFileName(item.path);
-      loadedTrees.add(T_FolderItem(path: itemName));
+
+      // ---------- Item is a file ----------
+      if (item is File) {
+        T_FileItem file = T_FileItem(path: itemName);
+        headerItem.add(file);
+      }
+      // ---------- Item is directory ----------
+      else if (item is Directory) {
+        T_FolderItem folder = T_FolderItem(path: itemName, children: []);
+        headerItem.add(folder);
+      }
+
       notifyListeners();
     }
   }
@@ -77,16 +90,22 @@ abstract class T_TreeItem extends StatelessWidget {
 // # Single folder
 // ##################################################
 class T_FolderItem extends T_TreeItem {
+  // Parameter
+  final List<T_TreeItem> children;
+
   // Constructor
-  T_FolderItem({super.key, required super.path});
+  T_FolderItem({super.key, required super.path, required this.children});
 
   @override
   Widget build(BuildContext context) {
     return T_Expandable(
-      name: super.name,
-      children: [],
+      preName: parent,
+      name: name,
+      children: children,
     );
   }
+
+  void add(T_TreeItem item) => children.add(item);
 }
 
 // ##################################################
@@ -95,7 +114,7 @@ class T_FolderItem extends T_TreeItem {
 // ##################################################
 class T_TreeHeader extends T_FolderItem {
   // Constructor
-  T_TreeHeader({super.key, required super.path});
+  T_TreeHeader({super.key, required super.path, required super.children});
 }
 
 // ##################################################
@@ -111,8 +130,8 @@ class T_FileItem extends T_TreeItem {
     return Row(children: [
       const SizedBox(width: Style_FileTree_Icon_Width_px),
       const Icon(Icons.description),
-      Text(super.parent, style: Style_FileTree_Text_ParentPath),
-      Text(super.name),
+      Text(parent, style: Style_FileTree_Text_ParentPath),
+      Text(name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       // TODO: Insert T_HashGenerationView
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
@@ -389,16 +408,21 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
 // ##################################################
 class T_Expandable extends StatefulWidget {
   // Constants
+  final String preName;
   final String name;
   final List<Widget> children;
 
   // Constructor
-  const T_Expandable({super.key, required this.name, required this.children});
+  const T_Expandable({super.key, required this.preName, required this.name, required this.children});
 
   @override
   State<T_Expandable> createState() => _T_ExpandableState();
 }
 
+// ##################################################
+// # STATE
+// # Expandable area
+// ##################################################
 class _T_ExpandableState extends State<T_Expandable> {
   // State parameter
   bool expanded = true;
@@ -419,6 +443,7 @@ class _T_ExpandableState extends State<T_Expandable> {
               onPressed: toggle,
             )),
         const Icon(Icons.folder),
+        Text(widget.preName, style: Style_FileTree_Text_ParentPath),
         Expanded(child: Text(widget.name)),
         const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         const T_FileHashSelector(),
