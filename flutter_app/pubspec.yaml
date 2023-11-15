@@ -15,6 +15,7 @@ dependencies:
   convert: ^3.1.1
   file_picker: ^6.0.0
   csv: ^5.0.2
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:
