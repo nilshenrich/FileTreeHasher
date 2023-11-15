@@ -90,6 +90,38 @@ class P_FileTrees extends ChangeNotifier {
 }
 
 // ##################################################
+// # PROVIDER
+// # Prover loaded single files
+// ##################################################
+class P_SingleFiles extends ChangeNotifier {
+  // List of loaded files
+  List<T_FileItem> loadedFiles = [];
+
+  // Constructor
+  P_SingleFiles();
+
+  // ##################################################
+  // @brief: Load files from system to GUI
+  // @param: paths
+  // ##################################################
+  void loadFiles(List<String?> paths) {
+    for (String? path in paths) {
+      if (path == null) continue;
+      loadedFiles.add(T_FileItem(path: path, showFullPath: true));
+      notifyListeners();
+    }
+  }
+
+  // ##################################################
+  // @brief: Remove all loaded files
+  // ##################################################
+  void clear() {
+    loadedFiles.clear();
+    notifyListeners();
+  }
+}
+
+// ##################################################
 // # TEMPLATE
 // # Single tree view item (header, folder or file)
 // ##################################################

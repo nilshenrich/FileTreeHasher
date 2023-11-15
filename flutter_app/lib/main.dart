@@ -27,7 +27,10 @@ class FileTreeHasher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => P_FileTrees())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => P_FileTrees()),
+        ChangeNotifierProvider(create: (context) => P_SingleFiles()),
+      ],
       child: const MaterialApp(
         restorationScopeId: 'app',
         title: 'File Tree Hasher',

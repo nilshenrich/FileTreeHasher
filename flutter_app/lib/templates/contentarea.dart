@@ -99,11 +99,12 @@ class T_BodyContent extends StatefulWidget {
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
   List<T_FileTree> _loadedTrees = [];
-  final List<T_FileItem> _loadedFiles = [];
+  List<T_FileItem> _loadedFiles = [];
 
   @override
   Widget build(BuildContext context) {
     _loadedTrees = context.watch<P_FileTrees>().loadedTrees;
+    _loadedFiles = context.watch<P_SingleFiles>().loadedFiles;
     return Column(children: [
       ContentDivider_folders(visible: _loadedTrees.isNotEmpty),
       Column(children: _loadedTrees),
@@ -141,12 +142,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected files in body --------------------
-    List<String?> paths = filePaths.paths;
-    for (String? path in paths) {
-      setState(() {
-        _loadedFiles.add(T_FileItem(path: path!, showFullPath: true));
-      });
-    }
+    context.read<P_SingleFiles>().loadFiles(filePaths.paths);
   }
 
   // ##################################################
@@ -155,9 +151,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void clearContent() {
     // Remove all loaded trees and files
     context.read<P_FileTrees>().clear();
-    setState(() {
-      _loadedFiles.clear();
-    });
+    context.read<P_SingleFiles>().clear();
   }
 
   // ##################################################
