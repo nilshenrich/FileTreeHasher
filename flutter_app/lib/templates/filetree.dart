@@ -93,6 +93,9 @@ abstract class T_TreeItem extends StatelessWidget {
   final String path; // Elements absolute system path (used for hash generation and shown in tree header)
   final String parent; // Elements parents absolute system path
 
+  // Hash algorithm selector key
+  final globKey_HashAlgorithm = GlobalKey<T_HashSelector_state>();
+
   // Constructor
   T_TreeItem({super.key, required this.path, required this.showFullPath})
       : name = GetFileName(path),
@@ -136,6 +139,10 @@ class T_TreeHeader extends T_FolderItem {
 // # Single file
 // ##################################################
 class T_FileItem extends T_TreeItem {
+  // Hash generation and comparison keys
+  final globKey_HashGenerationView = GlobalKey<T_HashGenerationView_state>();
+  final globKey_HashComparisonView = GlobalKey<T_HashComparisonView_state>();
+
   // Constructor
   T_FileItem({super.key, required super.path, super.showFullPath = false});
 
@@ -147,11 +154,21 @@ class T_FileItem extends T_TreeItem {
       Text(parent, style: Style_FileTree_Text_ParentPath),
       Text(name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      // TODO: Insert T_HashGenerationView
+      Expanded(child: T_HashGenerationView(key: globKey_HashGenerationView, filepath: path, globKey_HashComparisonView: globKey_HashComparisonView)),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      // TODO: Insert T_FileHashSelector
+      T_FileHashSelector(
+          key: globKey_HashAlgorithm,
+          onChanged: (selected) {
+            T_HashGenerationView_state hashGen = globKey_HashGenerationView.currentState!;
+            hashGen.abortHashGeneration();
+            hashGen.generateHash(selected);
+          }),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      // TODO: Insert T_HashComparisonView
+      T_HashComparisonView(
+          key: globKey_HashComparisonView,
+          onChanged: (value) {
+            globKey_HashGenerationView.currentState!.compareHashes(value);
+          })
     ]);
   }
 }
