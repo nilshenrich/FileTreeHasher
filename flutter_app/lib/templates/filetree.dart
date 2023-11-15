@@ -40,9 +40,19 @@ class P_FileTree extends ChangeNotifier {
   P_FileTree();
 
   // Load file tree to GUI
-  void loadFileTree(String path) {
+  void loadFileTree(String path) async {
     loadedTrees.add(T_TreeHeader(path: path));
     notifyListeners();
+
+    // -------------------- Get all direct child items from system --------------------
+    Directory rootDir = Directory(path);
+    List<FileSystemEntity> systemItems = rootDir.listSync();
+    for (FileSystemEntity item in systemItems) {
+      await Future.delayed(Duration.zero); // Needed to have items live updated
+      String itemName = GetFileName(item.path);
+      loadedTrees.add(T_FolderItem(path: itemName));
+      notifyListeners();
+    }
   }
 }
 
