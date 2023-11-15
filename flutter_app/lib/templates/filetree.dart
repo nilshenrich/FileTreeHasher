@@ -52,6 +52,14 @@ class P_FileTree extends ChangeNotifier {
   }
 
   // ##################################################
+  // @brief: Remove all loaded file trees
+  // ##################################################
+  void clear() {
+    loadedTrees.clear();
+    notifyListeners();
+  }
+
+  // ##################################################
   // @brief: Recursively load sub-items to an existing folder
   // @param: parentFolder
   // ##################################################
@@ -115,14 +123,30 @@ class T_FolderItem extends T_TreeItem {
 
   @override
   Widget build(BuildContext context) {
-    return T_Expandable(
-      preName: parent,
-      name: name,
-      children: children,
-    );
+    return T_Expandable(headerRow: [
+      const Icon(Icons.folder),
+      Text(parent, style: Style_FileTree_Text_ParentPath),
+      Expanded(child: Text(name)),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      T_FileHashSelector(key: globKey_HashAlgorithm, onChanged: change_hashAlgorithm),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
+    ], children: children);
   }
 
   void add(T_TreeItem item) => children.add(item);
+
+  // ##################################################
+  // @brief: Change handler: Selected hash algorithm has changed
+  //         Also change selected hash algorithm for all sub-items
+  // @param: selected
+  // ##################################################
+  void change_hashAlgorithm(String? selected) {
+    // For all sub-elements change hash algorithm to same vale (Sub-folders will automatically do for their sub-elements)
+    for (T_TreeItem subitem in children) {
+      subitem.globKey_HashAlgorithm.currentState!.set(selected);
+    }
+  }
 }
 
 // ##################################################
@@ -438,13 +462,12 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
 // # Expandable area
 // ##################################################
 class T_Expandable extends StatefulWidget {
-  // Constants
-  final String preName;
-  final String name;
+  // Parameter
+  final List<Widget> headerRow;
   final List<Widget> children;
 
   // Constructor
-  const T_Expandable({super.key, required this.preName, required this.name, required this.children});
+  const T_Expandable({super.key, required this.headerRow, required this.children});
 
   @override
   State<T_Expandable> createState() => _T_ExpandableState();
@@ -460,27 +483,22 @@ class _T_ExpandableState extends State<T_Expandable> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> widgetRow = [
+      SizedBox(
+          width: Style_FileTree_Icon_Width_px,
+          height: Style_FileTree_Icon_Height_px,
+          child: IconButton(
+            icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
+            hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            padding: EdgeInsets.zero,
+            onPressed: toggle,
+          )),
+    ];
+    widgetRow.addAll(widget.headerRow);
     return Column(children: [
-      Row(children: [
-        SizedBox(
-            width: Style_FileTree_Icon_Width_px,
-            height: Style_FileTree_Icon_Height_px,
-            child: IconButton(
-              icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              padding: EdgeInsets.zero,
-              onPressed: toggle,
-            )),
-        const Icon(Icons.folder),
-        Text(widget.preName, style: Style_FileTree_Text_ParentPath),
-        Expanded(child: Text(widget.name)),
-        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-        const T_FileHashSelector(),
-        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-        const SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
-      ]),
+      Row(children: widgetRow),
       Offstage(
           offstage: !expanded,
           child: Row(children: [

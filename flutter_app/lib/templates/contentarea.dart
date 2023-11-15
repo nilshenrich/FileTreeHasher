@@ -98,17 +98,18 @@ class T_BodyContent extends StatefulWidget {
 // ##################################################
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
-  // TODO: Restore code
+  List<T_FileTree> _loadedTrees = [];
+  final List<T_FileItem> _loadedFiles = [];
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        children:
-            // DEV: Show folder
-            context.watch<P_FileTree>().loadedTrees
-
-        // TODO: Restore code
-        );
+    _loadedTrees = context.watch<P_FileTree>().loadedTrees;
+    return Column(children: [
+      ContentDivider_folders(visible: _loadedTrees.isNotEmpty),
+      Column(children: _loadedTrees),
+      ContentDivider_files(visible: _loadedFiles.isNotEmpty),
+      Row(children: [Flexible(child: Column(children: _loadedFiles)), const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)])
+    ]);
   }
 
   // ##################################################
@@ -125,10 +126,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
-    // DEV: Set folder name
     context.read<P_FileTree>().loadFileTree(filetreePath);
-
-    // TODO: Restore code
   }
 
   // ##################################################
@@ -146,7 +144,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     List<String?> paths = filePaths.paths;
     for (String? path in paths) {
       setState(() {
-        // TODO: Restore code
+        _loadedFiles.add(T_FileItem(path: path!, showFullPath: true));
       });
     }
   }
@@ -155,9 +153,10 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @brief: Remove all loaded file trees and files
   // ##################################################
   void clearContent() {
+    // Remove all loaded trees and files
+    context.read<P_FileTree>().clear();
     setState(() {
-      // Remove all loaded trees and files
-      // TODO: Restore code
+      _loadedFiles.clear();
     });
   }
 
@@ -166,7 +165,14 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @param: selected
   // ##################################################
   void updateHashAlg(String? selected) {
-    // TODO: Restore code
+    for (T_FileTree view in _loadedTrees) {
+      for (T_TreeItem item in view.children) {
+        item.globKey_HashAlgorithm.currentState!.set(selected);
+      }
+    }
+    for (T_FileItem item in _loadedFiles) {
+      item.globKey_HashAlgorithm.currentState!.set(selected);
+    }
   }
 
   // ##################################################
@@ -183,28 +189,162 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   // TODO: What if hash generation is ongoing?
   void safeHashFile() {
-    // TODO: Restore code
+    // Get all file trees and single files into widgets
+    List<Widget> dialogRows = [];
+    for (T_FileTree view in _loadedTrees) {
+      dialogRows.add(T_StorageChooserRow(title: view.path, fileTreeView: view));
+    }
+    if (_loadedFiles.isNotEmpty) {
+      dialogRows.add(T_StorageChooserRow(title: HashfileSingletext));
+    }
+    if (dialogRows.isEmpty) {
+      showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(title: const Text("Nothing to be saved"), actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("OK"))
+            ]);
+          });
+      return;
+    }
+
+    // Add exit buttons at the end
+    dialogRows.add(Row(children: [
+      const Expanded(child: SizedBox.shrink()),
+      IconButton(
+          onPressed: () {
+            for (Widget row in dialogRows) {
+              if (row is! T_StorageChooserRow) continue;
+              String storagepath = row.getStoragePath();
+              if (row.fileTreeView == null) {
+                GenerateHashfile(SingleFiles_to_FileViewHashes(_loadedFiles, HashfileSingletext), storagepath);
+              } else {
+                T_FileTree view = row.fileTreeView!;
+                GenerateHashfile(FileTreeItems_to_FileViewHashes(view.children, view.path, view.path), storagepath);
+              }
+            }
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.check)),
+      IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close))
+    ]));
+
+    // Show dialog
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            title: const Text("Choose storage locations for hash files"),
+            children: [Column(children: dialogRows)],
+          );
+        });
   }
 
   // ##################################################
   // @brief: Load hash file from system and set comparison texts and hash algorithms accordingly
   // ##################################################
   void loadHashfile() async {
-    // TODO: Restore code
+    // -------------------- Pick hash files to load --------------------
+    FilePickerResult? filePaths = await FilePicker.platform
+        .pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true, type: FileType.custom, allowedExtensions: ['hash']);
+    if (filePaths == null) {
+      return;
+    }
+
+    // -------------------- Update file views --------------------
+    List<String?> paths = filePaths.paths;
+    for (String? path in paths) {
+      // Load and parse hash file
+      if (path == null) {
+        continue;
+      }
+      C_FileViewHashes? parsedHashfile = LoadHashfile(path);
+      if (parsedHashfile == null) {
+        continue;
+      }
+      String viewpath = parsedHashfile.name;
+      List<C_FileHashPair> hashlist = parsedHashfile.files;
+
+      // ---------- Update single files ----------
+      if (viewpath == HashfileSingletext) {
+        // For all hash string pairs:
+        // Just find if a single file exists with matching path
+        for (C_FileHashPair hashPair in hashlist) {
+          for (T_FileItem singlefile in _loadedFiles) {
+            if (singlefile.path == hashPair.file) {
+              singlefile.globKey_HashAlgorithm.currentState!.set(hashPair.algorithm);
+              singlefile.globKey_HashComparisonView.currentState!.set(hashPair.hash ?? "");
+            }
+          }
+        }
+      }
+
+      // ---------- Update tree views ----------
+      else {
+        // Find matching file tree view
+        T_FileTree? matchingview;
+        for (T_FileTree view in _loadedTrees) {
+          if (view.path == viewpath) matchingview = view;
+        }
+        if (matchingview == null) {
+          continue;
+        }
+
+        // For all hash string pairs:
+        // Go along file path and update file view if existing
+        for (C_FileHashPair hashpair in hashlist) {
+          List<String> pathparts = libpath.split(hashpair.file);
+          List<String> folders = pathparts.sublist(0, pathparts.length - 1);
+          String file = pathparts.last;
+          T_FileItem? matchingFileview = _getMatchingFileview(matchingview.children, folders, file);
+          if (matchingFileview == null) {
+            continue;
+          }
+          matchingFileview.globKey_HashAlgorithm.currentState!.set(hashpair.algorithm);
+          matchingFileview.globKey_HashComparisonView.currentState!.set(hashpair.hash ?? "");
+        }
+      }
+    }
   }
 
   // ##################################################
   // @brief: Clear all inputs for comparison hash
   // ##################################################
   void clearComparisonInputs() {
-    // TODO: Restore code
+    for (T_FileTree view in _loadedTrees) {
+      for (T_TreeItem item in view.children) {
+        if (item is T_FileItem) {
+          item.globKey_HashComparisonView.currentState!.set("");
+        } else if (item is T_FolderItem) {
+          _clearCompInp(item);
+        }
+      }
+    }
+    for (T_FileItem item in _loadedFiles) {
+      item.globKey_HashComparisonView.currentState!.set("");
+    }
   }
 
   // ##################################################
   // @brief: Clear all inputs for comparison hash for folder sub-items
   // @param: folder
   // ##################################################
-  // TODO: Restore code
+  void _clearCompInp(T_FolderItem folder) {
+    for (T_TreeItem item in folder.children) {
+      if (item is T_FileItem) {
+        item.globKey_HashComparisonView.currentState!.set("");
+      } else if (item is T_FolderItem) {
+        _clearCompInp(item);
+      }
+    }
+  }
 
   // ##################################################
   // @brief: Get file view element (if existing) that matches a folder path
@@ -213,7 +353,31 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @param: file
   // @return: T_FileView?
   // ##################################################
-  // TODO: Restore code
+  T_FileItem? _getMatchingFileview(List<T_TreeItem> viewitems, List<String> folders, String file) {
+    for (T_TreeItem item in viewitems) {
+      // Work on folder
+      if (item is T_FolderItem) {
+        if (folders.isEmpty) {
+          continue; // File searched, folder found
+        }
+        T_FileItem? found = _getMatchingFileview(item.children, folders.sublist(1, folders.length), file);
+        if (found != null) {
+          return found;
+        }
+      }
+
+      // Work on file
+      if (item is T_FileItem) {
+        if (folders.isNotEmpty) {
+          continue; // Folder searched, file found
+        }
+        if (item.name == file) {
+          return item;
+        }
+      }
+    }
+    return null;
+  }
 }
 
 // ##################################################
@@ -223,11 +387,11 @@ class T_BodyContent_state extends State<T_BodyContent> {
 class T_StorageChooserRow extends StatelessWidget {
   // Attributes
   final String title;
-  // TODO: Restore code // null means single files
+  final T_FileTree? fileTreeView; // null means single files
   final TextEditingController _textEditingController = TextEditingController();
 
   // Constructor
-  T_StorageChooserRow({super.key, required this.title});
+  T_StorageChooserRow({super.key, required this.title, this.fileTreeView});
 
   @override
   Widget build(BuildContext context) {
