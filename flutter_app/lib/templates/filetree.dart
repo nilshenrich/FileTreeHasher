@@ -44,7 +44,7 @@ class P_FileTrees extends ChangeNotifier {
   // ##################################################
   void loadFileTree(String path) {
     // -------------------- Add new tree header item --------------------
-    T_FileTree headerItem = T_FileTree(path: path, children: [], showFullPath: true);
+    T_FileTree headerItem = T_FileTree(path: path, children: []);
     loadedTrees.add(headerItem);
     notifyListeners();
     _loadSubitems(headerItem);
@@ -184,9 +184,10 @@ class T_FolderItem extends T_TreeItem {
 // # TEMPLATE
 // # File tree
 // ##################################################
+// TODO: Different style for overall folder
 class T_FileTree extends T_FolderItem {
   // Constructor
-  T_FileTree({super.key, required super.path, required super.children, super.showFullPath = false});
+  T_FileTree({super.key, required super.path, required super.children, super.showFullPath = true});
 }
 
 // ##################################################
