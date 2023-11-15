@@ -13,7 +13,6 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
@@ -44,7 +43,7 @@ class P_FileTrees extends ChangeNotifier {
   // ##################################################
   void loadFileTree(String path) {
     // -------------------- Add new tree header item --------------------
-    T_FileTree headerItem = T_FileTree(path: path, children: []);
+    T_FileTree headerItem = T_FileTree(path: path, children: List.empty(growable: true));
     loadedTrees.add(headerItem);
     notifyListeners();
     _loadSubitems(headerItem);
@@ -78,7 +77,7 @@ class P_FileTrees extends ChangeNotifier {
       }
       // ---------- Item is directory ----------
       else if (item is Directory) {
-        T_FolderItem folder = T_FolderItem(path: item.path, children: []);
+        T_FolderItem folder = T_FolderItem(path: item.path, children: List.empty(growable: true));
         parentFolder.add(folder);
         notifyListeners();
 
@@ -534,7 +533,7 @@ class _T_ExpandableState extends State<T_Expandable> {
       Offstage(
           offstage: !expanded,
           child: Row(children: [
-            SizedBox(width: Style_FileTree_SubItem_ShiftRight_px),
+            const SizedBox(width: Style_FileTree_SubItem_ShiftRight_px),
             Expanded(
               child: Column(
                 children: widget.children,

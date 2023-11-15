@@ -11,8 +11,6 @@
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names, library_private_types_in_public_api
 
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
@@ -126,6 +124,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
+    if (!context.mounted) return;
     context.read<P_FileTrees>().loadFileTree(filetreePath);
   }
 
@@ -141,6 +140,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected files in body --------------------
+    if (!context.mounted) return;
     context.read<P_SingleFiles>().loadFiles(filePaths.paths);
   }
 
