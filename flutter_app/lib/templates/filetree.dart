@@ -42,7 +42,6 @@ class P_FileTree extends ChangeNotifier {
   // Load file tree to GUI
   void loadFileTree(String path) {
     loadedTrees.add(T_TreeHeader(path: path));
-    loadedTrees.add(T_FolderItem(path: path)); // DEV: Just to have both underneath each other
     notifyListeners();
   }
 }
@@ -55,9 +54,12 @@ abstract class T_TreeItem extends StatelessWidget {
   // Parameter
   final String name; // Elements name (to be shown in GUI)
   final String path; // Elements absolute system path (used for hash generation and shown in tree header)
+  final String parent; // Elements parents absolute system path
 
   // Constructor
-  T_TreeItem({super.key, required this.path}) : name = GetFileName(path);
+  T_TreeItem({super.key, required this.path})
+      : name = GetFileName(path),
+        parent = GetParentPath(path);
 }
 
 // ##################################################
@@ -71,7 +73,7 @@ class T_FolderItem extends T_TreeItem {
   @override
   Widget build(BuildContext context) {
     return T_Expandable(
-      name: path,
+      name: super.name,
       children: [],
     );
   }
@@ -84,6 +86,31 @@ class T_FolderItem extends T_TreeItem {
 class T_TreeHeader extends T_FolderItem {
   // Constructor
   T_TreeHeader({super.key, required super.path});
+}
+
+// ##################################################
+// # TEMPLATE
+// # Single file
+// ##################################################
+class T_FileItem extends T_TreeItem {
+  // Constructor
+  T_FileItem({super.key, required super.path});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      const SizedBox(width: Style_FileTree_Icon_Width_px),
+      const Icon(Icons.description),
+      Text(super.parent, style: Style_FileTree_Text_ParentPath),
+      Text(super.name),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      // TODO: Insert T_HashGenerationView
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      // TODO: Insert T_FileHashSelector
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      // TODO: Insert T_HashComparisonView
+    ]);
+  }
 }
 
 // ##################################################
