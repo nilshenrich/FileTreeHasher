@@ -13,6 +13,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
@@ -64,28 +65,15 @@ abstract class T_TreeItem extends StatelessWidget {
 // # Single folder
 // ##################################################
 class T_FolderItem extends T_TreeItem {
-  // Style parameters
-  Widget? get _style_leading => null;
-  bool get _style_pathAsName => false;
-  TextStyle get _style_textStyle => const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black);
-  EdgeInsetsGeometry get _style_childrenPadding => const EdgeInsets.symmetric(horizontal: Style_FileTree_Item_ElementSpaces_px);
-  double get _style_marginTop => 0;
-
   // Constructor
   T_FolderItem({super.key, required super.path});
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SizedBox(height: _style_marginTop),
-      ExpansionTile(
-          maintainState: true,
-          initiallyExpanded: true,
-          leading: _style_leading,
-          title: Text(_style_pathAsName ? path : name, style: _style_textStyle),
-          childrenPadding: _style_childrenPadding,
-          children: [])
-    ]);
+    return T_Expandable(
+      name: path,
+      children: [],
+    );
   }
 }
 
@@ -94,20 +82,8 @@ class T_FolderItem extends T_TreeItem {
 // # File tree header
 // ##################################################
 class T_TreeHeader extends T_FolderItem {
-  // Override style parameters
-  @override
-  Widget? get _style_leading => const Icon((Icons.folder));
-  @override
-  bool get _style_pathAsName => true;
-  @override
-  TextStyle get _style_textStyle => const TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
-  @override
-  EdgeInsetsGeometry get _style_childrenPadding => const EdgeInsets.symmetric(horizontal: 0);
-  @override
-  double get _style_marginTop => 10;
-
   // Constructor
-  T_TreeHeader({required super.path});
+  T_TreeHeader({super.key, required super.path});
 }
 
 // ##################################################
@@ -367,5 +343,70 @@ class T_HashComparisonView_state extends State<T_HashComparisonView> {
       _hashComp = val;
     });
     _onChange(val);
+  }
+}
+
+// ##################################################
+// # TEMPLATE
+// # Expandable area
+// ##################################################
+class T_Expandable extends StatefulWidget {
+  // Constants
+  final String name;
+  final List<Widget> children;
+
+  // Constructor
+  const T_Expandable({super.key, required this.name, required this.children});
+
+  @override
+  State<T_Expandable> createState() => _T_ExpandableState();
+}
+
+class _T_ExpandableState extends State<T_Expandable> {
+  // State parameter
+  bool expanded = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Row(children: [
+        SizedBox(
+            width: Style_FileTree_Icon_Width_px,
+            height: Style_FileTree_Icon_Height_px,
+            child: IconButton(
+              icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              padding: EdgeInsets.zero,
+              onPressed: toggle,
+            )),
+        const Icon(Icons.folder),
+        Expanded(child: Text(widget.name)),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        const T_FileHashSelector(),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        const SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
+      ]),
+      Offstage(
+          offstage: !expanded,
+          child: Row(children: [
+            SizedBox(width: Style_FileTree_SubItem_ShiftRight_px),
+            Expanded(
+              child: Column(
+                children: widget.children,
+              ),
+            )
+          ]))
+    ]);
+  }
+
+  // ##################################################
+  // @brief: Toggle content area
+  // ##################################################
+  void toggle() {
+    setState(() {
+      expanded = !expanded;
+    });
   }
 }
