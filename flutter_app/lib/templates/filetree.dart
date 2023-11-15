@@ -39,32 +39,45 @@ class P_FileTree extends ChangeNotifier {
   // Constructor
   P_FileTree();
 
-  // Load file tree to GUI
-  void loadFileTree(String path) async {
+  // ##################################################
+  // @brief: Load a file tree from system to GUI
+  // @param: path
+  // ##################################################
+  void loadFileTree(String path) {
     // -------------------- Add new tree header item --------------------
-    T_TreeHeader headerItem = T_TreeHeader(path: path, children: []);
+    T_TreeHeader headerItem = T_TreeHeader(path: path, children: [], showFullPath: true);
     loadedTrees.add(headerItem);
     notifyListeners();
+    _loadSubitems(headerItem);
+  }
 
+  // ##################################################
+  // @brief: Recursively load sub-items to an existing folder
+  // @param: parentFolder
+  // ##################################################
+  void _loadSubitems(T_FolderItem parentFolder) async {
     // -------------------- Get all direct child items from system and add recursively --------------------
-    Directory rootDir = Directory(path);
+    Directory rootDir = Directory(parentFolder.path);
     List<FileSystemEntity> systemItems = rootDir.listSync();
     for (FileSystemEntity item in systemItems) {
       await Future.delayed(Duration.zero); // Needed to have items live updated
-      String itemName = GetFileName(item.path);
+      // await Future.delayed(Duration(seconds: 1)); // Needed to have items live updated
 
       // ---------- Item is a file ----------
       if (item is File) {
-        T_FileItem file = T_FileItem(path: itemName);
-        headerItem.add(file);
+        T_FileItem file = T_FileItem(path: item.path);
+        parentFolder.add(file);
+        notifyListeners();
       }
       // ---------- Item is directory ----------
       else if (item is Directory) {
-        T_FolderItem folder = T_FolderItem(path: itemName, children: []);
-        headerItem.add(folder);
-      }
+        T_FolderItem folder = T_FolderItem(path: item.path, children: []);
+        parentFolder.add(folder);
+        notifyListeners();
 
-      notifyListeners();
+        // Recurse on sub-folder
+        _loadSubitems(folder);
+      }
     }
   }
 }
@@ -75,14 +88,15 @@ class P_FileTree extends ChangeNotifier {
 // ##################################################
 abstract class T_TreeItem extends StatelessWidget {
   // Parameter
+  final bool showFullPath;
   final String name; // Elements name (to be shown in GUI)
   final String path; // Elements absolute system path (used for hash generation and shown in tree header)
   final String parent; // Elements parents absolute system path
 
   // Constructor
-  T_TreeItem({super.key, required this.path})
+  T_TreeItem({super.key, required this.path, required this.showFullPath})
       : name = GetFileName(path),
-        parent = GetParentPath(path);
+        parent = showFullPath ? GetParentPath(path) : "";
 }
 
 // ##################################################
@@ -94,7 +108,7 @@ class T_FolderItem extends T_TreeItem {
   final List<T_TreeItem> children;
 
   // Constructor
-  T_FolderItem({super.key, required super.path, required this.children});
+  T_FolderItem({super.key, required super.path, required this.children, super.showFullPath = false});
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +128,7 @@ class T_FolderItem extends T_TreeItem {
 // ##################################################
 class T_TreeHeader extends T_FolderItem {
   // Constructor
-  T_TreeHeader({super.key, required super.path, required super.children});
+  T_TreeHeader({super.key, required super.path, required super.children, super.showFullPath = false});
 }
 
 // ##################################################
@@ -123,7 +137,7 @@ class T_TreeHeader extends T_FolderItem {
 // ##################################################
 class T_FileItem extends T_TreeItem {
   // Constructor
-  T_FileItem({super.key, required super.path});
+  T_FileItem({super.key, required super.path, super.showFullPath = false});
 
   @override
   Widget build(BuildContext context) {
