@@ -103,7 +103,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
   @override
   Widget build(BuildContext context) {
-    _loadedTrees = context.watch<P_FileTree>().loadedTrees;
+    _loadedTrees = context.watch<P_FileTrees>().loadedTrees;
     return Column(children: [
       ContentDivider_folders(visible: _loadedTrees.isNotEmpty),
       Column(children: _loadedTrees),
@@ -126,7 +126,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
-    context.read<P_FileTree>().loadFileTree(filetreePath);
+    context.read<P_FileTrees>().loadFileTree(filetreePath);
   }
 
   // ##################################################
@@ -154,7 +154,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void clearContent() {
     // Remove all loaded trees and files
-    context.read<P_FileTree>().clear();
+    context.read<P_FileTrees>().clear();
     setState(() {
       _loadedFiles.clear();
     });

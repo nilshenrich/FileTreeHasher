@@ -29,15 +29,14 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 // ##################################################
 // # PROVIDER
-// # Provide loaded folder
-// # DEV: Just folder name
+// # Provide loaded folders
 // ##################################################
-class P_FileTree extends ChangeNotifier {
+class P_FileTrees extends ChangeNotifier {
   // List of loaded file trees
   List<T_FileTree> loadedTrees = [];
 
   // Constructor
-  P_FileTree();
+  P_FileTrees();
 
   // ##################################################
   // @brief: Load a file tree from system to GUI
