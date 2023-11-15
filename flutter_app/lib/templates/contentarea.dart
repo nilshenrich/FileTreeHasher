@@ -160,6 +160,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void updateHashAlg(String? selected) {
     for (T_FileTree view in _loadedTrees) {
+      view.globKey_HashAlgorithm.currentState!.set(selected);
       for (T_TreeItem item in view.children) {
         item.globKey_HashAlgorithm.currentState!.set(selected);
       }
