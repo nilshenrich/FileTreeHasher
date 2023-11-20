@@ -41,9 +41,10 @@ class P_FileTrees extends ChangeNotifier {
   // @brief: Load a file tree from system to GUI
   // @param: path
   // ##################################################
-  void loadFileTree(String path) {
+  void loadFileTree(String path) async {
     // -------------------- Add new tree header item --------------------
     T_FileTree headerItem = T_FileTree(path: path, children: List.empty(growable: true));
+    await Future.delayed(Duration.zero);
     loadedTrees.add(headerItem);
     notifyListeners();
     _loadSubitems(headerItem);
