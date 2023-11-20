@@ -146,13 +146,9 @@ abstract class T_TreeItem extends StatefulWidget {
 // # Single folder
 // ##################################################
 class T_FolderItem extends T_TreeItem {
-  // Parameter
-  final List<T_TreeItem> children;
-
   // Constructor
-  T_FolderItem({super.key, required super.path, required this.children, super.showFullPath = false});
-
-  void add(T_TreeItem item) => children.add(item);
+  // TODO: Get optional list of children
+  T_FolderItem({super.key, required super.path, super.showFullPath = false});
 
   // ##################################################
   // @brief: Change handler: Selected hash algorithm has changed
@@ -175,6 +171,9 @@ class T_FolderItem extends T_TreeItem {
 // # Single folder
 // ##################################################
 class T_FolderItem_state extends State<T_FolderItem> {
+  // Parameter
+  List<T_TreeItem> children = [];
+
   @override
   Widget build(BuildContext context) {
     return T_Expandable(headerRow: [
@@ -185,7 +184,13 @@ class T_FolderItem_state extends State<T_FolderItem> {
       T_FileHashSelector(key: widget.globKey_HashAlgorithm, onChanged: widget.change_hashAlgorithm),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
-    ], children: widget.children);
+    ], children: children);
+  }
+
+  void add(T_TreeItem item) {
+    setState(() {
+      children.add(item);
+    });
   }
 }
 
@@ -196,7 +201,7 @@ class T_FolderItem_state extends State<T_FolderItem> {
 // TODO: Different style for overall folder
 class T_FileTree extends T_FolderItem {
   // Constructor
-  T_FileTree({super.key, required super.path, required super.children, super.showFullPath = true});
+  T_FileTree({super.key, required super.path, super.showFullPath = true});
 }
 
 // ##################################################
