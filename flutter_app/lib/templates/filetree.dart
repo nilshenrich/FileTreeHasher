@@ -124,7 +124,7 @@ class P_SingleFiles extends ChangeNotifier {
 // # TEMPLATE
 // # Single tree view item (header, folder or file)
 // ##################################################
-abstract class T_TreeItem extends StatelessWidget {
+abstract class T_TreeItem extends StatefulWidget {
   // Parameter
   final bool showFullPath;
   final String name; // Elements name (to be shown in GUI)
@@ -151,19 +151,6 @@ class T_FolderItem extends T_TreeItem {
   // Constructor
   T_FolderItem({super.key, required super.path, required this.children, super.showFullPath = false});
 
-  @override
-  Widget build(BuildContext context) {
-    return T_Expandable(headerRow: [
-      const Icon(Icons.folder),
-      Text(parent, style: Style_FileTree_Text_ParentPath),
-      Expanded(child: Text(name)),
-      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_FileHashSelector(key: globKey_HashAlgorithm, onChanged: change_hashAlgorithm),
-      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
-    ], children: children);
-  }
-
   void add(T_TreeItem item) => children.add(item);
 
   // ##################################################
@@ -176,6 +163,28 @@ class T_FolderItem extends T_TreeItem {
     for (T_TreeItem subitem in children) {
       subitem.globKey_HashAlgorithm.currentState!.set(selected);
     }
+  }
+
+  @override
+  State<StatefulWidget> createState() => T_FolderItem_state();
+}
+
+// ##################################################
+// # STATE
+// # Single folder
+// ##################################################
+class T_FolderItem_state extends State<T_FolderItem> {
+  @override
+  Widget build(BuildContext context) {
+    return T_Expandable(headerRow: [
+      const Icon(Icons.folder),
+      Text(widget.parent, style: Style_FileTree_Text_ParentPath),
+      Expanded(child: Text(widget.name)),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      T_FileHashSelector(key: widget.globKey_HashAlgorithm, onChanged: widget.change_hashAlgorithm),
+      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+      const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
+    ], children: widget.children);
   }
 }
 
@@ -202,27 +211,38 @@ class T_FileItem extends T_TreeItem {
   T_FileItem({super.key, required super.path, super.showFullPath = false});
 
   @override
+  State<StatefulWidget> createState() => T_FileItem_state();
+}
+
+// ##################################################
+// # STATE
+// # Single file
+// ##################################################
+class T_FileItem_state extends State<T_FileItem> {
+  @override
   Widget build(BuildContext context) {
     return Row(children: [
       const SizedBox(width: Style_FileTree_Icon_Width_px),
       const Icon(Icons.description),
-      Text(parent, style: Style_FileTree_Text_ParentPath),
-      Text(name),
+      Text(widget.parent, style: Style_FileTree_Text_ParentPath),
+      Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      Expanded(child: T_HashGenerationView(key: globKey_HashGenerationView, filepath: path, globKey_HashComparisonView: globKey_HashComparisonView)),
+      Expanded(
+          child: T_HashGenerationView(
+              key: widget.globKey_HashGenerationView, filepath: widget.path, globKey_HashComparisonView: widget.globKey_HashComparisonView)),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       T_FileHashSelector(
-          key: globKey_HashAlgorithm,
+          key: widget.globKey_HashAlgorithm,
           onChanged: (selected) {
-            T_HashGenerationView_state hashGen = globKey_HashGenerationView.currentState!;
+            T_HashGenerationView_state hashGen = widget.globKey_HashGenerationView.currentState!;
             hashGen.abortHashGeneration();
             hashGen.generateHash(selected);
           }),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       T_HashComparisonView(
-          key: globKey_HashComparisonView,
+          key: widget.globKey_HashComparisonView,
           onChanged: (value) {
-            globKey_HashGenerationView.currentState!.compareHashes(value);
+            widget.globKey_HashGenerationView.currentState!.compareHashes(value);
           })
     ]);
   }
