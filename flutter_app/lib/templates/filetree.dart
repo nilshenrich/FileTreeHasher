@@ -522,14 +522,14 @@ class T_Expandable extends StatefulWidget {
   const T_Expandable({super.key, required this.headerRow, required this.children});
 
   @override
-  State<T_Expandable> createState() => _T_ExpandableState();
+  State<T_Expandable> createState() => _T_Expandable_state();
 }
 
 // ##################################################
 // # STATE
 // # Expandable area
 // ##################################################
-class _T_ExpandableState extends State<T_Expandable> {
+class _T_Expandable_state extends State<T_Expandable> {
   // State parameter
   bool expanded = true;
 
