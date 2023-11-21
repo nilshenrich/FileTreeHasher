@@ -117,6 +117,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // -------------------- Select folder from system --------------------
     // TODO: Multiple folders could be selected (Button description to be adapted). Think that is not possible for folders
     String? filetreePath = await FilePicker.platform.getDirectoryPath(initialDirectory: GetHomeDir().path);
+    filetreePath = "/home/nils/Dokumente/testfiles"; // DEV: Use debugging path
     if (filetreePath == null) {
       return;
     }
@@ -156,15 +157,16 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @param: selected
   // ##################################################
   void updateHashAlg(String? selected) {
-    for (T_FileTree view in context.read<P_FileTrees>().loadedTrees) {
-      view.globKey_HashAlgorithm.currentState!.set(selected);
-      for (T_TreeItem item in view.children) {
-        item.globKey_HashAlgorithm.currentState!.set(selected);
-      }
-    }
-    for (T_FileItem item in context.read<P_SingleFiles>().loadedFiles) {
-      item.globKey_HashAlgorithm.currentState!.set(selected);
-    }
+    // TODO: Reimplement
+    // for (T_FileTree view in context.read<P_FileTrees>().loadedTrees) {
+    //   view.globKey_HashAlgorithm.currentState!.set(selected);
+    //   for (T_TreeItem item in view.children) {
+    //     item.globKey_HashAlgorithm.currentState!.set(selected);
+    //   }
+    // }
+    // for (T_FileItem item in context.read<P_SingleFiles>().loadedFiles) {
+    //   item.globKey_HashAlgorithm.currentState!.set(selected);
+    // }
   }
 
   // ##################################################
@@ -211,16 +213,17 @@ class T_BodyContent_state extends State<T_BodyContent> {
       const Expanded(child: SizedBox.shrink()),
       IconButton(
           onPressed: () {
-            for (Widget row in dialogRows) {
-              if (row is! T_StorageChooserRow) continue;
-              String storagepath = row.getStoragePath();
-              if (row.fileTreeView == null) {
-                GenerateHashfile(SingleFiles_to_FileViewHashes(loadedFiles, HashfileSingletext), storagepath);
-              } else {
-                T_FileTree view = row.fileTreeView!;
-                GenerateHashfile(FileTreeItems_to_FileViewHashes(view.children, view.path, view.path), storagepath);
-              }
-            }
+            // TODO: Reimplement
+            // for (Widget row in dialogRows) {
+            //   if (row is! T_StorageChooserRow) continue;
+            //   String storagepath = row.getStoragePath();
+            //   if (row.fileTreeView == null) {
+            //     GenerateHashfile(SingleFiles_to_FileViewHashes(loadedFiles, HashfileSingletext), storagepath);
+            //   } else {
+            //     T_FileTree view = row.fileTreeView!;
+            //     GenerateHashfile(FileTreeItems_to_FileViewHashes(view.children, view.path, view.path), storagepath);
+            //   }
+            // }
             Navigator.pop(context);
           },
           icon: const Icon(Icons.check)),
@@ -277,8 +280,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
         for (C_FileHashPair hashPair in hashlist) {
           for (T_FileItem singlefile in loadedFiles) {
             if (singlefile.path == hashPair.file) {
-              singlefile.globKey_HashAlgorithm.currentState!.set(hashPair.algorithm);
-              singlefile.globKey_HashComparisonView.currentState!.set(hashPair.hash ?? "");
+              // TODO: Reimplement
+              // singlefile.globKey_HashAlgorithm.currentState!.set(hashPair.algorithm);
+              // singlefile.globKey_HashComparisonView.currentState!.set(hashPair.hash ?? "");
             }
           }
         }
@@ -297,17 +301,18 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
         // For all hash string pairs:
         // Go along file path and update file view if existing
-        for (C_FileHashPair hashpair in hashlist) {
-          List<String> pathparts = libpath.split(hashpair.file);
-          List<String> folders = pathparts.sublist(0, pathparts.length - 1);
-          String file = pathparts.last;
-          T_FileItem? matchingFileview = _getMatchingFileview(matchingview.children, folders, file);
-          if (matchingFileview == null) {
-            continue;
-          }
-          matchingFileview.globKey_HashAlgorithm.currentState!.set(hashpair.algorithm);
-          matchingFileview.globKey_HashComparisonView.currentState!.set(hashpair.hash ?? "");
-        }
+        // TODO: Reimplement
+        // for (C_FileHashPair hashpair in hashlist) {
+        //   List<String> pathparts = libpath.split(hashpair.file);
+        //   List<String> folders = pathparts.sublist(0, pathparts.length - 1);
+        //   String file = pathparts.last;
+        //   T_FileItem? matchingFileview = _getMatchingFileview(matchingview.children, folders, file);
+        //   if (matchingFileview == null) {
+        //     continue;
+        //   }
+        //   matchingFileview.globKey_HashAlgorithm.currentState!.set(hashpair.algorithm);
+        //   matchingFileview.globKey_HashComparisonView.currentState!.set(hashpair.hash ?? "");
+        // }
       }
     }
   }
@@ -316,18 +321,19 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @brief: Clear all inputs for comparison hash
   // ##################################################
   void clearComparisonInputs() {
-    for (T_FileTree view in context.read<P_FileTrees>().loadedTrees) {
-      for (T_TreeItem item in view.children) {
-        if (item is T_FileItem) {
-          item.globKey_HashComparisonView.currentState!.set("");
-        } else if (item is T_FolderItem) {
-          _clearCompInp(item);
-        }
-      }
-    }
-    for (T_FileItem item in context.read<P_SingleFiles>().loadedFiles) {
-      item.globKey_HashComparisonView.currentState!.set("");
-    }
+    // TODO: Reimplement
+    // for (T_FileTree view in context.read<P_FileTrees>().loadedTrees) {
+    //   for (T_TreeItem item in view.children) {
+    //     if (item is T_FileItem) {
+    //       item.globKey_HashComparisonView.currentState!.set("");
+    //     } else if (item is T_FolderItem) {
+    //       _clearCompInp(item);
+    //     }
+    //   }
+    // }
+    // for (T_FileItem item in context.read<P_SingleFiles>().loadedFiles) {
+    //   item.globKey_HashComparisonView.currentState!.set("");
+    // }
   }
 
   // ##################################################
@@ -335,13 +341,14 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @param: folder
   // ##################################################
   void _clearCompInp(T_FolderItem folder) {
-    for (T_TreeItem item in folder.children) {
-      if (item is T_FileItem) {
-        item.globKey_HashComparisonView.currentState!.set("");
-      } else if (item is T_FolderItem) {
-        _clearCompInp(item);
-      }
-    }
+    // TODO: Reimplement
+    // for (T_TreeItem item in folder.children) {
+    //   if (item is T_FileItem) {
+    //     item.globKey_HashComparisonView.currentState!.set("");
+    //   } else if (item is T_FolderItem) {
+    //     _clearCompInp(item);
+    //   }
+    // }
   }
 
   // ##################################################
@@ -352,28 +359,29 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @return: T_FileView?
   // ##################################################
   T_FileItem? _getMatchingFileview(List<T_TreeItem> viewitems, List<String> folders, String file) {
-    for (T_TreeItem item in viewitems) {
-      // Work on folder
-      if (item is T_FolderItem) {
-        if (folders.isEmpty) {
-          continue; // File searched, folder found
-        }
-        T_FileItem? found = _getMatchingFileview(item.children, folders.sublist(1, folders.length), file);
-        if (found != null) {
-          return found;
-        }
-      }
+    // TODO: Reimplement
+    // for (T_TreeItem item in viewitems) {
+    //   // Work on folder
+    //   if (item is T_FolderItem) {
+    //     if (folders.isEmpty) {
+    //       continue; // File searched, folder found
+    //     }
+    //     T_FileItem? found = _getMatchingFileview(item.children, folders.sublist(1, folders.length), file);
+    //     if (found != null) {
+    //       return found;
+    //     }
+    //   }
 
-      // Work on file
-      if (item is T_FileItem) {
-        if (folders.isNotEmpty) {
-          continue; // Folder searched, file found
-        }
-        if (item.name == file) {
-          return item;
-        }
-      }
-    }
+    //   // Work on file
+    //   if (item is T_FileItem) {
+    //     if (folders.isNotEmpty) {
+    //       continue; // Folder searched, file found
+    //     }
+    //     if (item.name == file) {
+    //       return item;
+    //     }
+    //   }
+    // }
     return null;
   }
 }

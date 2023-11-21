@@ -125,14 +125,15 @@ C_FileViewHashes? LoadHashfile(String storagepath) {
 C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_TreeItem> items, String name, String rootpath) {
   List<C_FileViewHashes> folders = [];
   List<C_FileHashPair> files = [];
-  for (T_TreeItem item in items) {
-    String relpath = libpath.relative(item.path, from: rootpath);
-    if (item is T_FolderItem) {
-      folders.add(FileTreeItems_to_FileViewHashes(item.children, item.path, rootpath));
-    } else if (item is T_FileItem) {
-      files.add(C_FileHashPair(relpath, item.globKey_HashGenerationView.currentState!.HashGen, item.globKey_HashAlgorithm.currentState!.get()!));
-    }
-  }
+  // TODO: Reimplement
+  // for (T_TreeItem item in items) {
+  //   String relpath = libpath.relative(item.path, from: rootpath);
+  //   if (item is T_FolderItem) {
+  //     folders.add(FileTreeItems_to_FileViewHashes(item.children, item.path, rootpath));
+  //   } else if (item is T_FileItem) {
+  //     files.add(C_FileHashPair(relpath, item.globKey_HashGenerationView.currentState!.HashGen, item.globKey_HashAlgorithm.currentState!.get()!));
+  //   }
+  // }
   return C_FileViewHashes(name, files, folders);
 }
 
@@ -144,8 +145,9 @@ C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_TreeItem> items, String 
 // ##################################################
 C_FileViewHashes SingleFiles_to_FileViewHashes(List<T_FileItem> fileViews, String name) {
   List<C_FileHashPair> files = [];
-  for (T_FileItem file in fileViews) {
-    files.add(C_FileHashPair(file.path, file.globKey_HashGenerationView.currentState!.HashGen, file.globKey_HashAlgorithm.currentState!.get()!));
-  }
+  // TODO: Reimplement
+  // for (T_FileItem file in fileViews) {
+  //   files.add(C_FileHashPair(file.path, file.globKey_HashGenerationView.currentState!.HashGen, file.globKey_HashAlgorithm.currentState!.get()!));
+  // }
   return C_FileViewHashes(name, files, []);
 }

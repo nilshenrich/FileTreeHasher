@@ -43,7 +43,7 @@ class P_FileTrees extends ChangeNotifier {
   // ##################################################
   void loadFileTree(String path) async {
     // -------------------- Add new tree header item --------------------
-    T_FileTree headerItem = T_FileTree(path: path, children: List.empty(growable: true));
+    T_FileTree headerItem = T_FileTree(path: path);
     await Future.delayed(Duration.zero);
     loadedTrees.add(headerItem);
     notifyListeners();
@@ -73,13 +73,15 @@ class P_FileTrees extends ChangeNotifier {
       // ---------- Item is a file ----------
       if (item is File) {
         T_FileItem file = T_FileItem(path: item.path);
-        parentFolder.add(file);
+        // TODO: Reimplement
+        // parentFolder.add(file);
         notifyListeners();
       }
       // ---------- Item is directory ----------
       else if (item is Directory) {
-        T_FolderItem folder = T_FolderItem(path: item.path, children: List.empty(growable: true));
-        parentFolder.add(folder);
+        T_FolderItem folder = T_FolderItem(path: item.path);
+        // TODO: Reimplement
+        // parentFolder.add(folder);
         notifyListeners();
 
         // Recurse on sub-folder
@@ -133,7 +135,8 @@ abstract class T_TreeItem extends StatefulWidget {
   final String parent; // Elements parents absolute system path
 
   // Hash algorithm selector key
-  final globKey_HashAlgorithm = GlobalKey<T_HashSelector_state>();
+  // TODO: Reimplement
+  // final globKey_HashAlgorithm = GlobalKey<T_HashSelector_state>();
 
   // Constructor
   T_TreeItem({super.key, required this.path, required this.showFullPath})
@@ -155,12 +158,13 @@ class T_FolderItem extends T_TreeItem {
   //         Also change selected hash algorithm for all sub-items
   // @param: selected
   // ##################################################
-  void change_hashAlgorithm(String? selected) {
-    // For all sub-elements change hash algorithm to same vale (Sub-folders will automatically do for their sub-elements)
-    for (T_TreeItem subitem in children) {
-      subitem.globKey_HashAlgorithm.currentState!.set(selected);
-    }
-  }
+  // TODO: Reimplement
+  // void change_hashAlgorithm(String? selected) {
+  //   // For all sub-elements change hash algorithm to same vale (Sub-folders will automatically do for their sub-elements)
+  //   for (T_TreeItem subitem in children) {
+  //     subitem.globKey_HashAlgorithm.currentState!.set(selected);
+  //   }
+  // }
 
   @override
   State<StatefulWidget> createState() => T_FolderItem_state();
@@ -181,7 +185,8 @@ class T_FolderItem_state extends State<T_FolderItem> {
       Text(widget.parent, style: Style_FileTree_Text_ParentPath),
       Expanded(child: Text(widget.name)),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_FileHashSelector(key: widget.globKey_HashAlgorithm, onChanged: widget.change_hashAlgorithm),
+      // TODO: Reimplement
+      // T_FileHashSelector(key: widget.globKey_HashAlgorithm, onChanged: widget.change_hashAlgorithm),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
     ], children: children);
@@ -210,8 +215,9 @@ class T_FileTree extends T_FolderItem {
 // ##################################################
 class T_FileItem extends T_TreeItem {
   // Hash generation and comparison keys
-  final globKey_HashGenerationView = GlobalKey<T_HashGenerationView_state>();
-  final globKey_HashComparisonView = GlobalKey<T_HashComparisonView_state>();
+  // TODO: Reimplement
+  // final globKey_HashGenerationView = GlobalKey<T_HashGenerationView_state>();
+  // final globKey_HashComparisonView = GlobalKey<T_HashComparisonView_state>();
 
   // Constructor
   T_FileItem({super.key, required super.path, super.showFullPath = false});
@@ -233,23 +239,26 @@ class T_FileItem_state extends State<T_FileItem> {
       Text(widget.parent, style: Style_FileTree_Text_ParentPath),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      Expanded(
-          child: T_HashGenerationView(
-              key: widget.globKey_HashGenerationView, filepath: widget.path, globKey_HashComparisonView: widget.globKey_HashComparisonView)),
+      // TODO: Reimplement
+      // Expanded(
+      //     child: T_HashGenerationView(
+      //         key: widget.globKey_HashGenerationView, filepath: widget.path, globKey_HashComparisonView: widget.globKey_HashComparisonView)),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_FileHashSelector(
-          key: widget.globKey_HashAlgorithm,
-          onChanged: (selected) {
-            T_HashGenerationView_state hashGen = widget.globKey_HashGenerationView.currentState!;
-            hashGen.abortHashGeneration();
-            hashGen.generateHash(selected);
-          }),
+      // TODO: Reimplement
+      // T_FileHashSelector(
+      //     key: widget.globKey_HashAlgorithm,
+      //     onChanged: (selected) {
+      //       T_HashGenerationView_state hashGen = widget.globKey_HashGenerationView.currentState!;
+      //       hashGen.abortHashGeneration();
+      //       hashGen.generateHash(selected);
+      //     }),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_HashComparisonView(
-          key: widget.globKey_HashComparisonView,
-          onChanged: (value) {
-            widget.globKey_HashGenerationView.currentState!.compareHashes(value);
-          })
+      // TODO: Reimplement
+      // T_HashComparisonView(
+      //     key: widget.globKey_HashComparisonView,
+      //     onChanged: (value) {
+      //       widget.globKey_HashGenerationView.currentState!.compareHashes(value);
+      //     })
     ]);
   }
 }
