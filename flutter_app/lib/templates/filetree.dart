@@ -144,6 +144,7 @@ abstract class T_TreeItem extends StatelessWidget {
 // # TEMPLATE
 // # Single folder
 // ##################################################
+// TODO: Make InheritedWidget, so all children can be updated on change
 class T_FolderItem extends T_TreeItem {
   // Parameter
   final List<T_TreeItem> children;
