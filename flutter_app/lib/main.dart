@@ -10,6 +10,7 @@
 // ####################################################################################################
 
 import 'package:file_tree_hasher/templates/filetree.dart';
+import 'package:file_tree_hasher/templates/filetree_live.dart';
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/contentarea.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,9 @@ class DebuggingApp extends StatelessWidget {
     return MaterialApp(
       restorationScopeId: 'debug',
       title: 'File Tree Hasher - Debugging live reload',
-      home: Container(), // TODO: Insert single file tree
+      home: Container(
+        child: T_FileTree_Tree(path: "/home/nils/Dokumente/testfiles"),
+      ),
     );
   }
 }
