@@ -1,5 +1,8 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:io';
+
+import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
 
@@ -41,11 +44,58 @@ class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
         Offstage(
           offstage: !expanded,
           child: Row(
-            children: children,
+            children: [
+              const SizedBox(
+                width: Style_FileTree_SubItem_ShiftRight_px,
+              ),
+              Column(
+                children: children,
+              ),
+            ],
           ),
         ),
       ],
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadChildren();
+  }
+
+  // ##################################################
+  // @brief: Load child items from system path
+  // ##################################################
+  void loadChildren() {
+    Directory systemDir = Directory(widget.path);
+    List<FileSystemEntity> systemItems = systemDir.listSync(); // TODO: Can be async?
+    for (FileSystemEntity sysItem in systemItems) {
+      T_FileTree_Item item;
+
+      // ---------- Item is a file ----------
+      if (sysItem is File) {
+        item = T_FileTree_File(
+          path: sysItem.path,
+          showFullPath: false,
+        );
+      }
+
+      // ---------- Item is a folder ----------
+      else if (sysItem is Directory) {
+        item = T_FileTree_Folder(path: sysItem.path);
+      }
+
+      // ---------- Item is none of these ----------
+      else {
+        continue;
+      }
+
+      // ---------- Add new item as sub-item ----------
+      setState(() {
+        children.add(item);
+      });
+    }
   }
 }
 
