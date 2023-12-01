@@ -67,11 +67,12 @@ class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
   // ##################################################
   // @brief: Load child items from system path
   // ##################################################
-  Future<void> loadChildren() async {
+  void loadChildren() async {
     Directory systemDir = Directory(widget.path);
     Stream<FileSystemEntity> systemItems = systemDir.list();
     await for (FileSystemEntity sysItem in systemItems) {
       T_FileTree_Item item;
+      // sleep(Duration(seconds: 1));
 
       // ---------- Item is a file ----------
       if (sysItem is File) {
