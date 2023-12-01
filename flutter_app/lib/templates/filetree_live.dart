@@ -24,12 +24,26 @@ class T_FileTree_Folder extends T_FileTree_Item {
 }
 
 class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
+  // State parameter
+  bool expanded = true;
+  List<T_FileTree_Item> children = [];
+
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        const Icon(Icons.folder),
-        Text(widget.name),
+        Row(
+          children: [
+            const Icon(Icons.folder),
+            Text(widget.name),
+          ],
+        ),
+        Offstage(
+          offstage: !expanded,
+          child: Row(
+            children: children,
+          ),
+        ),
       ],
     );
   }
