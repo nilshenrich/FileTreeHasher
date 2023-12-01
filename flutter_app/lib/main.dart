@@ -27,8 +27,8 @@ class DebuggingApp extends StatelessWidget {
     return MaterialApp(
       restorationScopeId: 'debug',
       title: 'File Tree Hasher - Debugging live reload',
-      home: Container(
-        child: T_FileTree_Tree(path: "/home/nils/Dokumente/testfiles"),
+      home: Scaffold(
+        body: T_FileTree_Tree(path: "/home/nils/Dokumente/testfiles"),
       ),
     );
   }
