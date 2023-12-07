@@ -182,7 +182,7 @@ class T_FolderItem_state extends State<T_FolderItem> {
   Widget build(BuildContext context) {
     return T_Expandable(headerRow: [
       const Icon(Icons.folder),
-      Text(widget.parent, style: Style_FileTree_Text_ParentPath),
+      Text(widget.parent, style: Style_FileTree_Item_Text_Parent),
       Expanded(child: Text(widget.name)),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       // TODO: Reimplement
@@ -236,7 +236,7 @@ class T_FileItem_state extends State<T_FileItem> {
     return Row(children: [
       const SizedBox(width: Style_FileTree_Icon_Width_px),
       const Icon(Icons.description),
-      Text(widget.parent, style: Style_FileTree_Text_ParentPath),
+      Text(widget.parent, style: Style_FileTree_Item_Text_Parent),
       Text(widget.name),
       const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
       // TODO: Reimplement

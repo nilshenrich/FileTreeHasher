@@ -9,7 +9,7 @@
 // #
 // ####################################################################################################
 
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, non_constant_identifier_names
 
 import 'dart:async';
 import 'dart:io';
@@ -17,6 +17,7 @@ import 'dart:io';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 // ##################################################
 // # TEMPLATE
@@ -43,6 +44,13 @@ abstract class T_FileTree_Item extends StatefulWidget {
 class I_FileTree_Folder extends T_FileTree_Item {
   // Constructor
   I_FileTree_Folder({super.key, required super.path, super.showFullPath = false});
+
+  // Style parameter
+  final bool _param_showIcon = true;
+  final TextStyle _param_textStyle_parent = Style_FileTree_Item_Text_Parent;
+  final TextStyle _param_textStyle_name = Style_FileTree_Item_Text_Name;
+  final Color _param_color_header = Style_FileTree_Item_Color;
+  final EdgeInsets _param_padding = Style_FileTree_Item_Padding;
 
   @override
   State<StatefulWidget> createState() => I_FileTree_Folder_state();
@@ -81,17 +89,21 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
             turns: _animation_iconturn,
             child: _iconToggle,
           ),
-          Icon(Icons.folder),
+          widget._param_showIcon ? Icon(Icons.folder) : SizedBox.shrink(),
           Text(
             widget.showFullPath ? widget.parent : "",
-            style: Style_FileTree_Text_ParentPath,
+            style: widget._param_textStyle_parent,
           ),
-          Text((widget.name))
+          Text(widget.name, style: widget._param_textStyle_name)
         ],
       ),
     );
-    Row areaHeader = Row(
-      children: [areaHeader_clickable],
+    var areaHeader = Container(
+      padding: widget._param_padding,
+      color: widget._param_color_header,
+      child: Row(
+        children: [areaHeader_clickable],
+      ),
     );
 
     // ---------- Content column ----------
@@ -177,6 +189,18 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
 class I_FileTree_Head extends I_FileTree_Folder {
   // Constructor
   I_FileTree_Head({super.key, required super.path, super.showFullPath = true});
+
+  // Style parameter
+  @override
+  bool get _param_showIcon => false;
+  @override
+  TextStyle get _param_textStyle_parent => Style_FileTree_Header_Text_Parent;
+  @override
+  TextStyle get _param_textStyle_name => Style_FileTree_Header_Text_Name;
+  @override
+  Color get _param_color_header => Style_FileTree_Header_Color;
+  @override
+  EdgeInsets get _param_padding => Style_FileTree_Header_Padding;
 }
 
 // ##################################################

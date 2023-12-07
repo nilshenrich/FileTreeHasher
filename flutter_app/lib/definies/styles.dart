@@ -22,11 +22,19 @@ import 'package:flutter/material.dart';
 const double Style_FileTree_Icon_Width_px = 24;
 const double Style_FileTree_Icon_Height_px = 24;
 
+// File tree theme
+const Color Style_FileTree_Header_Color = Colors.blue;
+const Color Style_FileTree_Item_Color = Colors.transparent;
+
+// File tree sizing
+const EdgeInsets Style_FileTree_Header_Padding = EdgeInsets.all(8);
+const EdgeInsets Style_FileTree_Item_Padding = EdgeInsets.all(0);
+
 // File tree text
-const TextStyle Style_FileTree_Header_Item = TextStyle(color: Colors.black, fontSize: 18);
-const TextStyle Style_FileTree_Header_ParentPath = TextStyle(color: Colors.grey, fontSize: 18);
-const TextStyle Style_FileTree_Text_Item = TextStyle(color: Colors.black);
-const TextStyle Style_FileTree_Text_ParentPath = TextStyle(color: Colors.grey);
+const TextStyle Style_FileTree_Header_Text_Name = TextStyle(color: Colors.black, fontSize: 18);
+const TextStyle Style_FileTree_Header_Text_Parent = TextStyle(color: Colors.black, fontSize: 18);
+const TextStyle Style_FileTree_Item_Text_Name = TextStyle(color: Colors.black);
+const TextStyle Style_FileTree_Item_Text_Parent = TextStyle(color: Colors.grey);
 
 // Hash selector
 const double Style_FileTree_HashSelector_Height_px = 24;
