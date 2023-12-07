@@ -52,35 +52,62 @@ class I_FileTree_Folder extends T_FileTree_Item {
 // # STATE
 // # Folder item
 // ##################################################
-class I_FileTree_Folder_state extends State<I_FileTree_Folder> {
+class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTickerProviderStateMixin {
   // State parameter
   bool expanded = true; // Is folder expanded
   List<T_FileTree_Item> children = []; // Direct child items to be shown in tree
   StreamController<T_FileTree_Item> s_children = StreamController(); // Stream to add a child item with live update
 
+  // Toggle animation
+  Duration _duration = Duration(milliseconds: 250);
+  Icon _iconToggle = Icon(Icons.expand_more);
+  late AnimationController _animationcontroller;
+  late Animation<double> _animation_expand;
+  late Animation<double> _animation_iconturn;
+
   @override
   Widget build(BuildContext context) {
+    // ---------- Header row ----------
+    GestureDetector areaHeader_clickable = GestureDetector(
+      onTap: () {
+        expanded ? _animationcontroller.reverse() : _animationcontroller.forward();
+        setState(() {
+          expanded = !expanded;
+        });
+      },
+      child: Row(
+        children: [
+          RotationTransition(
+            turns: _animation_iconturn,
+            child: _iconToggle,
+          ),
+          Text(
+            widget.showFullPath ? widget.parent : "",
+            style: Style_FileTree_Text_ParentPath,
+          ),
+          Text((widget.name))
+        ],
+      ),
+    );
+    Row areaHeader = Row(
+      children: [areaHeader_clickable],
+    );
+
+    // ---------- Content column ----------
+    Padding areaContent = Padding(
+      padding: EdgeInsets.fromLTRB(Style_FileTree_SubItem_ShiftRight_px, 0, 0, 0),
+      child: Column(children: children),
+    );
+
+    // ---------- Expandable ----------
     return Column(
       children: [
-        Row(
-          children: [
-            const Icon(Icons.folder),
-            Text(widget.name),
-          ],
-        ),
-        Offstage(
-          offstage: !expanded,
-          child: Row(
-            children: [
-              const SizedBox(
-                width: Style_FileTree_SubItem_ShiftRight_px,
-              ),
-              Column(
-                children: children,
-              ),
-            ],
-          ),
-        ),
+        areaHeader,
+        SizeTransition(
+          sizeFactor: _animation_expand,
+          axisAlignment: -1,
+          child: areaContent,
+        )
       ],
     );
   }
@@ -96,6 +123,12 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> {
 
     // ---------- Call base method as usual ----------
     super.initState();
+
+    // ---------- Initialize toggle animation ----------
+    _animationcontroller = AnimationController(vsync: this, duration: _duration);
+    _animation_expand = _animationcontroller.drive(CurveTween(curve: Curves.easeIn));
+    _animation_iconturn = _animationcontroller.drive(Tween<double>(begin: 0, end: -0.25).chain(CurveTween(curve: Curves.easeIn)));
+    if (expanded) _animationcontroller.value = 1;
 
     // ---------- Load all direct children items from system ----------
     loadChildren();
