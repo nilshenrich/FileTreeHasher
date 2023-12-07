@@ -1,3 +1,14 @@
+// ####################################################################################################
+// # @file filetree.dart
+// # @author Nils Henrich
+// # @brief Build file tree from system path and provide hash generating and checking
+// # @version 1.0.1+4
+// # @date 2023-12-07
+// #
+// # @copyright Copyright (c) 2023
+// #
+// ####################################################################################################
+
 // ignore_for_file: camel_case_types
 
 import 'dart:async';
