@@ -42,7 +42,7 @@ const InputDecoration Style_FileTree_ComparisonInput_Decoration =
     InputDecoration(border: OutlineInputBorder(), labelText: "Comparison hash", contentPadding: EdgeInsets.symmetric(horizontal: 8));
 
 // Sub-item
-const double Style_FileTree_SubItem_ShiftRight_px = 20;
+const double Style_FileTree_SubItem_ShiftRight_px = 25;
 
 // Item spacing
 const double Style_FileTree_Item_ElementSpaces_px = 10;

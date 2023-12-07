@@ -81,6 +81,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
             turns: _animation_iconturn,
             child: _iconToggle,
           ),
+          Icon(Icons.folder),
           Text(
             widget.showFullPath ? widget.parent : "",
             style: Style_FileTree_Text_ParentPath,
