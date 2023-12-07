@@ -24,7 +24,7 @@ import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/functions/general.dart';
-import 'package:file_tree_hasher/templates/filetree_old.dart';
+import 'package:file_tree_hasher/templates/filetree.dart';
 import 'package:path/path.dart' as libpath;
 
 // ##################################################
@@ -122,7 +122,7 @@ C_FileViewHashes? LoadHashfile(String storagepath) {
 // @param: name
 // @return: C_FileViewHashes
 // ##################################################
-C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_TreeItem> items, String name, String rootpath) {
+C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTree_Item> items, String name, String rootpath) {
   List<C_FileViewHashes> folders = [];
   List<C_FileHashPair> files = [];
   // TODO: Reimplement
@@ -143,7 +143,7 @@ C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_TreeItem> items, String 
 // @param: name
 // @return: C_FileViewHashes
 // ##################################################
-C_FileViewHashes SingleFiles_to_FileViewHashes(List<T_FileItem> fileViews, String name) {
+C_FileViewHashes SingleFiles_to_FileViewHashes(List<T_FileTree_Item> fileViews, String name) {
   List<C_FileHashPair> files = [];
   // TODO: Reimplement
   // for (T_FileItem file in fileViews) {

@@ -23,7 +23,6 @@ import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
 import 'package:path/path.dart' as libpath;
-import 'package:provider/provider.dart';
 
 // ##################################################
 // # Body content

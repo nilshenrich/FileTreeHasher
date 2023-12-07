@@ -9,10 +9,8 @@
 // #
 // ####################################################################################################
 
-import 'package:file_tree_hasher/templates/filetree.dart';
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/contentarea.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(const FileTreeHasher());
