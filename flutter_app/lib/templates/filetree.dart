@@ -19,6 +19,7 @@ abstract class T_FileTree_Item extends StatefulWidget {
         parent = GetParentPath(path);
 }
 
+// TODO: Make InheritedWidget, so all children can be updated on change
 class T_FileTree_Folder extends T_FileTree_Item {
   // Constructor
   T_FileTree_Folder({super.key, required super.path, super.showFullPath = false});
