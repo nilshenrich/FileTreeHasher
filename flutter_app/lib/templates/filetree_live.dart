@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file_tree_hasher/definies/styles.dart';
@@ -30,6 +31,7 @@ class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
   // State parameter
   bool expanded = true;
   List<T_FileTree_Item> children = [];
+  StreamController<T_FileTree_Item> s_children = StreamController();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,17 @@ class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
 
   @override
   void initState() {
+    // ---------- Add event listener to be triggered when adding a new child item ----------
+    s_children.stream.listen((item) {
+      setState(() {
+        children.add(item);
+      });
+    });
+
+    // ---------- Call base method as usual ----------
     super.initState();
+
+    // ---------- Load all direct children items from system ----------
     loadChildren();
   }
 
@@ -72,7 +84,6 @@ class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
     Stream<FileSystemEntity> systemItems = systemDir.list();
     await for (FileSystemEntity sysItem in systemItems) {
       T_FileTree_Item item;
-      // sleep(Duration(seconds: 1));
 
       // ---------- Item is a file ----------
       if (sysItem is File) {
@@ -92,10 +103,10 @@ class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
         continue;
       }
 
-      // ---------- Add new item as sub-item ----------
-      setState(() {
-        children.add(item);
-      });
+      // ---------- Trigger stram listener to add new item as sub-item ----------
+      if (!s_children.isClosed) s_children.sink.addStream(Stream.value(item));
+      // await Future.delayed(Duration(seconds: 1)); // DEV: To simulate calculation time
+      await Future.delayed(Duration.zero); // Use await to work consecutively on items
     }
   }
 }
