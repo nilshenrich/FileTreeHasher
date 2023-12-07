@@ -16,22 +16,7 @@ import 'package:file_tree_hasher/templates/contentarea.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  // runApp(const FileTreeHasher());
-  runApp(DebuggingApp());
-}
-
-// DEV: Debugging app
-class DebuggingApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      restorationScopeId: 'debug',
-      title: 'File Tree Hasher - Debugging live reload',
-      home: Scaffold(
-        body: I_FileTree_Head(path: "/home/nils/Dokumente/testfiles"),
-      ),
-    );
-  }
+  runApp(const FileTreeHasher());
 }
 
 // ##################################################

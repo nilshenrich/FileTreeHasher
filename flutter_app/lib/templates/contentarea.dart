@@ -21,7 +21,7 @@ import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
-import 'package:file_tree_hasher/templates/filetree_old.dart';
+import 'package:file_tree_hasher/templates/filetree.dart';
 import 'package:path/path.dart' as libpath;
 import 'package:provider/provider.dart';
 
@@ -96,11 +96,11 @@ class T_BodyContent extends StatefulWidget {
 // ##################################################
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
+  List<I_FileTree_Head> loadedTrees = List.empty(growable: true);
+  List<T_FileTree_Item> loadedFiles = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
-    List<T_FileTree> loadedTrees = context.watch<P_FileTrees>().loadedTrees;
-    List<T_FileItem> loadedFiles = context.watch<P_SingleFiles>().loadedFiles;
     return Column(children: [
       ContentDivider_folders(visible: loadedTrees.isNotEmpty),
       Column(children: loadedTrees),
@@ -123,8 +123,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
-    if (!context.mounted) return;
-    context.read<P_FileTrees>().loadFileTree(filetreePath);
+    setState(() {
+      loadedTrees.add(I_FileTree_Head(path: filetreePath!));
+    });
   }
 
   // ##################################################
@@ -139,8 +140,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected files in body --------------------
-    if (!context.mounted) return;
-    context.read<P_SingleFiles>().loadFiles(filePaths.paths);
+    // TODO: Implement
   }
 
   // ##################################################
@@ -148,8 +148,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void clearContent() {
     // Remove all loaded trees and files
-    context.read<P_FileTrees>().clear();
-    context.read<P_SingleFiles>().clear();
+    loadedTrees.clear();
+    loadedFiles.clear();
   }
 
   // ##################################################
@@ -185,8 +185,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void safeHashFile() {
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
-    List<T_FileItem> loadedFiles = context.read<P_SingleFiles>().loadedFiles;
-    for (T_FileTree view in context.read<P_FileTrees>().loadedTrees) {
+    for (I_FileTree_Head view in loadedTrees) {
       dialogRows.add(T_StorageChooserRow(title: view.path, fileTreeView: view));
     }
     if (loadedFiles.isNotEmpty) {
@@ -247,11 +246,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @brief: Load hash file from system and set comparison texts and hash algorithms accordingly
   // ##################################################
   void loadHashfile() async {
-    // Get loaded trees and files
-    if (!context.mounted) return;
-    List<T_FileTree> loadedTrees = context.read<P_FileTrees>().loadedTrees;
-    List<T_FileItem> loadedFiles = context.read<P_SingleFiles>().loadedFiles;
-
     // -------------------- Pick hash files to load --------------------
     FilePickerResult? filePaths = await FilePicker.platform
         .pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true, type: FileType.custom, allowedExtensions: ['hash']);
@@ -278,7 +272,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
         // For all hash string pairs:
         // Just find if a single file exists with matching path
         for (C_FileHashPair hashPair in hashlist) {
-          for (T_FileItem singlefile in loadedFiles) {
+          for (T_FileTree_Item singlefile in loadedFiles) {
             if (singlefile.path == hashPair.file) {
               // TODO: Reimplement
               // singlefile.globKey_HashAlgorithm.currentState!.set(hashPair.algorithm);
@@ -291,8 +285,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
       // ---------- Update tree views ----------
       else {
         // Find matching file tree view
-        T_FileTree? matchingview;
-        for (T_FileTree view in loadedTrees) {
+        I_FileTree_Head? matchingview;
+        for (I_FileTree_Head view in loadedTrees) {
           if (view.path == viewpath) matchingview = view;
         }
         if (matchingview == null) {
@@ -340,7 +334,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @brief: Clear all inputs for comparison hash for folder sub-items
   // @param: folder
   // ##################################################
-  void _clearCompInp(T_FolderItem folder) {
+  void _clearCompInp(I_FileTree_Folder folder) {
     // TODO: Reimplement
     // for (T_TreeItem item in folder.children) {
     //   if (item is T_FileItem) {
@@ -358,7 +352,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @param: file
   // @return: T_FileView?
   // ##################################################
-  T_FileItem? _getMatchingFileview(List<T_TreeItem> viewitems, List<String> folders, String file) {
+  T_FileTree_Item? _getMatchingFileview(List<T_FileTree_Item> viewitems, List<String> folders, String file) {
     // TODO: Reimplement
     // for (T_TreeItem item in viewitems) {
     //   // Work on folder
@@ -393,7 +387,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 class T_StorageChooserRow extends StatelessWidget {
   // Attributes
   final String title;
-  final T_FileTree? fileTreeView; // null means single files
+  final I_FileTree_Head? fileTreeView; // null means single files
   final TextEditingController _textEditingController = TextEditingController();
 
   // Constructor
