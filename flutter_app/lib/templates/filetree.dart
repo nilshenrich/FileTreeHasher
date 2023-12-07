@@ -7,6 +7,10 @@ import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
 
+// ##################################################
+// # TEMPLATE
+// # File tree item to be shown in file tree
+// ##################################################
 abstract class T_FileTree_Item extends StatefulWidget {
   // Parameter
   final String name; // Elements name (to be shown in GUI)
@@ -14,25 +18,34 @@ abstract class T_FileTree_Item extends StatefulWidget {
   final String parent; // Elements parents absolute system path
   final bool showFullPath; // True := Set full path as name ; False := Set just item name as name
 
+  // Constructor
   T_FileTree_Item({super.key, required this.path, required this.showFullPath})
       : name = GetFileName(path),
         parent = GetParentPath(path);
 }
 
+// ##################################################
+// # ITEM
+// # Folder item
+// ##################################################
 // TODO: Make InheritedWidget, so all children can be updated on change
-class T_FileTree_Folder extends T_FileTree_Item {
+class I_FileTree_Folder extends T_FileTree_Item {
   // Constructor
-  T_FileTree_Folder({super.key, required super.path, super.showFullPath = false});
+  I_FileTree_Folder({super.key, required super.path, super.showFullPath = false});
 
   @override
-  State<StatefulWidget> createState() => T_FileTree_Folder_state();
+  State<StatefulWidget> createState() => I_FileTree_Folder_state();
 }
 
-class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
+// ##################################################
+// # STATE
+// # Folder item
+// ##################################################
+class I_FileTree_Folder_state extends State<I_FileTree_Folder> {
   // State parameter
-  bool expanded = true;
-  List<T_FileTree_Item> children = [];
-  StreamController<T_FileTree_Item> s_children = StreamController();
+  bool expanded = true; // Is folder expanded
+  List<T_FileTree_Item> children = []; // Direct child items to be shown in tree
+  StreamController<T_FileTree_Item> s_children = StreamController(); // Stream to add a child item with live update
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +101,7 @@ class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
 
       // ---------- Item is a file ----------
       if (sysItem is File) {
-        item = T_FileTree_File(
+        item = I_FileTree_File(
           path: sysItem.path,
           showFullPath: false,
         );
@@ -96,7 +109,7 @@ class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
 
       // ---------- Item is a folder ----------
       else if (sysItem is Directory) {
-        item = T_FileTree_Folder(path: sysItem.path);
+        item = I_FileTree_Folder(path: sysItem.path);
       }
 
       // ---------- Item is none of these ----------
@@ -112,19 +125,32 @@ class T_FileTree_Folder_state extends State<T_FileTree_Folder> {
   }
 }
 
-class T_FileTree_Tree extends T_FileTree_Folder {
-  T_FileTree_Tree({super.key, required super.path, super.showFullPath = true});
+// ##################################################
+// # ITEM
+// # File tree head (differently designed folder under the hood)
+// ##################################################
+class I_FileTree_Head extends I_FileTree_Folder {
+  // Constructor
+  I_FileTree_Head({super.key, required super.path, super.showFullPath = true});
 }
 
-class T_FileTree_File extends T_FileTree_Item {
+// ##################################################
+// # ITEM
+// # File item
+// ##################################################
+class I_FileTree_File extends T_FileTree_Item {
   // Constructor
-  T_FileTree_File({super.key, required super.path, required super.showFullPath});
+  I_FileTree_File({super.key, required super.path, required super.showFullPath});
 
   @override
-  State<StatefulWidget> createState() => T_FileTree_File_state();
+  State<StatefulWidget> createState() => I_FileTree_File_state();
 }
 
-class T_FileTree_File_state extends State<T_FileTree_File> {
+// ##################################################
+// # STATE
+// # File item
+// ##################################################
+class I_FileTree_File_state extends State<I_FileTree_File> {
   @override
   Widget build(BuildContext context) {
     return Row(
