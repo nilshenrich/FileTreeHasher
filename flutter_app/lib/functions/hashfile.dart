@@ -24,7 +24,7 @@ import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/functions/general.dart';
-import 'package:file_tree_hasher/templates/filetree.dart';
+import 'package:file_tree_hasher/templates/filetree_old.dart';
 import 'package:path/path.dart' as libpath;
 
 // ##################################################

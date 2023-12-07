@@ -21,7 +21,7 @@ import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
-import 'package:file_tree_hasher/templates/filetree.dart';
+import 'package:file_tree_hasher/templates/filetree_old.dart';
 import 'package:path/path.dart' as libpath;
 import 'package:provider/provider.dart';
 
