@@ -397,9 +397,6 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
       hasher.add(chunk);
 
       // Update progress bar
-      if (!mounted) {
-        return;
-      }
       _s_hashGenProgress.sink.addStream(Stream.value(bytesRead / totalBytes));
     }
 
