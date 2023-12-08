@@ -346,8 +346,9 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     });
     Controller_ComparisonInput.stream.listen((input) {
       if (input.itempath == null || input.itempath == widget.path) {
+        if (input.hashAlg != null) globalkey_hashAlgSel.currentState!.set(input.hashAlg);
         setState(() {
-          _hashComp = input.content;
+          if (input.compInput != null) _hashComp = input.compInput!;
         });
       }
     });

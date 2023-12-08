@@ -35,20 +35,22 @@ import 'package:path/path.dart' as libpath;
 GlobalKey<T_BodyContent_state> BodyContent = GlobalKey<T_BodyContent_state>();
 
 // ##################################################
-// # Comparison input update trigger object
+// # Hash input update trigger object
 // # Items are identified by path. Null means all items are included
+// # Can update comparison input and selected hash algorithm. Null means not to be updated
 // ##################################################
-class ComparisonInputUpdater {
-  String? itempath;
-  String content;
-  ComparisonInputUpdater({required this.itempath, required this.content});
+class HashInputUpdater {
+  String? itempath; // Itentifies item by path. Null means all items
+  String? compInput; // Hash comparison input to be set. Null means don't update
+  String? hashAlg; // Hash algorithm to be selected. Null means don't update
+  HashInputUpdater({required this.itempath, this.compInput, this.hashAlg});
 }
 
 // ##################################################
 // # Global stream controllers every widget can listen to
 // ##################################################
 StreamController<String?> Controller_SelectedGlobalHashAlg = StreamController.broadcast(); // Globally selected hash algorithm
-StreamController<ComparisonInputUpdater> Controller_ComparisonInput = StreamController.broadcast(); // Comparison input to be updated
+StreamController<HashInputUpdater> Controller_ComparisonInput = StreamController.broadcast(); // Comparison input to be updated
 
 // ##################################################
 // # CONTENT
@@ -90,7 +92,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(onPressed: BodyContent.currentState!.loadHashfile, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file(s)"),
           IconButton(onPressed: BodyContent.currentState!.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file(s)"),
           IconButton(
-              onPressed: () => Controller_ComparisonInput.add(ComparisonInputUpdater(itempath: null, content: "")),
+              onPressed: () => Controller_ComparisonInput.add(HashInputUpdater(itempath: null, compInput: "")),
               icon: const Icon(Icons.delete_forever_outlined),
               tooltip: "Clear comparison strings")
         ])
@@ -299,7 +301,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
         // Trigger input update
         // TODO: Update selected hash algorithm as well
-        Controller_ComparisonInput.add(ComparisonInputUpdater(itempath: "${rootPath}/${filepath}", content: hashstring));
+        Controller_ComparisonInput.add(HashInputUpdater(itempath: "${rootPath}/${filepath}", compInput: hashstring, hashAlg: hashalg));
       });
     }
   }
