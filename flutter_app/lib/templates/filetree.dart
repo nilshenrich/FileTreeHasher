@@ -12,13 +12,20 @@
 // ignore_for_file: camel_case_types, non_constant_identifier_names
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:convert/convert.dart';
+import 'package:crypto/crypto.dart';
+import 'package:file_tree_hasher/definies/defaults.dart';
+import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 // ##################################################
 // # TEMPLATE
@@ -104,7 +111,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
         children: [
           T_FileHashSelector(),
           SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-          SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
+          SizedBox(width: Style_FileTree_ComparisonInput_Width_px - widget._param_padding.right),
         ],
       ),
     );
@@ -230,6 +237,12 @@ class I_FileTree_File extends T_FileTree_Item {
 // # File item
 // ##################################################
 class I_FileTree_File_state extends State<I_FileTree_File> {
+  // State parameter
+  String? _hashGen; // Generated hash
+  double _hashGenProgress = 0; // Hash generation progress (0-1)
+  StreamController<double> _s_hashGenProgress = StreamController(); // Stream to update live progress
+  bool _hashOngoing = false; // Hash generation ongoing? (Used for abortion)
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -238,7 +251,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
         Text(widget.parent, style: Style_FileTree_Item_Text_Parent),
         Text(widget.name, style: Style_FileTree_Item_Text_Name),
         SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-        Expanded(child: _buildHashGenerationView()),
+        Expanded(child: _buildHashGenerationView(context)),
         SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         T_FileHashSelector(),
         SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
@@ -249,10 +262,56 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
 
   // ##################################################
   // @brief: Build hash generation view
+  // @param: context
   // @return: Widget
   // ##################################################
-  Widget _buildHashGenerationView() {
-    return Text("# TODO: Build hash generation view");
+  Widget _buildHashGenerationView(BuildContext context) {
+    if (_hashGen == null) {
+      return LinearPercentIndicator(
+        percent: _hashGenProgress,
+        lineHeight: Style_FileTree_HashGen_Prg_Height_px,
+        center: Text("${(_hashGenProgress * 100).toStringAsFixed(1)}%", style: Style_FileTree_HashGen_Prg_Text),
+        progressColor: Style_FileTree_HashGen_Prg_Color,
+      );
+    }
+    return Row(
+      children: [
+        Flexible(
+            child: Container(
+          child: Text(_hashGen!, style: Style_FileTree_HashGen_Text),
+        )),
+        SizedBox(
+            height: Style_FileTree_HashSelector_FontSize_px,
+            child: IconButton(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: _hashGen!));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied to clipboard")));
+                },
+                iconSize: Style_FileTree_HashSelector_FontSize_px,
+                padding: EdgeInsets.zero,
+                color: Style_FileTree_HashGen_Text.color,
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                icon: const Icon(Icons.copy))),
+      ],
+    );
+  }
+
+  @override
+  void initState() {
+    // ---------- Add event listener to be triggered when updating progress ----------
+    _s_hashGenProgress.stream.listen((prog) {
+      setState(() {
+        _hashGenProgress = prog;
+      });
+    });
+
+    // ---------- Call base method as usual ----------
+    super.initState();
+
+    // ---------- Start generating hash ----------
+    generateHash(SelectedGlobalHashAlg);
   }
 
   // ##################################################
@@ -260,6 +319,111 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // @return: Widget
   // ##################################################
   Widget _buildHashComparisonView() {
-    return Text("# TODO: Build hash comparison view");
+    return SizedBox(
+      width: Style_FileTree_ComparisonInput_Width_px,
+      height: Style_FileTree_ComparisonInput_Height_px,
+      child: TextField(
+        style: Style_FileTree_ComparisonInput_Text,
+        decoration: Style_FileTree_ComparisonInput_Decoration,
+        controller: TextEditingController(),
+      ),
+    );
+  }
+
+  // ##################################################
+  // @brief: Generate hash and update progress bar
+  // @param: alg
+  // ##################################################
+  void generateHash(String? alg) async {
+    // -------------------- Open file read stream --------------------
+
+    // Check if file exists
+    File file = File(widget.path);
+    if (!file.existsSync()) {
+      setState(() {
+        _hashGen = "<Can't find file in file system>";
+        _hashGenProgress = 0;
+      });
+      return;
+    }
+
+    // Reset any old status
+    // TODO: Reset _hashGen as well
+    _s_hashGenProgress.sink.addStream(Stream.value(0));
+
+    // File size and processed size for progress calculation
+    int totalBytes = file.lengthSync();
+    int bytesRead = 0;
+
+    // -------------------- Choose hash generator --------------------
+
+    // Select hash algorithm
+    var hashOut = AccumulatorSink<Digest>();
+    ByteConversionSink hasher;
+    if (alg == E_HashAlgorithms.MD5.value) {
+      hasher = md5.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA1.value) {
+      hasher = sha1.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA256.value) {
+      hasher = sha256.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA384.value) {
+      hasher = sha384.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.SHA512.value) {
+      hasher = sha512.startChunkedConversion(hashOut);
+    } else if (alg == E_HashAlgorithms.NONE.value) {
+      setState(() {
+        _hashGen = "<No hash to create>";
+      });
+      return;
+    } else {
+      setState(() {
+        _hashGen = "<Can't use hash algorithm '$alg'>";
+      });
+      return;
+    }
+
+    // -------------------- Generate hash block wise --------------------
+    _hashOngoing = true;
+
+    // Read file step by step and generate hash
+    await for (var chunk in file.openRead()) {
+      // Abort process here if flag is unset
+      if (!_hashOngoing) {
+        return;
+      }
+
+      // Generate hash for next file part
+      bytesRead += chunk.length;
+      hasher.add(chunk);
+
+      // Update progress bar
+      if (!mounted) {
+        return;
+      }
+      _s_hashGenProgress.sink.addStream(Stream.value(bytesRead / totalBytes));
+    }
+
+    _hashOngoing = false;
+
+    // -------------------- Done --------------------
+
+    // Extract hash string
+    hasher.close();
+    String hashString = hashOut.events.single.toString();
+
+    _hashGen = hashString;
+  }
+
+  // ##################################################
+  // @brief: Abort current hash generation
+  // ##################################################
+  void abortHashGeneration() {
+    // Unset flag to mark abortion
+    _hashOngoing = false;
+
+    // Reset hash generation view
+    setState(() {
+      _hashGen = "<aborted>";
+    });
   }
 }

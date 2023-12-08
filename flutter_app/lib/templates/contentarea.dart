@@ -147,6 +147,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void clearContent() {
     // Remove all loaded trees and files
+    // BUG: Cleared after next load
     loadedTrees.clear();
     loadedFiles.clear();
   }
