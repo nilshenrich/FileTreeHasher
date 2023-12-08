@@ -11,6 +11,8 @@
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names, library_private_types_in_public_api
 
+import 'dart:async';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
@@ -30,11 +32,17 @@ import 'package:path/path.dart' as libpath;
 GlobalKey<T_BodyContent_state> BodyContent = GlobalKey<T_BodyContent_state>();
 
 // ##################################################
+// # Stream on changed global hash algorithm
+// ##################################################
+StreamController<String?> SelectedGlobalHashAlg_controller = StreamController.broadcast();
+
+// ##################################################
 // # CONTENT
 // # Header bar containing general control elements
 // ##################################################
 class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
-  const T_HeaderBar({super.key});
+  // Constructor
+  T_HeaderBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +65,8 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
         // -------------------- Section: Hash algorithm --------------------
         T_HeaderControlSection(headingText: "Algorithm selection", items: [
           T_GlobalHashSelector(onChanged: (selected) {
-            SelectedGlobalHashAlg = selected;
-            BodyContent.currentState!.updateHashAlg(selected);
+            SelectedGlobalHashAlg = selected; // TODO: Needed?
+            SelectedGlobalHashAlg_controller.add(selected);
           })
         ]),
         // -------------------- Section: Comparison --------------------
@@ -123,7 +131,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
     // -------------------- Show selected folder as tree view --------------------
     setState(() {
-      loadedTrees.add(I_FileTree_Head(path: filetreePath!));
+      loadedTrees.add(I_FileTree_Head(path: filetreePath!, stream_hashGen: SelectedGlobalHashAlg_controller.stream));
     });
   }
 
@@ -151,23 +159,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
       loadedTrees.clear();
       loadedFiles.clear();
     });
-  }
-
-  // ##################################################
-  // @brief: Update all hash algorithms recursively
-  // @param: selected
-  // ##################################################
-  void updateHashAlg(String? selected) {
-    // TODO: Reimplement
-    // for (T_FileTree view in context.read<P_FileTrees>().loadedTrees) {
-    //   view.globKey_HashAlgorithm.currentState!.set(selected);
-    //   for (T_TreeItem item in view.children) {
-    //     item.globKey_HashAlgorithm.currentState!.set(selected);
-    //   }
-    // }
-    // for (T_FileItem item in context.read<P_SingleFiles>().loadedFiles) {
-    //   item.globKey_HashAlgorithm.currentState!.set(selected);
-    // }
   }
 
   // ##################################################
