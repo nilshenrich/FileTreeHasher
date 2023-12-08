@@ -12,7 +12,10 @@
 // ignore_for_file: camel_case_types, non_constant_identifier_names, library_private_types_in_public_api
 
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
@@ -265,54 +268,39 @@ class T_BodyContent_state extends State<T_BodyContent> {
       if (path == null) {
         continue;
       }
-      C_FileViewHashes? parsedHashfile = LoadHashfile(path);
-      if (parsedHashfile == null) {
-        continue;
-      }
-      String viewpath = parsedHashfile.name;
-      List<C_FileHashPair> hashlist = parsedHashfile.files;
 
-      // ---------- Update single files ----------
-      if (viewpath == HashfileSingletext) {
-        // For all hash string pairs:
-        // Just find if a single file exists with matching path
-        for (C_FileHashPair hashPair in hashlist) {
-          for (T_FileTree_Item singlefile in loadedFiles) {
-            if (singlefile.path == hashPair.file) {
-              // TODO: Reimplement
-              // singlefile.globKey_HashAlgorithm.currentState!.set(hashPair.algorithm);
-              // singlefile.globKey_HashComparisonView.currentState!.set(hashPair.hash ?? "");
-            }
-          }
+      // Read file line by line
+      // Ignore all lines before the mpty line, they are part of the file header
+      bool isRealData = false;
+      String? rootPath;
+      File(path).openRead().transform(utf8.decoder).transform(LineSplitter()).forEach((line) {
+        // Search for empty line to identify usable data
+        if (line.isEmpty) {
+          isRealData = true;
+          return;
         }
-      }
+        if (!isRealData) return;
 
-      // ---------- Update tree views ----------
-      else {
-        // Find matching file tree view
-        I_FileTree_Head? matchingview;
-        for (I_FileTree_Head view in loadedTrees) {
-          if (view.path == viewpath) matchingview = view;
-        }
-        if (matchingview == null) {
-          continue;
+        // First line of usable data is the tree view root path or the marker for single files
+        if (rootPath == null) {
+          rootPath = line;
+          return;
         }
 
-        // For all hash string pairs:
-        // Go along file path and update file view if existing
-        // TODO: Reimplement
-        // for (C_FileHashPair hashpair in hashlist) {
-        //   List<String> pathparts = libpath.split(hashpair.file);
-        //   List<String> folders = pathparts.sublist(0, pathparts.length - 1);
-        //   String file = pathparts.last;
-        //   T_FileItem? matchingFileview = _getMatchingFileview(matchingview.children, folders, file);
-        //   if (matchingFileview == null) {
-        //     continue;
-        //   }
-        //   matchingFileview.globKey_HashAlgorithm.currentState!.set(hashpair.algorithm);
-        //   matchingFileview.globKey_HashComparisonView.currentState!.set(hashpair.hash ?? "");
-        // }
-      }
+        // Get 3 CSV columns from line
+        List<List<String>> csvrow_list = const CsvToListConverter()
+            .convert(line, fieldDelimiter: ",", textDelimiter: '"', textEndDelimiter: '"', eol: LineendingChar, shouldParseNumbers: false);
+        if (csvrow_list.isEmpty) return;
+        List csvrow = csvrow_list[0];
+        if (csvrow.length != 3) return;
+        String hashstring = csvrow[0];
+        String hashalg = csvrow[1];
+        String filepath = csvrow[2];
+
+        // Trigger input update
+        // TODO: Update selected hash algorithm as well
+        Controller_ComparisonInput.add(ComparisonInputUpdater(itempath: "${rootPath}/${filepath}", content: hashstring));
+      });
     }
   }
 }

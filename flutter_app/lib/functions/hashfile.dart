@@ -65,58 +65,6 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
 }
 
 // ##################################################
-// @brief: Load hash file from system and return info in usable form (List of hashed files with absolute path)
-// @param: storagepath
-// @return C_FileViewHashes? (No containing folders, just having full path files)
-// ##################################################
-C_FileViewHashes? LoadHashfile(String storagepath) {
-  // Lists to return
-  List<C_FileHashPair> filesToReturn = [];
-
-  // Read hash file
-  File filesocket = File(storagepath);
-  if (!filesocket.existsSync()) return null;
-  List<String> lines = filesocket.readAsLinesSync(); // TODO: Better read file dynamically (https://github.com/nilshenrich/FileTreeHasher/issues/14)
-
-  // Iterate over all lines
-  // Ignore all lines before the empty line, they are part of the file header
-  bool isRealData = false;
-  String? rootpath;
-  for (String line in lines) {
-    // Search for empty line to identify usable data
-    if (line.isEmpty) {
-      isRealData = true;
-      continue;
-    }
-    if (!isRealData) continue;
-
-    // First line of usable data is the tree views root path or the marker "Single files"
-    if (rootpath == null) {
-      rootpath = line;
-      continue;
-    }
-
-    // Get 3 CSV colums from line
-    List<List<String>> csvrow_list = const CsvToListConverter()
-        .convert(line, fieldDelimiter: ",", textDelimiter: '"', textEndDelimiter: '"', eol: LineendingChar, shouldParseNumbers: false);
-    if (csvrow_list.isEmpty) continue;
-    List csvrow = csvrow_list[0];
-    if (csvrow.length != 3) continue;
-    String hashstring = csvrow[0];
-    String hashalg = csvrow[1];
-    String filepath = csvrow[2];
-
-    // Get the current line (file) into return object
-    filesToReturn.add(C_FileHashPair(filepath, hashstring, hashalg));
-  }
-
-  if (rootpath == null) {
-    return null;
-  }
-  return C_FileViewHashes(rootpath, filesToReturn, []);
-}
-
-// ##################################################
 // @brief: Transform a given list of file tree items into a C_FileViewHashes
 // @param: items
 // @param: name
