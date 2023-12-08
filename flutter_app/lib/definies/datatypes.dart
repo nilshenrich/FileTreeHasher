@@ -14,11 +14,12 @@
 // ##################################################
 // # Hash comparison result
 // ##################################################
-
 enum E_HashComparisonResult {
-  none, // No comparison
-  equal, // Generated hash and comparison hash match
-  notEqual, // Generated hash and comparison hash differ
+  none, // Hash generation completed: No comparison
+  queued, // Hash to be generated but not started
+  busy, // Hash being generated
+  equal, // Hash generation completed: hash match
+  notEqual, // Hash generation completed: hash differ
 }
 
 // ##################################################
