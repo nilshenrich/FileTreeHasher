@@ -32,9 +32,9 @@ import 'package:path/path.dart' as libpath;
 GlobalKey<T_BodyContent_state> BodyContent = GlobalKey<T_BodyContent_state>();
 
 // ##################################################
-// # Stream on changed global hash algorithm
+// # Global stream controllers every widget can listen to
 // ##################################################
-StreamController<String?> SelectedGlobalHashAlg_controller = StreamController.broadcast();
+StreamController<String?> Controller_SelectedGlobalHashAlg = StreamController.broadcast(); // Globally selected hash algorithm
 
 // ##################################################
 // # CONTENT
@@ -46,7 +46,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    SelectedGlobalHashAlg_controller.stream.listen((selected) {
+    Controller_SelectedGlobalHashAlg.stream.listen((selected) {
       SelectedGlobalHashAlg = selected;
     });
     return AppBar(
@@ -68,7 +68,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
         // -------------------- Section: Hash algorithm --------------------
         T_HeaderControlSection(headingText: "Algorithm selection", items: [
           T_GlobalHashSelector(onChanged: (selected) {
-            SelectedGlobalHashAlg_controller.add(selected);
+            Controller_SelectedGlobalHashAlg.add(selected);
           })
         ]),
         // -------------------- Section: Comparison --------------------
@@ -133,7 +133,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
     // -------------------- Show selected folder as tree view --------------------
     setState(() {
-      loadedTrees.add(I_FileTree_Head(path: filetreePath!, stream_hashGen: SelectedGlobalHashAlg_controller.stream));
+      loadedTrees.add(I_FileTree_Head(path: filetreePath!, stream_hashGen: Controller_SelectedGlobalHashAlg.stream));
     });
   }
 
