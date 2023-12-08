@@ -28,12 +28,11 @@ abstract class T_FileTree_Item extends StatefulWidget {
   final String name; // Elements name (to be shown in GUI)
   final String path; // Elements absolute system path (used for hash generation and shown in tree header)
   final String parent; // Elements parents absolute system path
-  final bool showFullPath; // True := Set full path as name ; False := Set just item name as name
 
   // Constructor
-  T_FileTree_Item({super.key, required this.path, required this.showFullPath})
+  T_FileTree_Item({super.key, required this.path, required showFullPath})
       : name = GetFileName(path),
-        parent = GetParentPath(path);
+        parent = showFullPath ? GetParentPath(path) : "";
 }
 
 // ##################################################
@@ -91,7 +90,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
           ),
           widget._param_showIcon ? Icon(Icons.folder) : SizedBox.shrink(),
           Text(
-            widget.showFullPath ? widget.parent : "",
+            widget.parent,
             style: widget._param_textStyle_parent,
           ),
           Text(widget.name, style: widget._param_textStyle_name)
