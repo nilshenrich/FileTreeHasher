@@ -37,10 +37,14 @@ abstract class T_FileTree_Item extends StatefulWidget {
   final String path; // Elements absolute system path (used for hash generation and shown in tree header)
   final String parent; // Elements parents absolute system path
 
+  // Status change: Parent stream
+  Stream<String?>? s_hashGen_stream;
+
   // Constructor
-  T_FileTree_Item({super.key, required this.path, required showFullPath})
+  T_FileTree_Item({super.key, required this.path, required showFullPath, Stream<String?>? stream_hashGen})
       : name = GetFileName(path),
-        parent = showFullPath ? GetParentPath(path) : "";
+        parent = showFullPath ? GetParentPath(path) : "",
+        s_hashGen_stream = stream_hashGen;
 }
 
 // ##################################################
@@ -50,7 +54,7 @@ abstract class T_FileTree_Item extends StatefulWidget {
 // TODO: Make InheritedWidget, so all children can be updated on change
 class I_FileTree_Folder extends T_FileTree_Item {
   // Constructor
-  I_FileTree_Folder({super.key, required super.path, super.showFullPath = false});
+  I_FileTree_Folder({super.key, required super.path, super.stream_hashGen, super.showFullPath = false});
 
   // Style parameter
   final bool _param_showIcon = true;
@@ -72,6 +76,12 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
   bool expanded = true; // Is folder expanded
   List<T_FileTree_Item> children = []; // Direct child items to be shown in tree
   StreamController<T_FileTree_Item> s_children = StreamController(); // Stream to add a child item with live update
+
+  // Status change: Children notification
+  StreamController<String?> s_hashGen_controller = StreamController.broadcast();
+
+  // Hash algorithm selector key
+  GlobalKey<T_HashSelector_state> globalkey_hashAlgSel = GlobalKey();
 
   // Toggle animation
   Duration _duration = Duration(milliseconds: 250);
@@ -109,7 +119,12 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
     Widget areaHeader_unclickable = Container(
       child: Row(
         children: [
-          T_FileHashSelector(),
+          T_FileHashSelector(
+            key: globalkey_hashAlgSel,
+            onChanged: (selected) {
+              s_hashGen_controller.add(selected);
+            },
+          ),
           SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
           SizedBox(width: Style_FileTree_ComparisonInput_Width_px - widget._param_padding.right),
         ],
@@ -150,6 +165,9 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
         children.add(item);
       });
     });
+    widget.s_hashGen_stream?.listen((selected) {
+      globalkey_hashAlgSel.currentState!.set(selected);
+    });
 
     // ---------- Call base method as usual ----------
     super.initState();
@@ -175,15 +193,12 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
 
       // ---------- Item is a file ----------
       if (sysItem is File) {
-        item = I_FileTree_File(
-          path: sysItem.path,
-          showFullPath: false,
-        );
+        item = I_FileTree_File(path: sysItem.path, stream_hashGen: s_hashGen_controller.stream, showFullPath: false);
       }
 
       // ---------- Item is a folder ----------
       else if (sysItem is Directory) {
-        item = I_FileTree_Folder(path: sysItem.path);
+        item = I_FileTree_Folder(path: sysItem.path, stream_hashGen: s_hashGen_controller.stream);
       }
 
       // ---------- Item is none of these ----------
@@ -205,7 +220,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
 // ##################################################
 class I_FileTree_Head extends I_FileTree_Folder {
   // Constructor
-  I_FileTree_Head({super.key, required super.path, super.showFullPath = true});
+  I_FileTree_Head({super.key, required super.path, super.stream_hashGen, super.showFullPath = true});
 
   // Style parameter
   @override
@@ -226,7 +241,7 @@ class I_FileTree_Head extends I_FileTree_Folder {
 // ##################################################
 class I_FileTree_File extends T_FileTree_Item {
   // Constructor
-  I_FileTree_File({super.key, required super.path, required super.showFullPath});
+  I_FileTree_File({super.key, required super.path, required super.showFullPath, super.stream_hashGen});
 
   @override
   State<StatefulWidget> createState() => I_FileTree_File_state();
@@ -243,6 +258,9 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   StreamController<double> _s_hashGenProgress = StreamController(); // Stream to update live progress
   bool _hashOngoing = false; // Hash generation ongoing? (Used for abortion)
 
+  // Hash algorithm selector key
+  GlobalKey<T_HashSelector_state> globalkey_hashAlgSel = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -253,7 +271,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
         SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         Expanded(child: _buildHashGenerationView(context)),
         SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-        T_FileHashSelector(),
+        T_FileHashSelector(key: globalkey_hashAlgSel),
         SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         _buildHashComparisonView()
       ],
@@ -298,22 +316,6 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     );
   }
 
-  @override
-  void initState() {
-    // ---------- Add event listener to be triggered when updating progress ----------
-    _s_hashGenProgress.stream.listen((prog) {
-      setState(() {
-        _hashGenProgress = prog;
-      });
-    });
-
-    // ---------- Call base method as usual ----------
-    super.initState();
-
-    // ---------- Start generating hash ----------
-    generateHash(SelectedGlobalHashAlg);
-  }
-
   // ##################################################
   // @brief: Build hash comparison view
   // @return: Widget
@@ -328,6 +330,25 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
         controller: TextEditingController(),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    // ---------- Add event listener to be triggered when updating progress ----------
+    _s_hashGenProgress.stream.listen((prog) {
+      setState(() {
+        _hashGenProgress = prog;
+      });
+    });
+    widget.s_hashGen_stream?.listen((selected) {
+      globalkey_hashAlgSel.currentState!.set(selected);
+    });
+
+    // ---------- Call base method as usual ----------
+    super.initState();
+
+    // ---------- Start generating hash ----------
+    generateHash(SelectedGlobalHashAlg);
   }
 
   // ##################################################
