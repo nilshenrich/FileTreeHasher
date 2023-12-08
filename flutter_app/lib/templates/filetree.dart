@@ -21,6 +21,7 @@ import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/general.dart';
+import 'package:file_tree_hasher/templates/contentarea.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -252,6 +253,7 @@ class I_FileTree_File extends T_FileTree_Item {
 // ##################################################
 class I_FileTree_File_state extends State<I_FileTree_File> {
   // State parameter
+  String _hashComp = "";
   String? _hashGen; // Generated hash
   double _hashGenProgress = 0; // Hash generation progress (0-1)
   StreamController<double> _s_hashGenProgress = StreamController(); // Stream to update live progress
@@ -326,7 +328,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
       child: TextField(
         style: Style_FileTree_ComparisonInput_Text,
         decoration: Style_FileTree_ComparisonInput_Decoration,
-        controller: TextEditingController(),
+        controller: TextEditingController(text: _hashComp),
       ),
     );
   }
@@ -341,6 +343,13 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     });
     widget.s_hashGen_stream?.listen((selected) {
       globalkey_hashAlgSel.currentState!.set(selected);
+    });
+    Controller_ComparisonInput.stream.listen((input) {
+      if (input.itempath == null || input.itempath == widget.path) {
+        setState(() {
+          _hashComp = input.content;
+        });
+      }
     });
 
     // ---------- Call base method as usual ----------

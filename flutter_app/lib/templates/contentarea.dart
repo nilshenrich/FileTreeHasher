@@ -32,9 +32,20 @@ import 'package:path/path.dart' as libpath;
 GlobalKey<T_BodyContent_state> BodyContent = GlobalKey<T_BodyContent_state>();
 
 // ##################################################
+// # Comparison input update trigger object
+// # Items are identified by path. Null means all items are included
+// ##################################################
+class ComparisonInputUpdater {
+  String? itempath;
+  String content;
+  ComparisonInputUpdater({required this.itempath, required this.content});
+}
+
+// ##################################################
 // # Global stream controllers every widget can listen to
 // ##################################################
 StreamController<String?> Controller_SelectedGlobalHashAlg = StreamController.broadcast(); // Globally selected hash algorithm
+StreamController<ComparisonInputUpdater> Controller_ComparisonInput = StreamController.broadcast(); // Comparison input to be updated
 
 // ##################################################
 // # CONTENT
@@ -76,7 +87,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(onPressed: BodyContent.currentState!.loadHashfile, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file(s)"),
           IconButton(onPressed: BodyContent.currentState!.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file(s)"),
           IconButton(
-              onPressed: BodyContent.currentState!.clearComparisonInputs,
+              onPressed: () => Controller_ComparisonInput.add(ComparisonInputUpdater(itempath: null, content: "")),
               icon: const Icon(Icons.delete_forever_outlined),
               tooltip: "Clear comparison strings")
         ])
@@ -303,40 +314,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
         // }
       }
     }
-  }
-
-  // ##################################################
-  // @brief: Clear all inputs for comparison hash
-  // ##################################################
-  void clearComparisonInputs() {
-    // TODO: Reimplement
-    // for (T_FileTree view in context.read<P_FileTrees>().loadedTrees) {
-    //   for (T_TreeItem item in view.children) {
-    //     if (item is T_FileItem) {
-    //       item.globKey_HashComparisonView.currentState!.set("");
-    //     } else if (item is T_FolderItem) {
-    //       _clearCompInp(item);
-    //     }
-    //   }
-    // }
-    // for (T_FileItem item in context.read<P_SingleFiles>().loadedFiles) {
-    //   item.globKey_HashComparisonView.currentState!.set("");
-    // }
-  }
-
-  // ##################################################
-  // @brief: Clear all inputs for comparison hash for folder sub-items
-  // @param: folder
-  // ##################################################
-  void _clearCompInp(I_FileTree_Folder folder) {
-    // TODO: Reimplement
-    // for (T_TreeItem item in folder.children) {
-    //   if (item is T_FileItem) {
-    //     item.globKey_HashComparisonView.currentState!.set("");
-    //   } else if (item is T_FolderItem) {
-    //     _clearCompInp(item);
-    //   }
-    // }
   }
 
   // ##################################################
