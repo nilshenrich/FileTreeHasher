@@ -411,7 +411,9 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     hasher.close();
     String hashString = hashOut.events.single.toString();
 
-    _hashGen = hashString;
+    setState(() {
+      _hashGen = hashString;
+    });
   }
 
   // ##################################################
