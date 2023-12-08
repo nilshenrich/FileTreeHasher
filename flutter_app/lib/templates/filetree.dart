@@ -16,6 +16,7 @@ import 'dart:io';
 
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/general.dart';
+import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
@@ -75,33 +76,43 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
   @override
   Widget build(BuildContext context) {
     // ---------- Header row ----------
-    GestureDetector areaHeader_clickable = GestureDetector(
-      onTap: () {
-        expanded ? _animationcontroller.reverse() : _animationcontroller.forward();
-        setState(() {
-          expanded = !expanded;
-        });
-      },
+    Widget areaHeader_clickable = MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          expanded ? _animationcontroller.reverse() : _animationcontroller.forward();
+          setState(() {
+            expanded = !expanded;
+          });
+        },
+        child: Row(
+          children: [
+            RotationTransition(
+              turns: _animation_iconturn,
+              child: _iconToggle,
+            ),
+            widget._param_showIcon ? Icon(Icons.folder) : SizedBox.shrink(),
+            Text(widget.parent, style: widget._param_textStyle_parent),
+            Text(widget.name, style: widget._param_textStyle_name),
+          ],
+        ),
+      ),
+    );
+    Widget areaHeader_unclickable = Container(
       child: Row(
         children: [
-          RotationTransition(
-            turns: _animation_iconturn,
-            child: _iconToggle,
-          ),
-          widget._param_showIcon ? Icon(Icons.folder) : SizedBox.shrink(),
-          Text(
-            widget.parent,
-            style: widget._param_textStyle_parent,
-          ),
-          Text(widget.name, style: widget._param_textStyle_name)
+          T_FileHashSelector(),
+          SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+          SizedBox(width: Style_FileTree_ComparisonInput_Width_px),
         ],
       ),
     );
-    var areaHeader = Container(
+    Widget areaHeader = Container(
       padding: widget._param_padding,
       color: widget._param_color_header,
       child: Row(
-        children: [areaHeader_clickable],
+        children: [Expanded(child: areaHeader_clickable), areaHeader_unclickable],
       ),
     );
 
@@ -224,8 +235,31 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     return Row(
       children: [
         const Icon(Icons.description),
-        Text(widget.name),
+        Text(widget.parent, style: Style_FileTree_Item_Text_Parent),
+        Text(widget.name, style: Style_FileTree_Item_Text_Name),
+        SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        Expanded(child: _buildHashGenerationView()),
+        SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        T_FileHashSelector(),
+        SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        _buildHashComparisonView()
       ],
     );
+  }
+
+  // ##################################################
+  // @brief: Build hash generation view
+  // @return: Widget
+  // ##################################################
+  Widget _buildHashGenerationView() {
+    return Text("# TODO: Build hash generation view");
+  }
+
+  // ##################################################
+  // @brief: Build hash comparison view
+  // @return: Widget
+  // ##################################################
+  Widget _buildHashComparisonView() {
+    return Text("# TODO: Build hash comparison view");
   }
 }
