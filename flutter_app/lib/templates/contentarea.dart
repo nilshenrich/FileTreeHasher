@@ -46,6 +46,9 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    SelectedGlobalHashAlg_controller.stream.listen((selected) {
+      SelectedGlobalHashAlg = selected;
+    });
     return AppBar(
         flexibleSpace: Column(children: [
       const SizedBox(height: 10),
@@ -65,7 +68,6 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
         // -------------------- Section: Hash algorithm --------------------
         T_HeaderControlSection(headingText: "Algorithm selection", items: [
           T_GlobalHashSelector(onChanged: (selected) {
-            SelectedGlobalHashAlg = selected; // TODO: Needed?
             SelectedGlobalHashAlg_controller.add(selected);
           })
         ]),
