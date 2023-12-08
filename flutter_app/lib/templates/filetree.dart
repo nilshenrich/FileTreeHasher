@@ -207,7 +207,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
       }
 
       // ---------- Trigger stram listener to add new item as sub-item ----------
-      if (!s_children.isClosed) s_children.sink.addStream(Stream.value(item));
+      if (!s_children.isClosed) s_children.add(item);
       // await Future.delayed(Duration(seconds: 1)); // DEV: To simulate calculation time
       await Future.delayed(Duration.zero); // Use await to work consecutively on items
     }
@@ -370,7 +370,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
 
     // Reset any old status
     // TODO: Reset _hashGen as well
-    _s_hashGenProgress.sink.addStream(Stream.value(0));
+    _s_hashGenProgress.add(0);
 
     // File size and processed size for progress calculation
     int totalBytes = file.lengthSync();
@@ -418,7 +418,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
       hasher.add(chunk);
 
       // Update progress bar
-      _s_hashGenProgress.sink.addStream(Stream.value(bytesRead / totalBytes));
+      _s_hashGenProgress.add(bytesRead / totalBytes);
     }
 
     _hashOngoing = false;
