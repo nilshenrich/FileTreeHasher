@@ -315,40 +315,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
       }
     }
   }
-
-  // ##################################################
-  // @brief: Get file view element (if existing) that matches a folder path
-  // @param: viewitems
-  // @param: folders
-  // @param: file
-  // @return: T_FileView?
-  // ##################################################
-  T_FileTree_Item? _getMatchingFileview(List<T_FileTree_Item> viewitems, List<String> folders, String file) {
-    // TODO: Reimplement
-    // for (T_TreeItem item in viewitems) {
-    //   // Work on folder
-    //   if (item is T_FolderItem) {
-    //     if (folders.isEmpty) {
-    //       continue; // File searched, folder found
-    //     }
-    //     T_FileItem? found = _getMatchingFileview(item.children, folders.sublist(1, folders.length), file);
-    //     if (found != null) {
-    //       return found;
-    //     }
-    //   }
-
-    //   // Work on file
-    //   if (item is T_FileItem) {
-    //     if (folders.isNotEmpty) {
-    //       continue; // Folder searched, file found
-    //     }
-    //     if (item.name == file) {
-    //       return item;
-    //     }
-    //   }
-    // }
-    return null;
-  }
 }
 
 // ##################################################
