@@ -168,7 +168,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     for (PlatformFile sysFile in picked.files) {
       String? path = sysFile.path;
       if (path == null) continue;
-      I_FileTree_File file = I_FileTree_File(path: path, showFullPath: true);
+      I_FileTree_File file = I_FileTree_File(path: path, stream_hashGen: Controller_SelectedGlobalHashAlg.stream, showFullPath: true);
       l_loadedFiles.add(file);
     }
     setState(() {

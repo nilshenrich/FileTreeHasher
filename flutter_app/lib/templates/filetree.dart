@@ -39,13 +39,13 @@ abstract class T_FileTree_Item extends StatefulWidget {
   final String parent; // Elements parents absolute system path
 
   // Status change: Parent stream
-  Stream<String?>? s_hashGen_stream;
+  Stream<String?> s_hashGen_stream;
 
   // Constructor
-  T_FileTree_Item({super.key, required this.path, required showFullPath, Stream<String?>? stream_hashGen})
+  T_FileTree_Item({super.key, required this.path, required Stream<String?> stream_hashGen, required showFullPath})
       : name = GetFileName(path),
-        parent = showFullPath ? GetParentPath(path) : "",
-        s_hashGen_stream = stream_hashGen;
+        s_hashGen_stream = stream_hashGen,
+        parent = showFullPath ? GetParentPath(path) : "";
 }
 
 // ##################################################
@@ -54,7 +54,7 @@ abstract class T_FileTree_Item extends StatefulWidget {
 // ##################################################
 class I_FileTree_Folder extends T_FileTree_Item {
   // Constructor
-  I_FileTree_Folder({super.key, required super.path, super.stream_hashGen, super.showFullPath = false});
+  I_FileTree_Folder({super.key, required super.path, required super.stream_hashGen, super.showFullPath = false});
 
   // Style parameter
   final bool _param_showIcon = true;
@@ -220,7 +220,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
 // ##################################################
 class I_FileTree_Head extends I_FileTree_Folder {
   // Constructor
-  I_FileTree_Head({super.key, required super.path, super.stream_hashGen, super.showFullPath = true});
+  I_FileTree_Head({super.key, required super.path, required super.stream_hashGen, super.showFullPath = true});
 
   // Style parameter
   @override
@@ -241,7 +241,7 @@ class I_FileTree_Head extends I_FileTree_Folder {
 // ##################################################
 class I_FileTree_File extends T_FileTree_Item {
   // Constructor
-  I_FileTree_File({super.key, required super.path, required super.showFullPath, super.stream_hashGen});
+  I_FileTree_File({super.key, required super.path, required super.stream_hashGen, required super.showFullPath});
 
   @override
   State<StatefulWidget> createState() => I_FileTree_File_state();
