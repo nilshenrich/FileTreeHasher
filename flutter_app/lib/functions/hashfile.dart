@@ -73,7 +73,7 @@ void GenerateHashfile(C_FileViewHashes fileviewhashes, String storagepath, {bool
 C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTree_Item> items, String name, String rootpath) {
   List<C_FileViewHashes> folders = [];
   List<C_FileHashPair> files = [];
-  // TODO: Reimplement
+  // TODO: Obsolete for new structure
   // for (T_TreeItem item in items) {
   //   String relpath = libpath.relative(item.path, from: rootpath);
   //   if (item is T_FolderItem) {
@@ -93,7 +93,7 @@ C_FileViewHashes FileTreeItems_to_FileViewHashes(List<T_FileTree_Item> items, St
 // ##################################################
 C_FileViewHashes SingleFiles_to_FileViewHashes(List<T_FileTree_Item> fileViews, String name) {
   List<C_FileHashPair> files = [];
-  // TODO: Reimplement
+  // TODO: Obsolete for new structure
   // for (T_FileItem file in fileViews) {
   //   files.add(C_FileHashPair(file.path, file.globKey_HashGenerationView.currentState!.HashGen, file.globKey_HashAlgorithm.currentState!.get()!));
   // }

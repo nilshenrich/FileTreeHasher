@@ -188,7 +188,8 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
   void loadChildren() async {
     Directory systemDir = Directory(widget.path);
     Stream<FileSystemEntity> systemItems = systemDir.list();
-    await for (FileSystemEntity sysItem in systemItems) {
+    // await for (FileSystemEntity sysItem in systemItems) {
+    systemItems.forEach((sysItem) {
       T_FileTree_Item item;
 
       // ---------- Item is a file ----------
@@ -203,14 +204,13 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
 
       // ---------- Item is none of these ----------
       else {
-        continue;
+        return;
       }
 
-      // ---------- Trigger stram listener to add new item as sub-item ----------
+      // ---------- Trigger stream listener to add new item as sub-item ----------
       if (!s_children.isClosed) s_children.add(item);
-      // await Future.delayed(Duration(seconds: 1)); // DEV: To simulate calculation time
-      await Future.delayed(Duration.zero); // Use await to work consecutively on items
-    }
+      // sleep(Duration(seconds: 1)); // DEV: To simulate calculation time
+    });
   }
 }
 

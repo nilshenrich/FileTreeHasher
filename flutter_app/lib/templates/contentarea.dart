@@ -122,7 +122,7 @@ class T_BodyContent extends StatefulWidget {
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
   List<I_FileTree_Head> loadedTrees = List.empty(growable: true);
-  List<T_FileTree_Item> loadedFiles = List.empty(growable: true);
+  List<I_FileTree_File> loadedFiles = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -158,13 +158,22 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void selectNewFiles() async {
     // -------------------- Select files from system --------------------
-    FilePickerResult? filePaths = await FilePicker.platform.pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true);
-    if (filePaths == null) {
+    FilePickerResult? picked = await FilePicker.platform.pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true);
+    if (picked == null) {
       return;
     }
 
     // -------------------- Show selected files in body --------------------
-    // TODO: Implement
+    List<I_FileTree_File> l_loadedFiles = loadedFiles;
+    for (PlatformFile sysFile in picked.files) {
+      String? path = sysFile.path;
+      if (path == null) continue;
+      I_FileTree_File file = I_FileTree_File(path: path, showFullPath: true);
+      l_loadedFiles.add(file);
+    }
+    setState(() {
+      loadedFiles = l_loadedFiles;
+    });
   }
 
   // ##################################################
