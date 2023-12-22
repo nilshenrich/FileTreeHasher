@@ -6,6 +6,7 @@ if [ "$EUID" -ne 0 ]; then
     exit -1
 fi
 
+
 # Get directory of this file
 currentDir=$(dirname $(readlink -f $0))
 
@@ -14,11 +15,15 @@ binname="file_tree_hasher"
 appname="filetreehasher"
 installpath="/opt/$appname"
 
+# Bundle path
+p_bundlefiles=$currentDir/../../build/linux/x64/release/bundle/*
+p_bundleIcon=$currentDir/../../assets/img/logo.png
+
 # Create installation directory
 mkdir -p $installpath
 
 # Copy bundle folder
-cp -r $currentDir/../../build/linux/x64/release/bundle/* $installpath/
+cp -r $p_bundlefiles $installpath/
 
 # Rename binary file
 mv $installpath/$binname $installpath/$appname
@@ -37,7 +42,7 @@ chmod 755 $installpath/$appname
 ln -s $installpath/$appname /usr/local/bin/$appname
 
 # Create desktop entry by copying the desktop file
-convert $currentDir/../../assets/img/logo.png -resize 256x256 $installpath/favicon.png
+convert $p_bundleIcon -resize 256x256 $installpath/favicon.png
 echo -e """[Desktop Entry]
 Type=Application
 Name=File Tree Hasher
