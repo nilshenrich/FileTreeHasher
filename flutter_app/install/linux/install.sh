@@ -16,10 +16,8 @@ appname="filetreehasher"
 installpath="/opt/$appname"
 
 # Bundle path
-# p_bundlefiles=$currentDir/../../build/linux/x64/release/bundle/*
-# p_bundleIcon=$currentDir/../../assets/img/logo.png
-p_bundlefiles=$currentDir/bundle/*
-p_bundleIcon=$currentDir/logo.png
+p_bundlefiles=$currentDir/../../build/linux/x64/release/bundle/*
+p_bundleIcon=$currentDir/../../assets/img/logo.png
 
 # Create installation directory
 mkdir -p $installpath
