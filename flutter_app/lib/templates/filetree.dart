@@ -105,9 +105,12 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
         },
         child: Row(
           children: [
-            RotationTransition(
-              turns: _animation_iconturn,
-              child: _iconToggle,
+            SizedBox(
+              width: Style_FileTree_Item_Expander_Width_px,
+              child: RotationTransition(
+                turns: _animation_iconturn,
+                child: _iconToggle,
+              ),
             ),
             widget._param_showIcon ? Icon(Icons.folder) : SizedBox.shrink(),
             Text(widget.parent, style: widget._param_textStyle_parent),
@@ -266,6 +269,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        SizedBox(width: Style_FileTree_Item_Expander_Width_px),
         const Icon(Icons.description),
         Text(widget.parent, style: Style_FileTree_Item_Text_Parent),
         Text(widget.name, style: Style_FileTree_Item_Text_Name),

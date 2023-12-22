@@ -57,6 +57,7 @@ const double Style_FileTree_SubItem_ShiftRight_px = 25;
 
 // Item spacing
 const double Style_FileTree_Item_ElementSpaces_px = 10;
+const double Style_FileTree_Item_Expander_Width_px = 25;
 
 // Text style for generated hash
 const TextStyle Style_FileTree_HashGen_Text = TextStyle(color: Colors.grey, overflow: TextOverflow.ellipsis);
