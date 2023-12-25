@@ -49,7 +49,7 @@ class HashInputUpdater {
 // ##################################################
 // # Global stream controllers every widget can listen to
 // ##################################################
-StreamController<C_HashGen> Controller_SelectedGlobalHashAlg = StreamController.broadcast(); // Globally selected hash algorithm
+StreamController<C_HashAlg> Controller_SelectedGlobalHashAlg = StreamController.broadcast(); // Globally selected hash algorithm
 StreamController<HashInputUpdater> Controller_ComparisonInput = StreamController.broadcast(); // Comparison input to be updated
 
 // ##################################################
@@ -84,7 +84,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
         // -------------------- Section: Hash algorithm --------------------
         T_HeaderControlSection(headingText: "Algorithm selection", items: [
           T_GlobalHashSelector(onChanged: (selected) {
-            Controller_SelectedGlobalHashAlg.add(C_HashGen(selected));
+            Controller_SelectedGlobalHashAlg.add(C_HashAlg(selected));
           })
         ]),
         // -------------------- Section: Comparison --------------------
@@ -148,7 +148,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
     // -------------------- Show selected folder as tree view --------------------
     setState(() {
-      loadedTrees.add(I_FileTree_Head(path: filetreePath!, stream_hashGen: Controller_SelectedGlobalHashAlg.stream));
+      loadedTrees.add(I_FileTree_Head(path: filetreePath!, stream_hashAlg: Controller_SelectedGlobalHashAlg.stream));
     });
   }
 
@@ -168,7 +168,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     for (PlatformFile sysFile in picked.files) {
       String? path = sysFile.path;
       if (path == null) continue;
-      I_FileTree_File file = I_FileTree_File(path: path, stream_hashGen: Controller_SelectedGlobalHashAlg.stream, showFullPath: true);
+      I_FileTree_File file = I_FileTree_File(path: path, stream_hashAlg: Controller_SelectedGlobalHashAlg.stream, showFullPath: true);
       l_loadedFiles.add(file);
     }
     setState(() {
