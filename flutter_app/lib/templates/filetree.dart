@@ -182,7 +182,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
       }
 
       setState(() {
-        children.add(S_FileTree_StreamControlled_Item(controller: controller, item: item));
+        children.add(S_FileTree_StreamControlled_Item(item: item, controllers: [controller]));
       });
     });
     widget.s_hashGen_stream?.listen((selected) {
@@ -465,13 +465,13 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
 // ##################################################
 class S_FileTree_StreamControlled_Item {
   // Private attributes
-  final StreamController _controller;
   final T_FileTree_Item _item;
+  final List<StreamController> _controllers;
 
   // Constructor
-  S_FileTree_StreamControlled_Item({required StreamController controller, required T_FileTree_Item item})
-      : _controller = controller,
-        _item = item;
+  S_FileTree_StreamControlled_Item({required T_FileTree_Item item, required List<StreamController> controllers})
+      : _item = item,
+        _controllers = controllers;
 
   // Getter
   T_FileTree_Item get item => _item;
@@ -479,8 +479,11 @@ class S_FileTree_StreamControlled_Item {
   // Stream get stream => _controller.stream;
 
   // Stream setter
-  // TODO: Accept all data types
-  void send(String? s) {
-    _controller.add(s);
+  void send<T>(T e) {
+    for (StreamController controller in _controllers) {
+      if (controller is StreamController<T>) {
+        controller.add(e);
+      }
+    }
   }
 }
