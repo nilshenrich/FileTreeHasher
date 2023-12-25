@@ -243,8 +243,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
             // }
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.check)),
-      IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close))
+          icon: const Icon(Icons.check)), // Exit with saving
+      IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)) // Exit without saving
     ]));
 
     // Show dialog

@@ -39,7 +39,7 @@ abstract class T_FileTree_Item extends StatefulWidget {
   final String parent; // Elements parents absolute system path
 
   // Status change: Parent stream
-  Stream<String?> s_hashGen_stream;
+  Stream<String?> s_hashGen_stream; // Generated hash
 
   // Constructor
   T_FileTree_Item({super.key, required this.path, required Stream<String?> stream_hashGen, required showFullPath})
@@ -74,11 +74,8 @@ class I_FileTree_Folder extends T_FileTree_Item {
 class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTickerProviderStateMixin {
   // State parameter
   bool expanded = true; // Is folder expanded
-  List<T_FileTree_Item> children = []; // Direct child items to be shown in tree
-  StreamController<T_FileTree_Item> s_children = StreamController(); // Stream to add a child item with live update
-
-  // Status change: Children notification
-  StreamController<String?> s_hashGen_controller = StreamController.broadcast();
+  List<S_FileTree_StreamControlled_Item> children = []; // Direct child items to be shown in tree
+  StreamController<S_FileTree_StreamControlled_Item> s_children = StreamController(); // Stream to add a child item with live update
 
   // Hash algorithm selector key
   GlobalKey<T_HashSelector_state> globalkey_hashAlgSel = GlobalKey();
@@ -125,7 +122,9 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
           T_FileHashSelector(
             key: globalkey_hashAlgSel,
             onChanged: (selected) {
-              s_hashGen_controller.add(selected);
+              children.forEach((item) {
+                item.send(selected);
+              });
             },
           ),
           SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
@@ -144,7 +143,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
     // ---------- Content column ----------
     Padding areaContent = Padding(
       padding: EdgeInsets.fromLTRB(Style_FileTree_SubItem_ShiftRight_px, 0, 0, 0),
-      child: Column(children: children),
+      child: Column(children: children.map((c) => c.item).toList()),
     );
 
     // ---------- Expandable ----------
@@ -194,15 +193,16 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
     // await for (FileSystemEntity sysItem in systemItems) {
     systemItems.forEach((sysItem) {
       T_FileTree_Item item;
+      StreamController<String?> controller = StreamController();
 
       // ---------- Item is a file ----------
       if (sysItem is File) {
-        item = I_FileTree_File(path: sysItem.path, stream_hashGen: s_hashGen_controller.stream, showFullPath: false);
+        item = I_FileTree_File(path: sysItem.path, stream_hashGen: controller.stream, showFullPath: false);
       }
 
       // ---------- Item is a folder ----------
       else if (sysItem is Directory) {
-        item = I_FileTree_Folder(path: sysItem.path, stream_hashGen: s_hashGen_controller.stream);
+        item = I_FileTree_Folder(path: sysItem.path, stream_hashGen: controller.stream);
       }
 
       // ---------- Item is none of these ----------
@@ -211,7 +211,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
       }
 
       // ---------- Trigger stream listener to add new item as sub-item ----------
-      if (!s_children.isClosed) s_children.add(item);
+      if (!s_children.isClosed) s_children.add(S_FileTree_StreamControlled_Item(controller: controller, item: item));
       // sleep(Duration(seconds: 1)); // DEV: To simulate calculation time
     });
   }
@@ -458,5 +458,31 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     setState(() {
       _hashGen = "<aborted>";
     });
+  }
+}
+
+// ##################################################
+// # STRUCT
+// # Stream controlled item
+// ##################################################
+class S_FileTree_StreamControlled_Item {
+  // Private attributes
+  final StreamController _controller;
+  final T_FileTree_Item _item;
+
+  // Constructor
+  S_FileTree_StreamControlled_Item({required StreamController controller, required T_FileTree_Item item})
+      : _controller = controller,
+        _item = item;
+
+  // Getter
+  T_FileTree_Item get item => _item;
+  // StreamController get controller => _controller;
+  // Stream get stream => _controller.stream;
+
+  // Stream setter
+  // TODO: Accept all data types
+  void send(String? s) {
+    _controller.add(s);
   }
 }
