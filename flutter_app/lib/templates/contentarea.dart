@@ -121,16 +121,19 @@ class T_BodyContent extends StatefulWidget {
 // ##################################################
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
-  List<I_FileTree_Head> loadedTrees = List.empty(growable: true);
-  List<I_FileTree_File> loadedFiles = List.empty(growable: true);
+  List<S_FileTree_StreamControlled_Item> loadedTrees = List.empty(growable: true);
+  List<S_FileTree_StreamControlled_Item> loadedFiles = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       ContentDivider_folders(visible: loadedTrees.isNotEmpty),
-      Column(children: loadedTrees),
+      Column(children: loadedTrees.map((c) => c.item).toList()),
       ContentDivider_files(visible: loadedFiles.isNotEmpty),
-      Row(children: [Flexible(child: Column(children: loadedFiles)), const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)])
+      Row(children: [
+        Flexible(child: Column(children: loadedFiles.map((c) => c.item).toList())),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)
+      ])
     ]);
   }
 
@@ -147,8 +150,14 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
+    StreamController<C_HashFile_SavePath> controller_HashFile_SavePath = StreamController();
     setState(() {
-      loadedTrees.add(I_FileTree_Head(path: filetreePath!, stream_hashAlg: Controller_SelectedGlobalHashAlg.stream));
+      loadedTrees.add(S_FileTree_StreamControlled_Item(
+          item: I_FileTree_Head(
+              path: filetreePath!,
+              stream_hashAlg: Controller_SelectedGlobalHashAlg.stream,
+              stream_hashFile_savePath: controller_HashFile_SavePath.stream),
+          controllers: [Controller_SelectedGlobalHashAlg, controller_HashFile_SavePath]));
     });
   }
 
@@ -164,12 +173,17 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected files in body --------------------
-    List<I_FileTree_File> l_loadedFiles = loadedFiles;
+    List<S_FileTree_StreamControlled_Item> l_loadedFiles = loadedFiles;
     for (PlatformFile sysFile in picked.files) {
       String? path = sysFile.path;
       if (path == null) continue;
-      I_FileTree_File file = I_FileTree_File(path: path, stream_hashAlg: Controller_SelectedGlobalHashAlg.stream, showFullPath: true);
-      l_loadedFiles.add(file);
+      StreamController<C_HashFile_SavePath> controller_HashFile_SavePath = StreamController();
+      I_FileTree_File file = I_FileTree_File(
+          path: path,
+          stream_hashAlg: Controller_SelectedGlobalHashAlg.stream,
+          stream_hashFile_savePath: controller_HashFile_SavePath.stream,
+          showFullPath: true);
+      l_loadedFiles.add(S_FileTree_StreamControlled_Item(item: file, controllers: [Controller_SelectedGlobalHashAlg, controller_HashFile_SavePath]));
     }
     setState(() {
       loadedFiles = l_loadedFiles;
@@ -203,8 +217,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
   void safeHashFile() {
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
-    for (I_FileTree_Head view in loadedTrees) {
-      dialogRows.add(T_StorageChooserRow(title: view.path, fileTreeView: view));
+    for (S_FileTree_StreamControlled_Item view in loadedTrees) {
+      dialogRows.add(T_StorageChooserRow(title: view.item.path, fileTreeView: view));
     }
     if (loadedFiles.isNotEmpty) {
       dialogRows.add(T_StorageChooserRow(title: HashfileSingletext));
@@ -230,17 +244,19 @@ class T_BodyContent_state extends State<T_BodyContent> {
       const Expanded(child: SizedBox.shrink()),
       IconButton(
           onPressed: () {
-            // TODO: Reimplement
-            // for (Widget row in dialogRows) {
-            //   if (row is! T_StorageChooserRow) continue;
-            //   String storagepath = row.getStoragePath();
-            //   if (row.fileTreeView == null) {
-            //     GenerateHashfile(SingleFiles_to_FileViewHashes(loadedFiles, HashfileSingletext), storagepath);
-            //   } else {
-            //     T_FileTree view = row.fileTreeView!;
-            //     GenerateHashfile(FileTreeItems_to_FileViewHashes(view.children, view.path, view.path), storagepath);
-            //   }
-            // }
+            for (Widget row in dialogRows) {
+              if (row is! T_StorageChooserRow) continue;
+              File fileSocket = File(row.getStoragePath());
+              // TODO: Write file header here
+              if (row.fileTreeView == null) {
+                for (S_FileTree_StreamControlled_Item file in loadedFiles) {
+                  file.send(C_HashFile_SavePath(fileSocket));
+                }
+              } else {
+                S_FileTree_StreamControlled_Item view = row.fileTreeView!;
+                view.send(C_HashFile_SavePath(fileSocket));
+              }
+            }
             Navigator.pop(context);
           },
           icon: const Icon(Icons.check)), // Exit with saving
@@ -322,7 +338,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 class T_StorageChooserRow extends StatelessWidget {
   // Attributes
   final String title;
-  final I_FileTree_Head? fileTreeView; // null means single files
+  final S_FileTree_StreamControlled_Item? fileTreeView; // null means single files
   final TextEditingController _textEditingController = TextEditingController();
 
   // Constructor

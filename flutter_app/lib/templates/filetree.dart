@@ -40,11 +40,18 @@ abstract class T_FileTree_Item extends StatefulWidget {
 
   // Status change: Parent stream
   Stream<C_HashAlg> s_hashAlg_stream; // Selected hash algorithm
+  Stream<C_HashFile_SavePath> s_hashFile_savePath_stream; // File path to save hash file to
 
   // Constructor
-  T_FileTree_Item({super.key, required this.path, required Stream<C_HashAlg> stream_hashAlg, required showFullPath})
+  T_FileTree_Item(
+      {super.key,
+      required this.path,
+      required Stream<C_HashAlg> stream_hashAlg,
+      required Stream<C_HashFile_SavePath> stream_hashFile_savePath,
+      required showFullPath})
       : name = GetFileName(path),
         s_hashAlg_stream = stream_hashAlg,
+        s_hashFile_savePath_stream = stream_hashFile_savePath,
         parent = showFullPath ? GetParentPath(path) : "";
 }
 
@@ -54,7 +61,8 @@ abstract class T_FileTree_Item extends StatefulWidget {
 // ##################################################
 class I_FileTree_Folder extends T_FileTree_Item {
   // Constructor
-  I_FileTree_Folder({super.key, required super.path, required super.stream_hashAlg, super.showFullPath = false});
+  I_FileTree_Folder(
+      {super.key, required super.path, required super.stream_hashAlg, required super.stream_hashFile_savePath, super.showFullPath = false});
 
   // Style parameter
   final bool _param_showIcon = true;
@@ -164,16 +172,22 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
     // ---------- Add event listener to be triggered when adding a new child item ----------
     s_children.stream.listen((sysItem) {
       T_FileTree_Item item;
-      StreamController<C_HashAlg> controller = StreamController();
+      StreamController<C_HashAlg> controller_hashAlg = StreamController();
+      StreamController<C_HashFile_SavePath> controller_hashFile_savePath = StreamController();
 
       // ---------- Item is a file ----------
       if (sysItem is File) {
-        item = I_FileTree_File(path: sysItem.path, stream_hashAlg: controller.stream, showFullPath: false);
+        item = I_FileTree_File(
+            path: sysItem.path,
+            stream_hashAlg: controller_hashAlg.stream,
+            stream_hashFile_savePath: controller_hashFile_savePath.stream,
+            showFullPath: false);
       }
 
       // ---------- Item is a folder ----------
       else if (sysItem is Directory) {
-        item = I_FileTree_Folder(path: sysItem.path, stream_hashAlg: controller.stream);
+        item = I_FileTree_Folder(
+            path: sysItem.path, stream_hashAlg: controller_hashAlg.stream, stream_hashFile_savePath: controller_hashFile_savePath.stream);
       }
 
       // ---------- Item is none of these ----------
@@ -182,11 +196,16 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
       }
 
       setState(() {
-        children.add(S_FileTree_StreamControlled_Item(item: item, controllers: [controller]));
+        children.add(S_FileTree_StreamControlled_Item(item: item, controllers: [controller_hashAlg, controller_hashFile_savePath]));
       });
     });
     widget.s_hashAlg_stream?.listen((hash) {
       globalkey_hashAlgSel.currentState!.set(hash.value);
+    });
+    widget.s_hashFile_savePath_stream.listen((path) {
+      for (S_FileTree_StreamControlled_Item child in children) {
+        child.send(path);
+      }
     });
 
     // ---------- Call base method as usual ----------
@@ -221,7 +240,8 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
 // ##################################################
 class I_FileTree_Head extends I_FileTree_Folder {
   // Constructor
-  I_FileTree_Head({super.key, required super.path, required super.stream_hashAlg, super.showFullPath = true});
+  I_FileTree_Head(
+      {super.key, required super.path, required super.stream_hashAlg, required super.stream_hashFile_savePath, super.showFullPath = true});
 
   // Style parameter
   @override
@@ -242,7 +262,8 @@ class I_FileTree_Head extends I_FileTree_Folder {
 // ##################################################
 class I_FileTree_File extends T_FileTree_Item {
   // Constructor
-  I_FileTree_File({super.key, required super.path, required super.stream_hashAlg, required super.showFullPath});
+  I_FileTree_File(
+      {super.key, required super.path, required super.stream_hashAlg, required super.stream_hashFile_savePath, required super.showFullPath});
 
   @override
   State<StatefulWidget> createState() => I_FileTree_File_state();
@@ -346,7 +367,11 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     widget.s_hashAlg_stream?.listen((hash) {
       globalkey_hashAlgSel.currentState!.set(hash.value);
     });
+    widget.s_hashFile_savePath_stream.listen((file) {
+      // TODO: Implement writing line
+    });
     Controller_ComparisonInput.stream.listen((input) {
+      // TODO: Can be done more efficient?
       if (input.itempath == null || input.itempath == widget.path) {
         if (input.hashAlg != null) globalkey_hashAlgSel.currentState!.set(input.hashAlg);
         setState(() {
@@ -463,6 +488,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
 // # STRUCT
 // # Stream controlled item
 // ##################################################
+// TODO: Make type polymorphic
 class S_FileTree_StreamControlled_Item {
   // Private attributes
   final T_FileTree_Item _item;
@@ -500,4 +526,8 @@ abstract class TC_Explicit<T> {
 
 class C_HashAlg extends TC_Explicit<String?> {
   C_HashAlg(super.value);
+}
+
+class C_HashFile_SavePath extends TC_Explicit<File> {
+  C_HashFile_SavePath(super.value);
 }
