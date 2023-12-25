@@ -492,8 +492,12 @@ class S_FileTree_StreamControlled_Item {
 // # TYPE
 // # Explicit types to be used in stream controllers to identify
 // ##################################################
-class C_HashAlg {
-  String? _value;
-  C_HashAlg(String? value) : _value = value;
-  String? get value => _value;
+abstract class TC_Explicit<T> {
+  T _value;
+  TC_Explicit(T value) : _value = value;
+  T get value => _value;
+}
+
+class C_HashAlg extends TC_Explicit<String?> {
+  C_HashAlg(super.value);
 }
