@@ -39,10 +39,10 @@ abstract class T_FileTree_Item extends StatefulWidget {
   final String parent; // Elements parents absolute system path
 
   // Status change: Parent stream
-  Stream<String?> s_hashGen_stream; // Generated hash
+  Stream<C_HashGen> s_hashGen_stream; // Generated hash
 
   // Constructor
-  T_FileTree_Item({super.key, required this.path, required Stream<String?> stream_hashGen, required showFullPath})
+  T_FileTree_Item({super.key, required this.path, required Stream<C_HashGen> stream_hashGen, required showFullPath})
       : name = GetFileName(path),
         s_hashGen_stream = stream_hashGen,
         parent = showFullPath ? GetParentPath(path) : "";
@@ -123,7 +123,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
             key: globalkey_hashAlgSel,
             onChanged: (selected) {
               children.forEach((item) {
-                item.send(selected);
+                item.send(C_HashGen(selected));
               });
             },
           ),
@@ -164,7 +164,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
     // ---------- Add event listener to be triggered when adding a new child item ----------
     s_children.stream.listen((sysItem) {
       T_FileTree_Item item;
-      StreamController<String?> controller = StreamController();
+      StreamController<C_HashGen> controller = StreamController();
 
       // ---------- Item is a file ----------
       if (sysItem is File) {
@@ -185,8 +185,8 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
         children.add(S_FileTree_StreamControlled_Item(item: item, controllers: [controller]));
       });
     });
-    widget.s_hashGen_stream?.listen((selected) {
-      globalkey_hashAlgSel.currentState!.set(selected);
+    widget.s_hashGen_stream?.listen((hash) {
+      globalkey_hashAlgSel.currentState!.set(hash.value);
     });
 
     // ---------- Call base method as usual ----------
@@ -343,8 +343,8 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
         _hashGenProgress = prog;
       });
     });
-    widget.s_hashGen_stream?.listen((selected) {
-      globalkey_hashAlgSel.currentState!.set(selected);
+    widget.s_hashGen_stream?.listen((hash) {
+      globalkey_hashAlgSel.currentState!.set(hash.value);
     });
     Controller_ComparisonInput.stream.listen((input) {
       if (input.itempath == null || input.itempath == widget.path) {
@@ -486,4 +486,14 @@ class S_FileTree_StreamControlled_Item {
       }
     }
   }
+}
+
+// ##################################################
+// # TYPE
+// # Explicit types to be used in stream controllers to identify
+// ##################################################
+class C_HashGen {
+  String? _value;
+  C_HashGen(String? value) : _value = value;
+  String? get value => _value;
 }

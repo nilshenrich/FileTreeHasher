@@ -49,7 +49,7 @@ class HashInputUpdater {
 // ##################################################
 // # Global stream controllers every widget can listen to
 // ##################################################
-StreamController<String?> Controller_SelectedGlobalHashAlg = StreamController.broadcast(); // Globally selected hash algorithm
+StreamController<C_HashGen> Controller_SelectedGlobalHashAlg = StreamController.broadcast(); // Globally selected hash algorithm
 StreamController<HashInputUpdater> Controller_ComparisonInput = StreamController.broadcast(); // Comparison input to be updated
 
 // ##################################################
@@ -63,7 +63,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     Controller_SelectedGlobalHashAlg.stream.listen((selected) {
-      SelectedGlobalHashAlg = selected;
+      SelectedGlobalHashAlg = selected.value;
     });
     return AppBar(
         flexibleSpace: Column(children: [
@@ -84,7 +84,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
         // -------------------- Section: Hash algorithm --------------------
         T_HeaderControlSection(headingText: "Algorithm selection", items: [
           T_GlobalHashSelector(onChanged: (selected) {
-            Controller_SelectedGlobalHashAlg.add(selected);
+            Controller_SelectedGlobalHashAlg.add(C_HashGen(selected));
           })
         ]),
         // -------------------- Section: Comparison --------------------
