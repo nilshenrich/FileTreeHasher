@@ -75,7 +75,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
   // State parameter
   bool expanded = true; // Is folder expanded
   List<S_FileTree_StreamControlled_Item> children = []; // Direct child items to be shown in tree
-  StreamController<S_FileTree_StreamControlled_Item> s_children = StreamController(); // Stream to add a child item with live update
+  StreamController<FileSystemEntity> s_children = StreamController(); // Stream to add a child item with live update
 
   // Hash algorithm selector key
   GlobalKey<T_HashSelector_state> globalkey_hashAlgSel = GlobalKey();
@@ -162,9 +162,27 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
   @override
   void initState() {
     // ---------- Add event listener to be triggered when adding a new child item ----------
-    s_children.stream.listen((item) {
+    s_children.stream.listen((sysItem) {
+      T_FileTree_Item item;
+      StreamController<String?> controller = StreamController();
+
+      // ---------- Item is a file ----------
+      if (sysItem is File) {
+        item = I_FileTree_File(path: sysItem.path, stream_hashGen: controller.stream, showFullPath: false);
+      }
+
+      // ---------- Item is a folder ----------
+      else if (sysItem is Directory) {
+        item = I_FileTree_Folder(path: sysItem.path, stream_hashGen: controller.stream);
+      }
+
+      // ---------- Item is none of these ----------
+      else {
+        return;
+      }
+
       setState(() {
-        children.add(item);
+        children.add(S_FileTree_StreamControlled_Item(controller: controller, item: item));
       });
     });
     widget.s_hashGen_stream?.listen((selected) {
@@ -192,27 +210,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
     Stream<FileSystemEntity> systemItems = systemDir.list();
     // await for (FileSystemEntity sysItem in systemItems) {
     systemItems.forEach((sysItem) {
-      T_FileTree_Item item;
-      StreamController<String?> controller = StreamController();
-
-      // ---------- Item is a file ----------
-      if (sysItem is File) {
-        item = I_FileTree_File(path: sysItem.path, stream_hashGen: controller.stream, showFullPath: false);
-      }
-
-      // ---------- Item is a folder ----------
-      else if (sysItem is Directory) {
-        item = I_FileTree_Folder(path: sysItem.path, stream_hashGen: controller.stream);
-      }
-
-      // ---------- Item is none of these ----------
-      else {
-        return;
-      }
-
-      // ---------- Trigger stream listener to add new item as sub-item ----------
-      if (!s_children.isClosed) s_children.add(S_FileTree_StreamControlled_Item(controller: controller, item: item));
-      // sleep(Duration(seconds: 1)); // DEV: To simulate calculation time
+      s_children.add(sysItem);
     });
   }
 }
