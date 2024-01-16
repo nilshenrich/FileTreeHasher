@@ -25,7 +25,6 @@ import 'package:file_tree_hasher/templates/contentarea.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 // ##################################################
