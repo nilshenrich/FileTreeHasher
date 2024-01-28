@@ -19,6 +19,7 @@ import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
+import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/hashfile.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
@@ -247,12 +248,14 @@ class T_BodyContent_state extends State<T_BodyContent> {
             for (Widget row in dialogRows) {
               if (row is! T_StorageChooserRow) continue;
               File fileSocket = File(row.getStoragePath());
-              // TODO: Write file header here
+              fileSocket.writeAsStringSync("${HashFileHeader}\n\n");
               if (row.fileTreeView == null) {
+                fileSocket.writeAsStringSync("${HashfileSingletext}\n", mode: FileMode.append);
                 for (S_FileTree_StreamControlled_Item file in loadedFiles) {
                   file.send(C_HashFile_SavePath(fileSocket));
                 }
               } else {
+                fileSocket.writeAsStringSync("${row.getStoragePath()}\n", mode: FileMode.append);
                 S_FileTree_StreamControlled_Item view = row.fileTreeView!;
                 view.send(C_HashFile_SavePath(fileSocket));
               }
