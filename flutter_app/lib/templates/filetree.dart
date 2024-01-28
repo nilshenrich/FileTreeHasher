@@ -371,6 +371,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
       globalkey_hashAlgSel.currentState!.set(hash.value);
     });
     widget.s_hashFile_savePath_stream.listen((file) {
+      // TODO: For tree get relative path from head
       file.value.writeAsStringSync("${_hashGen}, ${globalkey_hashAlgSel.currentState!.get()}, \"${widget.path}\"\n", mode: FileMode.append);
     });
     Controller_ComparisonInput.stream.listen((input) {
