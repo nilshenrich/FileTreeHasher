@@ -258,7 +258,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
               } else {
                 hashFileSocket.writeAsStringSync("${GetParentPath(hashFilePath)}\n", mode: FileMode.append);
                 S_FileTree_StreamControlled_Item view = row.fileTreeView!;
-                view.send(C_HashFile_SavePath(hashFileSocket));
+                view.send(C_HashFile_SavePath(hashFileSocket, row.fileTreeView!.item.path));
               }
             }
             Navigator.pop(context);

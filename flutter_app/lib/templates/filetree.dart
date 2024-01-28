@@ -14,6 +14,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:path/path.dart' as libpath;
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
@@ -371,8 +372,9 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
       globalkey_hashAlgSel.currentState!.set(hash.value);
     });
     widget.s_hashFile_savePath_stream.listen((file) {
-      // TODO: For tree get relative path from head
-      file.value.writeAsStringSync("${_hashGen}, ${globalkey_hashAlgSel.currentState!.get()}, \"${widget.path}\"\n", mode: FileMode.append);
+      file.value.writeAsStringSync(
+          "${_hashGen}, ${globalkey_hashAlgSel.currentState!.get()}, \"${libpath.relative(widget.path, from: file.rootDir)}\"\n",
+          mode: FileMode.append);
     });
     Controller_ComparisonInput.stream.listen((input) {
       // TODO: Can be done more efficient?
@@ -532,5 +534,6 @@ class C_HashAlg extends TC_Explicit<String?> {
 }
 
 class C_HashFile_SavePath extends TC_Explicit<File> {
-  C_HashFile_SavePath(super.value);
+  final String? rootDir; // Directory of header if file saves a tree view
+  C_HashFile_SavePath(super.value, [this.rootDir]);
 }
