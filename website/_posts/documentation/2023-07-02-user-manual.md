@@ -50,9 +50,9 @@ Version: <version>
 
 /path/to/my/folder
 da39a3ee5e6b4b0d3255bfef95601890afd80709,sha1,"top-file"
-d41d8cd98f00b204e9800998ecf8427e,md5,"top-folder/sub-file"
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,sha256,"top-folder/sub-file-2"
-b2f5ff47436671b6e533d8dc3614845d,md5,"top-folder-2/sub-folder/sub-sub-file"
+d41d8cd98f00b204e9800998ecf8427e, md5, "top-folder/sub-file"
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, sha256, "top-folder/sub-file-2"
+b2f5ff47436671b6e533d8dc3614845d, md5, "top-folder-2/sub-folder/sub-sub-file"
 ```
 
 ```
@@ -64,9 +64,9 @@ Version: <version>
 
 Single files
 da39a3ee5e6b4b0d3255bfef95601890afd80709,sha1,"/path/to/file/one"
-d41d8cd98f00b204e9800998ecf8427e,md5,"/file/paths/are/absolute"
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,sha256,"/no/need/to/be/in/same/directory"
-b2f5ff47436671b6e533d8dc3614845d,md5,"/another/file"
+d41d8cd98f00b204e9800998ecf8427e, md5, "/file/paths/are/absolute"
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, sha256, "/no/need/to/be/in/same/directory"
+b2f5ff47436671b6e533d8dc3614845d, md5, "/another/file"
 ```
 
 A hash list file has the extension ".hash" and can be opened using a regular text editor or a CSV editor. Using a CSV editor, the following settings should be used for optimal readability:
