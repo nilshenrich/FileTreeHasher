@@ -491,7 +491,6 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
 // # STRUCT
 // # Stream controlled item
 // ##################################################
-// TODO: Make type polymorphic
 class S_FileTree_StreamControlled_Item {
   // Private attributes
   final T_FileTree_Item _item;

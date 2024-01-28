@@ -247,17 +247,18 @@ class T_BodyContent_state extends State<T_BodyContent> {
           onPressed: () {
             for (Widget row in dialogRows) {
               if (row is! T_StorageChooserRow) continue;
-              File fileSocket = File(row.getStoragePath());
-              fileSocket.writeAsStringSync("${HashFileHeader}\n\n");
+              String hashFilePath = row.getStoragePath();
+              File hashFileSocket = File(hashFilePath);
+              hashFileSocket.writeAsStringSync("${HashFileHeader}\n\n");
               if (row.fileTreeView == null) {
-                fileSocket.writeAsStringSync("${HashfileSingletext}\n", mode: FileMode.append);
+                hashFileSocket.writeAsStringSync("${HashfileSingletext}\n", mode: FileMode.append);
                 for (S_FileTree_StreamControlled_Item file in loadedFiles) {
-                  file.send(C_HashFile_SavePath(fileSocket));
+                  file.send(C_HashFile_SavePath(hashFileSocket));
                 }
               } else {
-                fileSocket.writeAsStringSync("${row.getStoragePath()}\n", mode: FileMode.append);
+                hashFileSocket.writeAsStringSync("${GetParentPath(hashFilePath)}\n", mode: FileMode.append);
                 S_FileTree_StreamControlled_Item view = row.fileTreeView!;
-                view.send(C_HashFile_SavePath(fileSocket));
+                view.send(C_HashFile_SavePath(hashFileSocket));
               }
             }
             Navigator.pop(context);
