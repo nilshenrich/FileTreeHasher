@@ -294,7 +294,11 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
         SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         Expanded(child: _buildHashGenerationView(context)),
         SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-        T_FileHashSelector(key: globalkey_hashAlgSel),
+        T_FileHashSelector(
+            key: globalkey_hashAlgSel,
+            onChanged: (selected) {
+              generateHash(selected);
+            }),
         SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         _buildHashComparisonView()
       ],
