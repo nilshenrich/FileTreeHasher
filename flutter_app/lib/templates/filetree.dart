@@ -373,7 +373,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     });
     widget.s_hashFile_savePath_stream.listen((file) {
       file.value.writeAsStringSync(
-          "${_hashGen}, ${globalkey_hashAlgSel.currentState!.get()}, \"${libpath.relative(widget.path, from: file.rootDir)}\"\n",
+          "${_hashGen},${globalkey_hashAlgSel.currentState!.get()},\"${libpath.relative(widget.path, from: file.rootDir)}\"\n",
           mode: FileMode.append);
     });
     Controller_ComparisonInput.stream.listen((input) {

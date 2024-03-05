@@ -321,7 +321,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
         // Get 3 CSV columns from line
         List<List<String>> csvrow_list = const CsvToListConverter()
-            .convert(line, fieldDelimiter: ",", textDelimiter: '"', textEndDelimiter: '"', eol: LineendingChar, shouldParseNumbers: false);
+            .convert(line, fieldDelimiter: ",", textDelimiter: '"', eol: LineendingChar, shouldParseNumbers: false, convertEmptyTo: "");
         if (csvrow_list.isEmpty) return;
         List csvrow = csvrow_list[0];
         if (csvrow.length != 3) return;
