@@ -278,7 +278,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // State parameter
   String _hashComp = "";
   int _hashComp_cursorPos = 0;
-  TextEditingController _hashComp_controller = TextEditingController();
+  TextEditingController _hashComp_controller = TextEditingController(); // BUG: Controller here blocks setting input programmatically b. no text set
   E_HashComparisonResult _hashComparisonResult = E_HashComparisonResult.none;
   String? _hashGen; // Generated hash
   double _hashGenProgress = 0; // Hash generation progress (0-1)
