@@ -14,6 +14,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:path/path.dart' as libpath;
 
 import 'package:convert/convert.dart';
@@ -280,6 +281,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   double _hashGenProgress = 0; // Hash generation progress (0-1)
   StreamController<double> _s_hashGenProgress = StreamController(); // Stream to update live progress
   bool _hashOngoing = false; // Hash generation ongoing? (Used for abortion)
+  E_HashComparisonResult _hashComparisonResult = E_HashComparisonResult.none;
 
   // Hash algorithm selector key
   GlobalKey<T_HashSelector_state> globalkey_hashAlgSel = GlobalKey();
@@ -324,6 +326,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
       children: [
         Flexible(
             child: Container(
+          color: Style_FileTree_HashComp_Colors[_hashComparisonResult],
           child: Text(_hashGen!, style: Style_FileTree_HashGen_Text),
         )),
         SizedBox(
@@ -348,14 +351,18 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // @brief: Build hash comparison view
   // @return: Widget
   // ##################################################
+  // TODO: Cursor position is shifted to the end after each change but should stays same
   Widget _buildHashComparisonView() {
+    TextEditingController controller = TextEditingController(text: _hashComp);
+    controller.selection = TextSelection.fromPosition(TextPosition(offset: _hashComp.length));
     return SizedBox(
       width: Style_FileTree_ComparisonInput_Width_px,
       height: Style_FileTree_ComparisonInput_Height_px,
       child: TextField(
         style: Style_FileTree_ComparisonInput_Text,
         decoration: Style_FileTree_ComparisonInput_Decoration,
-        controller: TextEditingController(text: _hashComp),
+        controller: controller,
+        onChanged: _compareHash,
       ),
     );
   }
@@ -487,6 +494,29 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     setState(() {
       _hashGen = "<aborted>";
     });
+  }
+
+  // ##################################################
+  // @brief: Compare generated hash with text input
+  //         hashComp Set comparison result accordingly
+  // @param: hashComp Text input
+  // ##################################################
+  void _compareHash(String hashComp) {
+    // Update buffer
+    _hashComp = hashComp;
+
+    // If any hash is empty, set comparison result None
+    if (_hashGen!.isEmpty || hashComp.isEmpty) {
+      setState(() {
+        _hashComparisonResult = E_HashComparisonResult.none;
+        return;
+      });
+    } else {
+      // For 2 valid inputs, the result is equal or not equal
+      setState(() {
+        _hashComparisonResult = _hashGen!.toLowerCase() == hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
+      });
+    }
   }
 }
 
