@@ -15,5 +15,6 @@
         "editor.rulers": [
             150
         ]
-    }
+    },
+    "cmake.configureOnOpen": false
 }

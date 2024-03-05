@@ -215,6 +215,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
   //                - For single file section the hash files default location is the users home directory
   // ##################################################
   // TODO: What if hash generation is ongoing?
+  // TODO: Add creation date as well
   void safeHashFile() {
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
@@ -251,6 +252,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
               File hashFileSocket = File(hashFilePath);
               hashFileSocket.writeAsStringSync("${HashFileHeader}\n\n");
               if (row.fileTreeView == null) {
+                // TODO: Use absolute file paths for single files
                 hashFileSocket.writeAsStringSync("${HashfileSingletext}\n", mode: FileMode.append);
                 for (S_FileTree_StreamControlled_Item file in loadedFiles) {
                   file.send(C_HashFile_SavePath(hashFileSocket));
