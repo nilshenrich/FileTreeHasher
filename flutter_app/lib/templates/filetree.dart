@@ -277,11 +277,13 @@ class I_FileTree_File extends T_FileTree_Item {
 class I_FileTree_File_state extends State<I_FileTree_File> {
   // State parameter
   String _hashComp = "";
+  int _hashComp_cursorPos = 0;
+  TextEditingController _hashComp_controller = TextEditingController();
+  E_HashComparisonResult _hashComparisonResult = E_HashComparisonResult.none;
   String? _hashGen; // Generated hash
   double _hashGenProgress = 0; // Hash generation progress (0-1)
   StreamController<double> _s_hashGenProgress = StreamController(); // Stream to update live progress
   bool _hashOngoing = false; // Hash generation ongoing? (Used for abortion)
-  E_HashComparisonResult _hashComparisonResult = E_HashComparisonResult.none;
 
   // Hash algorithm selector key
   GlobalKey<T_HashSelector_state> globalkey_hashAlgSel = GlobalKey();
@@ -353,15 +355,14 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // ##################################################
   // TODO: Cursor position is shifted to the end after each change but should stays same
   Widget _buildHashComparisonView() {
-    TextEditingController controller = TextEditingController(text: _hashComp);
-    controller.selection = TextSelection.fromPosition(TextPosition(offset: _hashComp.length));
+    _hashComp_controller.selection = TextSelection.collapsed(offset: _hashComp_cursorPos);
     return SizedBox(
       width: Style_FileTree_ComparisonInput_Width_px,
       height: Style_FileTree_ComparisonInput_Height_px,
       child: TextField(
         style: Style_FileTree_ComparisonInput_Text,
         decoration: Style_FileTree_ComparisonInput_Decoration,
-        controller: controller,
+        controller: _hashComp_controller,
         onChanged: _compareHash,
       ),
     );
@@ -504,6 +505,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   void _compareHash(String hashComp) {
     // Update buffer
     _hashComp = hashComp;
+    _hashComp_cursorPos = _hashComp_controller.selection.baseOffset;
 
     // If any hash is empty, set comparison result None
     if (_hashGen!.isEmpty || hashComp.isEmpty) {
@@ -511,12 +513,12 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
         _hashComparisonResult = E_HashComparisonResult.none;
         return;
       });
-    } else {
-      // For 2 valid inputs, the result is equal or not equal
-      setState(() {
-        _hashComparisonResult = _hashGen!.toLowerCase() == hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
-      });
     }
+
+    // For 2 valid inputs, the result is equal or not equal
+    setState(() {
+      _hashComparisonResult = _hashGen!.toLowerCase() == hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
+    });
   }
 }
 
