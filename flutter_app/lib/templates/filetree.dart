@@ -278,7 +278,6 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // State parameter
   String _hashComp = "";
   int _hashComp_cursorPos = 0;
-  TextEditingController _hashComp_controller = TextEditingController(); // BUG: Controller here blocks setting input programmatically b. no text set
   E_HashComparisonResult _hashComparisonResult = E_HashComparisonResult.none;
   String? _hashGen; // Generated hash
   double _hashGenProgress = 0; // Hash generation progress (0-1)
@@ -353,8 +352,8 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // @brief: Build hash comparison view
   // @return: Widget
   // ##################################################
-  // TODO: Cursor position is shifted to the end after each change but should stays same
   Widget _buildHashComparisonView() {
+    TextEditingController _hashComp_controller = TextEditingController(text: _hashComp);
     _hashComp_controller.selection = TextSelection.collapsed(offset: _hashComp_cursorPos);
     return SizedBox(
       width: Style_FileTree_ComparisonInput_Width_px,
@@ -363,7 +362,14 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
         style: Style_FileTree_ComparisonInput_Text,
         decoration: Style_FileTree_ComparisonInput_Decoration,
         controller: _hashComp_controller,
-        onChanged: _compareHash,
+        onChanged: (String hashComp) {
+          // Update buffer
+          _hashComp = hashComp;
+          _hashComp_cursorPos = _hashComp_controller.selection.baseOffset;
+
+          // Compare
+          _compareHash(hashComp);
+        },
       ),
     );
   }
@@ -388,9 +394,11 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
       // TODO: Can be done more efficient?
       if (input.itempath == null || input.itempath == widget.path) {
         if (input.hashAlg != null) globalkey_hashAlgSel.currentState!.set(input.hashAlg);
-        setState(() {
-          if (input.compInput != null) _hashComp = input.compInput!;
-        });
+        if (input.compInput != null) {
+          _hashComp = input.compInput!;
+          _hashComp_cursorPos = _hashComp.length;
+          _compareHash(_hashComp);
+        }
       }
     });
 
@@ -503,16 +511,12 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // @param: hashComp Text input
   // ##################################################
   void _compareHash(String hashComp) {
-    // Update buffer
-    _hashComp = hashComp;
-    _hashComp_cursorPos = _hashComp_controller.selection.baseOffset;
-
     // If any hash is empty, set comparison result None
     if (_hashGen!.isEmpty || hashComp.isEmpty) {
       setState(() {
         _hashComparisonResult = E_HashComparisonResult.none;
-        return;
       });
+      return;
     }
 
     // For 2 valid inputs, the result is equal or not equal
