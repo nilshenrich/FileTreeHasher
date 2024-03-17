@@ -515,6 +515,16 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
       return;
     }
 
+    // If generated hash does not match expected format, set comparison result None
+    String r_allowedChars = "a-fA-F0-9";
+    List<int> allowedLengths = [32, 40, 64, 96, 128];
+    if (!RegExp('^(${allowedLengths.map((i) => '^[$r_allowedChars]{$i}\$').join('|')})\$').hasMatch(_hashGen!)) {
+      setState(() {
+        _hashComparisonResult = E_HashComparisonResult.none;
+      });
+      return;
+    }
+
     // For 2 valid inputs, the result is equal or not equal
     setState(() {
       _hashComparisonResult = _hashGen!.toLowerCase() == _hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
