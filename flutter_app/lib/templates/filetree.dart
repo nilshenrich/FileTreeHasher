@@ -418,10 +418,9 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     // Check if file exists
     File file = File(widget.path);
     if (!file.existsSync()) {
-      setState(() {
-        _hashGen = "<Can't find file in file system>";
-        _hashGenProgress = 0;
-      });
+      _hashGen = "<Can't find file in file system>";
+      _hashGenProgress = 0;
+      _compareHash();
       return;
     }
 
@@ -449,14 +448,12 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     } else if (alg == E_HashAlgorithms.SHA512.value) {
       hasher = sha512.startChunkedConversion(hashOut);
     } else if (alg == E_HashAlgorithms.NONE.value) {
-      setState(() {
-        _hashGen = "<No hash to create>";
-      });
+      _hashGen = "<No hash to create>";
+      _compareHash();
       return;
     } else {
-      setState(() {
-        _hashGen = "<Can't use hash algorithm '$alg'>";
-      });
+      _hashGen = "<Can't use hash algorithm '$alg'>";
+      _compareHash();
       return;
     }
 
