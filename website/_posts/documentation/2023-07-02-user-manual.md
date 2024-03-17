@@ -16,7 +16,7 @@ Using **File Tree Hasher** you are able to generate hash for files of any type a
 - SHA256
 - SHA384
 - SHA512
-- no hash
+- NONE
 
 The hash algorithm to use can be selected for each file individually.\
 If a file is added or the hash algorithm is changed, the hash generation starts automatically.
@@ -49,10 +49,10 @@ Source code: https://github.com/nilshenrich/FileTreeHasher
 Version: <version>
 
 /path/to/my/folder
-da39a3ee5e6b4b0d3255bfef95601890afd80709,sha1,"top-file"
-d41d8cd98f00b204e9800998ecf8427e,md5,"top-folder/sub-file"
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,sha256,"top-folder/sub-file-2"
-b2f5ff47436671b6e533d8dc3614845d,md5,"top-folder-2/sub-folder/sub-sub-file"
+da39a3ee5e6b4b0d3255bfef95601890afd80709,SHA1,"top-file"
+d41d8cd98f00b204e9800998ecf8427e,MD5,"top-folder/sub-file"
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,SHA256,"top-folder/sub-file-2"
+b2f5ff47436671b6e533d8dc3614845d,MD5,"top-folder-2/sub-folder/sub-sub-file"
 ```
 
 ```
@@ -63,10 +63,10 @@ Source code: https://github.com/nilshenrich/FileTreeHasher
 Version: <version>
 
 Single files
-da39a3ee5e6b4b0d3255bfef95601890afd80709,sha1,"/path/to/file/one"
-d41d8cd98f00b204e9800998ecf8427e,md5,"/file/paths/are/absolute"
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,sha256,"/no/need/to/be/in/same/directory"
-b2f5ff47436671b6e533d8dc3614845d,md5,"/another/file"
+da39a3ee5e6b4b0d3255bfef95601890afd80709,SHA1,"/path/to/file/one"
+d41d8cd98f00b204e9800998ecf8427e,MD5,"/file/paths/are/absolute"
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,SHA256,"/no/need/to/be/in/same/directory"
+b2f5ff47436671b6e533d8dc3614845d,MD5,"/another/file"
 ```
 
 A hash list file has the extension ".hash" and can be opened using a regular text editor or a CSV editor. Using a CSV editor, the following settings should be used for optimal readability:
