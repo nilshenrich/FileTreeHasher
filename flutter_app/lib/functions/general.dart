@@ -50,7 +50,7 @@ Directory GetHomeDir() {
 // @param: path
 // @return: String
 // ##################################################
-String GetParentPath(String path) {
+String GetParentPath(String path, {bool trailingSlash = false}) {
   String parent = libpath.dirname(path);
 
   // Raltive path without directory
@@ -61,6 +61,8 @@ String GetParentPath(String path) {
   if (RegExp(r"^[A-Za-z]:\\$").hasMatch(parent)) return "";
 
   // Add trailing slash
+  if (trailingSlash) parent = "$parent/";
+
   return parent;
 }
 

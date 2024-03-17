@@ -37,7 +37,7 @@ abstract class T_FileTree_Item extends StatefulWidget {
   // Parameter
   final String name; // Elements name (to be shown in GUI)
   final String path; // Elements absolute system path (used for hash generation and shown in tree header)
-  final String parent; // Elements parents absolute system path
+  final String parent; // Elements parents absolute system path (With trailing slash)
 
   // Status change: Parent stream
   final Stream<C_HashAlg> s_hashAlg_stream; // Selected hash algorithm
@@ -53,7 +53,7 @@ abstract class T_FileTree_Item extends StatefulWidget {
       : name = GetFileName(path),
         s_hashAlg_stream = stream_hashAlg,
         s_hashFile_savePath_stream = stream_hashFile_savePath,
-        parent = showFullPath ? GetParentPath(path) : "";
+        parent = showFullPath ? GetParentPath(path, trailingSlash: true) : "";
 }
 
 // ##################################################
