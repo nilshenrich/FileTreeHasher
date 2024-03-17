@@ -21,7 +21,6 @@ import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
-import 'package:file_tree_hasher/functions/hashfile.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
