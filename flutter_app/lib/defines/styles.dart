@@ -15,7 +15,7 @@
 // ##################################################
 
 // Icons
-import 'package:file_tree_hasher/definies/datatypes.dart';
+import 'package:file_tree_hasher/defines/datatypes.dart';
 import 'package:flutter/material.dart';
 
 // File tree icon

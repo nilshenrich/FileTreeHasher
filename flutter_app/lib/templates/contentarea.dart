@@ -17,17 +17,15 @@ import 'dart:io';
 
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:file_tree_hasher/definies/datatypes.dart';
-import 'package:file_tree_hasher/definies/defaults.dart';
-import 'package:file_tree_hasher/definies/info.dart';
-import 'package:file_tree_hasher/definies/styles.dart';
+import 'package:file_tree_hasher/defines/defaults.dart';
+import 'package:file_tree_hasher/defines/info.dart';
+import 'package:file_tree_hasher/defines/styles.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
-import 'package:path/path.dart' as libpath;
 
 // ##################################################
 // # Body content
@@ -58,7 +56,7 @@ StreamController<HashInputUpdater> Controller_ComparisonInput = StreamController
 // ##################################################
 class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
   // Constructor
-  T_HeaderBar({super.key});
+  const T_HeaderBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +152,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
     setState(() {
       loadedTrees.add(S_FileTree_StreamControlled_Item(
           item: I_FileTree_Head(
-              path: filetreePath!,
+              path: filetreePath,
               stream_hashAlg: Controller_SelectedGlobalHashAlg.stream,
               stream_hashFile_savePath: controller_HashFile_SavePath.stream),
           controllers: [Controller_SelectedGlobalHashAlg, controller_HashFile_SavePath]));
@@ -249,9 +247,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
               if (row is! T_StorageChooserRow) continue;
               String hashFilePath = row.getStoragePath();
               File hashFileSocket = File(hashFilePath);
-              hashFileSocket.writeAsStringSync("${HashFileHeader}\n\n");
+              hashFileSocket.writeAsStringSync("$HashFileHeader\n\n");
               if (row.fileTreeView == null) {
-                hashFileSocket.writeAsStringSync("${HashfileSingletext}\n", mode: FileMode.append);
+                hashFileSocket.writeAsStringSync("$HashfileSingletext\n", mode: FileMode.append);
                 for (S_FileTree_StreamControlled_Item file in loadedFiles) {
                   file.send(C_HashFile_SavePath(hashFileSocket));
                 }
@@ -303,7 +301,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
       // Ignore all lines before the mpty line, they are part of the file header
       bool isRealData = false;
       String? rootPath;
-      File(path).openRead().transform(utf8.decoder).transform(LineSplitter()).forEach((line) {
+      File(path).openRead().transform(utf8.decoder).transform(const LineSplitter()).forEach((line) {
         // Search for empty line to identify usable data
         if (line.isEmpty) {
           isRealData = true;
@@ -329,7 +327,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 
         // Trigger input update
         // TODO: Update selected hash algorithm as well
-        Controller_ComparisonInput.add(HashInputUpdater(itempath: "${rootPath}/${filepath}", compInput: hashstring, hashAlg: hashalg));
+        Controller_ComparisonInput.add(HashInputUpdater(itempath: "$rootPath/$filepath", compInput: hashstring, hashAlg: hashalg));
       });
     }
   }

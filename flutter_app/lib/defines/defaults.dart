@@ -12,7 +12,7 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
 import 'dart:io';
-import 'package:file_tree_hasher/definies/hashalgorithms.dart';
+import 'package:file_tree_hasher/defines/hashalgorithms.dart';
 
 // ---------- Default hash algorithm ----------
 // ---------- This algorithm is selected on startup ----------

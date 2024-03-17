@@ -14,14 +14,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:file_tree_hasher/definies/datatypes.dart';
+import 'package:file_tree_hasher/defines/datatypes.dart';
 import 'package:path/path.dart' as libpath;
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
-import 'package:file_tree_hasher/definies/defaults.dart';
-import 'package:file_tree_hasher/definies/hashalgorithms.dart';
-import 'package:file_tree_hasher/definies/styles.dart';
+import 'package:file_tree_hasher/defines/defaults.dart';
+import 'package:file_tree_hasher/defines/hashalgorithms.dart';
+import 'package:file_tree_hasher/defines/styles.dart';
 import 'package:file_tree_hasher/functions/general.dart';
 import 'package:file_tree_hasher/templates/contentarea.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
@@ -90,8 +90,8 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
   GlobalKey<T_HashSelector_state> globalkey_hashAlgSel = GlobalKey();
 
   // Toggle animation
-  Duration _duration = Duration(milliseconds: 250);
-  Icon _iconToggle = Icon(Icons.expand_more);
+  final Duration _duration = const Duration(milliseconds: 250);
+  final Icon _iconToggle = const Icon(Icons.expand_more);
   late AnimationController _animationcontroller;
   late Animation<double> _animation_expand;
   late Animation<double> _animation_iconturn;
@@ -118,28 +118,26 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
                 child: _iconToggle,
               ),
             ),
-            widget._param_showIcon ? Icon(Icons.folder) : SizedBox.shrink(),
+            widget._param_showIcon ? const Icon(Icons.folder) : const SizedBox.shrink(),
             Text(widget.parent, style: widget._param_textStyle_parent),
             Text(widget.name, style: widget._param_textStyle_name),
           ],
         ),
       ),
     );
-    Widget areaHeader_unclickable = Container(
-      child: Row(
-        children: [
-          T_FileHashSelector(
-            key: globalkey_hashAlgSel,
-            onChanged: (selected) {
-              children.forEach((item) {
-                item.send(C_HashAlg(selected));
-              });
-            },
-          ),
-          SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-          SizedBox(width: Style_FileTree_ComparisonInput_Width_px - widget._param_padding.right),
-        ],
-      ),
+    Widget areaHeader_unclickable = Row(
+      children: [
+        T_FileHashSelector(
+          key: globalkey_hashAlgSel,
+          onChanged: (selected) {
+            for (var item in children) {
+              item.send(C_HashAlg(selected));
+            }
+          },
+        ),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        SizedBox(width: Style_FileTree_ComparisonInput_Width_px - widget._param_padding.right),
+      ],
     );
     Widget areaHeader = Container(
       padding: widget._param_padding,
@@ -151,7 +149,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
 
     // ---------- Content column ----------
     Padding areaContent = Padding(
-      padding: EdgeInsets.fromLTRB(Style_FileTree_SubItem_ShiftRight_px, 0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(Style_FileTree_SubItem_ShiftRight_px, 0, 0, 0),
       child: Column(children: children.map((c) => c.item).toList()),
     );
 
@@ -200,7 +198,7 @@ class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTicker
         children.add(S_FileTree_StreamControlled_Item(item: item, controllers: [controller_hashAlg, controller_hashFile_savePath]));
       });
     });
-    widget.s_hashAlg_stream?.listen((hash) {
+    widget.s_hashAlg_stream.listen((hash) {
       globalkey_hashAlgSel.currentState!.set(hash.value);
     });
     widget.s_hashFile_savePath_stream.listen((path) {
@@ -281,7 +279,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   E_HashComparisonResult _hashComparisonResult = E_HashComparisonResult.none;
   String? _hashGen; // Generated hash
   double _hashGenProgress = 0; // Hash generation progress (0-1)
-  StreamController<double> _s_hashGenProgress = StreamController(); // Stream to update live progress
+  final StreamController<double> _s_hashGenProgress = StreamController(); // Stream to update live progress
   bool _hashOngoing = false; // Hash generation ongoing? (Used for abortion)
 
   // Hash algorithm selector key
@@ -291,19 +289,19 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: Style_FileTree_Item_Expander_Width_px),
+        const SizedBox(width: Style_FileTree_Item_Expander_Width_px),
         const Icon(Icons.description),
         Text(widget.parent, style: Style_FileTree_Item_Text_Parent),
         Text(widget.name, style: Style_FileTree_Item_Text_Name),
-        SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         Expanded(child: _buildHashGenerationView(context)),
-        SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         T_FileHashSelector(
             key: globalkey_hashAlgSel,
             onChanged: (selected) {
               generateHash(selected);
             }),
-        SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
         _buildHashComparisonView()
       ],
     );
@@ -353,19 +351,19 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // @return: Widget
   // ##################################################
   Widget _buildHashComparisonView() {
-    TextEditingController _hashComp_controller = TextEditingController(text: _hashComp);
-    _hashComp_controller.selection = TextSelection.collapsed(offset: _hashComp_cursorPos);
+    TextEditingController hashComp_controller = TextEditingController(text: _hashComp);
+    hashComp_controller.selection = TextSelection.collapsed(offset: _hashComp_cursorPos);
     return SizedBox(
       width: Style_FileTree_ComparisonInput_Width_px,
       height: Style_FileTree_ComparisonInput_Height_px,
       child: TextField(
         style: Style_FileTree_ComparisonInput_Text,
         decoration: Style_FileTree_ComparisonInput_Decoration,
-        controller: _hashComp_controller,
+        controller: hashComp_controller,
         onChanged: (String hashComp) {
           // Update buffer
           _hashComp = hashComp;
-          _hashComp_cursorPos = _hashComp_controller.selection.baseOffset;
+          _hashComp_cursorPos = hashComp_controller.selection.baseOffset;
 
           // Compare
           _compareHash(hashComp);
@@ -382,13 +380,13 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
         _hashGenProgress = prog;
       });
     });
-    widget.s_hashAlg_stream?.listen((hash) {
+    widget.s_hashAlg_stream.listen((hash) {
       globalkey_hashAlgSel.currentState!.set(hash.value);
     });
     widget.s_hashFile_savePath_stream.listen((file) {
       file.value.writeAsStringSync(
           // rootDir null means single file -> Use absolute path
-          "${_hashGen},${globalkey_hashAlgSel.currentState!.get()},\"${file.rootDir == null ? widget.path : libpath.relative(widget.path, from: file.rootDir)}\"\n",
+          "$_hashGen,${globalkey_hashAlgSel.currentState!.get()},\"${file.rootDir == null ? widget.path : libpath.relative(widget.path, from: file.rootDir)}\"\n",
           mode: FileMode.append);
     });
     Controller_ComparisonInput.stream.listen((input) {
@@ -561,7 +559,7 @@ class S_FileTree_StreamControlled_Item {
 // # Explicit types to be used in stream controllers to identify
 // ##################################################
 abstract class TC_Explicit<T> {
-  T _value;
+  final T _value;
   TC_Explicit(T value) : _value = value;
   T get value => _value;
 }

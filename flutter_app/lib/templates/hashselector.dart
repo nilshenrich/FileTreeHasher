@@ -16,9 +16,9 @@
 // # TEMPLATE
 // # Overall hash selector
 // ##################################################
-import 'package:file_tree_hasher/definies/defaults.dart';
-import 'package:file_tree_hasher/definies/hashalgorithms.dart';
-import 'package:file_tree_hasher/definies/styles.dart';
+import 'package:file_tree_hasher/defines/defaults.dart';
+import 'package:file_tree_hasher/defines/hashalgorithms.dart';
+import 'package:file_tree_hasher/defines/styles.dart';
 import 'package:flutter/material.dart';
 
 abstract class T_HashSelector extends StatefulWidget {
