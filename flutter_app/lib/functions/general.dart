@@ -61,7 +61,7 @@ String GetParentPath(String path) {
   if (RegExp(r"^[A-Za-z]:\\$").hasMatch(parent)) return "";
 
   // Add trailing slash
-  return "$parent/";
+  return parent;
 }
 
 // ##################################################

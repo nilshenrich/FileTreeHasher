@@ -9,10 +9,8 @@
 // #
 // ####################################################################################################
 
-import 'package:file_tree_hasher/templates/filetree.dart';
 import 'package:flutter/material.dart';
 import 'package:file_tree_hasher/templates/contentarea.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(const FileTreeHasher());
@@ -26,16 +24,10 @@ class FileTreeHasher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => P_FileTrees()),
-        ChangeNotifierProvider(create: (context) => P_SingleFiles()),
-      ],
-      child: const MaterialApp(
-        restorationScopeId: 'app',
-        title: 'File Tree Hasher',
-        home: ControlHeader(),
-      ),
+    return const MaterialApp(
+      restorationScopeId: 'app',
+      title: 'File Tree Hasher',
+      home: ControlHeader(),
     );
   }
 }
@@ -52,6 +44,6 @@ class ControlHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: const T_HeaderBar(), body: SingleChildScrollView(child: T_BodyContent(key: BodyContent)));
+    return Scaffold(appBar: T_HeaderBar(), body: SingleChildScrollView(child: T_BodyContent(key: BodyContent)));
   }
 }

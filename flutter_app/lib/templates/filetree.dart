@@ -1,9 +1,9 @@
 // ####################################################################################################
 // # @file filetree.dart
 // # @author Nils Henrich
-// # @brief Templates for loaded file, file tree and corresponding hashing and comparison funcionality
+// # @brief Build file tree from system path and provide hash generating and checking
 // # @version 1.0.1+4
-// # @date 2023-03-30
+// # @date 2023-12-07
 // #
 // # @copyright Copyright (c) 2023
 // #
@@ -11,335 +11,430 @@
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:file_tree_hasher/definies/datatypes.dart';
+import 'package:path/path.dart' as libpath;
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
-import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
 import 'package:file_tree_hasher/definies/hashalgorithms.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/general.dart';
+import 'package:file_tree_hasher/templates/contentarea.dart';
 import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 // ##################################################
-// # PROVIDER
-// # Provide loaded folders
-// ##################################################
-class P_FileTrees extends ChangeNotifier {
-  // List of loaded file trees
-  List<T_FileTree> loadedTrees = [];
-
-  // Constructor
-  P_FileTrees();
-
-  // ##################################################
-  // @brief: Load a file tree from system to GUI
-  // @param: path
-  // ##################################################
-  void loadFileTree(String path) {
-    // -------------------- Add new tree header item --------------------
-    T_FileTree headerItem = T_FileTree(path: path, children: List.empty(growable: true));
-    loadedTrees.add(headerItem);
-    notifyListeners();
-    _loadSubitems(headerItem);
-  }
-
-  // ##################################################
-  // @brief: Remove all loaded file trees
-  // ##################################################
-  void clear() {
-    loadedTrees.clear();
-    notifyListeners();
-  }
-
-  // ##################################################
-  // @brief: Recursively load sub-items to an existing folder
-  // @param: parentFolder
-  // ##################################################
-  void _loadSubitems(T_FolderItem parentFolder) async {
-    // -------------------- Get all direct child items from system and add recursively --------------------
-    Directory rootDir = Directory(parentFolder.path);
-    List<FileSystemEntity> systemItems = rootDir.listSync();
-    for (FileSystemEntity item in systemItems) {
-      await Future.delayed(Duration.zero); // Needed to have items live updated
-      // await Future.delayed(Duration(seconds: 1)); // Needed to have items live updated
-
-      // ---------- Item is a file ----------
-      if (item is File) {
-        T_FileItem file = T_FileItem(path: item.path);
-        parentFolder.add(file);
-        notifyListeners();
-      }
-      // ---------- Item is directory ----------
-      else if (item is Directory) {
-        T_FolderItem folder = T_FolderItem(path: item.path, children: List.empty(growable: true));
-        parentFolder.add(folder);
-        notifyListeners();
-
-        // Recurse on sub-folder
-        _loadSubitems(folder);
-      }
-    }
-  }
-}
-
-// ##################################################
-// # PROVIDER
-// # Prover loaded single files
-// ##################################################
-class P_SingleFiles extends ChangeNotifier {
-  // List of loaded files
-  List<T_FileItem> loadedFiles = [];
-
-  // Constructor
-  P_SingleFiles();
-
-  // ##################################################
-  // @brief: Load files from system to GUI
-  // @param: paths
-  // ##################################################
-  void loadFiles(List<String?> paths) {
-    for (String? path in paths) {
-      if (path == null) continue;
-      loadedFiles.add(T_FileItem(path: path, showFullPath: true));
-      notifyListeners();
-    }
-  }
-
-  // ##################################################
-  // @brief: Remove all loaded files
-  // ##################################################
-  void clear() {
-    loadedFiles.clear();
-    notifyListeners();
-  }
-}
-
-// ##################################################
 // # TEMPLATE
-// # Single tree view item (header, folder or file)
+// # File tree item to be shown in file tree
 // ##################################################
-abstract class T_TreeItem extends StatelessWidget {
+abstract class T_FileTree_Item extends StatefulWidget {
   // Parameter
-  final bool showFullPath;
   final String name; // Elements name (to be shown in GUI)
   final String path; // Elements absolute system path (used for hash generation and shown in tree header)
   final String parent; // Elements parents absolute system path
 
-  // Hash algorithm selector key
-  final globKey_HashAlgorithm = GlobalKey<T_HashSelector_state>();
+  // Status change: Parent stream
+  Stream<C_HashAlg> s_hashAlg_stream; // Selected hash algorithm
+  Stream<C_HashFile_SavePath> s_hashFile_savePath_stream; // File path to save hash file to
 
   // Constructor
-  T_TreeItem({super.key, required this.path, required this.showFullPath})
+  T_FileTree_Item(
+      {super.key,
+      required this.path,
+      required Stream<C_HashAlg> stream_hashAlg,
+      required Stream<C_HashFile_SavePath> stream_hashFile_savePath,
+      required showFullPath})
       : name = GetFileName(path),
+        s_hashAlg_stream = stream_hashAlg,
+        s_hashFile_savePath_stream = stream_hashFile_savePath,
         parent = showFullPath ? GetParentPath(path) : "";
 }
 
 // ##################################################
-// # TEMPLATE
-// # Single folder
+// # ITEM
+// # Folder item
 // ##################################################
-// TODO: Make InheritedWidget, so all children can be updated on change
-class T_FolderItem extends T_TreeItem {
-  // Parameter
-  final List<T_TreeItem> children;
-
+class I_FileTree_Folder extends T_FileTree_Item {
   // Constructor
-  T_FolderItem({super.key, required super.path, required this.children, super.showFullPath = false});
+  I_FileTree_Folder(
+      {super.key, required super.path, required super.stream_hashAlg, required super.stream_hashFile_savePath, super.showFullPath = false});
+
+  // Style parameter
+  final bool _param_showIcon = true;
+  final TextStyle _param_textStyle_parent = Style_FileTree_Item_Text_Parent;
+  final TextStyle _param_textStyle_name = Style_FileTree_Item_Text_Name;
+  final Color _param_color_header = Style_FileTree_Item_Color;
+  final EdgeInsets _param_padding = Style_FileTree_Item_Padding;
 
   @override
-  Widget build(BuildContext context) {
-    return T_Expandable(headerRow: [
-      const Icon(Icons.folder),
-      Text(parent, style: Style_FileTree_Text_ParentPath),
-      Expanded(child: Text(name)),
-      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_FileHashSelector(key: globKey_HashAlgorithm, onChanged: change_hashAlgorithm),
-      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      const SizedBox(width: Style_FileTree_ComparisonInput_Width_px)
-    ], children: children);
-  }
-
-  void add(T_TreeItem item) => children.add(item);
-
-  // ##################################################
-  // @brief: Change handler: Selected hash algorithm has changed
-  //         Also change selected hash algorithm for all sub-items
-  // @param: selected
-  // ##################################################
-  void change_hashAlgorithm(String? selected) {
-    // For all sub-elements change hash algorithm to same vale (Sub-folders will automatically do for their sub-elements)
-    for (T_TreeItem subitem in children) {
-      subitem.globKey_HashAlgorithm.currentState!.set(selected);
-    }
-  }
-}
-
-// ##################################################
-// # TEMPLATE
-// # File tree
-// ##################################################
-// TODO: Different style for overall folder
-class T_FileTree extends T_FolderItem {
-  // Constructor
-  T_FileTree({super.key, required super.path, required super.children, super.showFullPath = true});
-}
-
-// ##################################################
-// # TEMPLATE
-// # Single file
-// ##################################################
-class T_FileItem extends T_TreeItem {
-  // Hash generation and comparison keys
-  final globKey_HashGenerationView = GlobalKey<T_HashGenerationView_state>();
-  final globKey_HashComparisonView = GlobalKey<T_HashComparisonView_state>();
-
-  // Constructor
-  T_FileItem({super.key, required super.path, super.showFullPath = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      const SizedBox(width: Style_FileTree_Icon_Width_px),
-      const Icon(Icons.description),
-      Text(parent, style: Style_FileTree_Text_ParentPath),
-      Text(name),
-      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      Expanded(child: T_HashGenerationView(key: globKey_HashGenerationView, filepath: path, globKey_HashComparisonView: globKey_HashComparisonView)),
-      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_FileHashSelector(
-          key: globKey_HashAlgorithm,
-          onChanged: (selected) {
-            T_HashGenerationView_state hashGen = globKey_HashGenerationView.currentState!;
-            hashGen.abortHashGeneration();
-            hashGen.generateHash(selected);
-          }),
-      const SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
-      T_HashComparisonView(
-          key: globKey_HashComparisonView,
-          onChanged: (value) {
-            globKey_HashGenerationView.currentState!.compareHashes(value);
-          })
-    ]);
-  }
-}
-
-// ##################################################
-// # TEMPLATE
-// # Hash generation view
-// # This widget can be inserted into file view to show hash calculation progress or generated hash comparison
-// ##################################################
-class T_HashGenerationView extends StatefulWidget {
-  // Attributes
-  final String filepath;
-  final GlobalKey<T_HashComparisonView_state> globKey_HashComparisonView;
-
-  // Constructor
-  const T_HashGenerationView({super.key, required this.filepath, required this.globKey_HashComparisonView});
-
-  @override
-  State<StatefulWidget> createState() => T_HashGenerationView_state();
+  State<StatefulWidget> createState() => I_FileTree_Folder_state();
 }
 
 // ##################################################
 // # STATE
-// # Hash generation view state
+// # Folder item
 // ##################################################
-class T_HashGenerationView_state extends State<T_HashGenerationView> {
-  // State attributes
-  String _hashGen = "";
-  double _genProgress = 0;
-  bool _ongoing = false;
-  E_HashComparisonResult _comparisonResult = E_HashComparisonResult.none;
+class I_FileTree_Folder_state extends State<I_FileTree_Folder> with SingleTickerProviderStateMixin {
+  // State parameter
+  bool expanded = true; // Is folder expanded
+  List<S_FileTree_StreamControlled_Item> children = []; // Direct child items to be shown in tree
+  StreamController<FileSystemEntity> s_children = StreamController(); // Stream to add a child item with live update
+
+  // Hash algorithm selector key
+  GlobalKey<T_HashSelector_state> globalkey_hashAlgSel = GlobalKey();
+
+  // Toggle animation
+  Duration _duration = Duration(milliseconds: 250);
+  Icon _iconToggle = Icon(Icons.expand_more);
+  late AnimationController _animationcontroller;
+  late Animation<double> _animation_expand;
+  late Animation<double> _animation_iconturn;
 
   @override
   Widget build(BuildContext context) {
-    return _hashGen.isEmpty
-        ? LinearPercentIndicator(
-            percent: _genProgress,
-            lineHeight: Style_FileTree_HashGen_Prg_Height_px,
-            center: Text("${(_genProgress * 100).toStringAsFixed(1)}%", style: Style_FileTree_HashGen_Prg_Text),
-            progressColor: Style_FileTree_HashGen_Prg_Color)
-        : Row(children: [
-            Flexible(
-                child:
-                    Container(color: Style_FileTree_HashComp_Colors[_comparisonResult], child: Text(_hashGen, style: Style_FileTree_HashGen_Text))),
+    // ---------- Header row ----------
+    Widget areaHeader_clickable = MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          expanded ? _animationcontroller.reverse() : _animationcontroller.forward();
+          setState(() {
+            expanded = !expanded;
+          });
+        },
+        child: Row(
+          children: [
             SizedBox(
-                height: Style_FileTree_HashSelector_FontSize_px,
-                child: IconButton(
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: _hashGen));
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied to clipboard")));
-                    },
-                    iconSize: Style_FileTree_HashSelector_FontSize_px,
-                    padding: EdgeInsets.zero,
-                    color: Style_FileTree_HashGen_Text.color,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    icon: const Icon(Icons.copy)))
-          ]);
+              width: Style_FileTree_Item_Expander_Width_px,
+              child: RotationTransition(
+                turns: _animation_iconturn,
+                child: _iconToggle,
+              ),
+            ),
+            widget._param_showIcon ? Icon(Icons.folder) : SizedBox.shrink(),
+            Text(widget.parent, style: widget._param_textStyle_parent),
+            Text(widget.name, style: widget._param_textStyle_name),
+          ],
+        ),
+      ),
+    );
+    Widget areaHeader_unclickable = Container(
+      child: Row(
+        children: [
+          T_FileHashSelector(
+            key: globalkey_hashAlgSel,
+            onChanged: (selected) {
+              children.forEach((item) {
+                item.send(C_HashAlg(selected));
+              });
+            },
+          ),
+          SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+          SizedBox(width: Style_FileTree_ComparisonInput_Width_px - widget._param_padding.right),
+        ],
+      ),
+    );
+    Widget areaHeader = Container(
+      padding: widget._param_padding,
+      color: widget._param_color_header,
+      child: Row(
+        children: [Expanded(child: areaHeader_clickable), areaHeader_unclickable],
+      ),
+    );
+
+    // ---------- Content column ----------
+    Padding areaContent = Padding(
+      padding: EdgeInsets.fromLTRB(Style_FileTree_SubItem_ShiftRight_px, 0, 0, 0),
+      child: Column(children: children.map((c) => c.item).toList()),
+    );
+
+    // ---------- Expandable ----------
+    return Column(
+      children: [
+        areaHeader,
+        SizeTransition(
+          sizeFactor: _animation_expand,
+          axisAlignment: -1,
+          child: areaContent,
+        )
+      ],
+    );
   }
 
   @override
   void initState() {
+    // ---------- Add event listener to be triggered when adding a new child item ----------
+    s_children.stream.listen((sysItem) {
+      T_FileTree_Item item;
+      StreamController<C_HashAlg> controller_hashAlg = StreamController();
+      StreamController<C_HashFile_SavePath> controller_hashFile_savePath = StreamController();
+
+      // ---------- Item is a file ----------
+      if (sysItem is File) {
+        item = I_FileTree_File(
+            path: sysItem.path,
+            stream_hashAlg: controller_hashAlg.stream,
+            stream_hashFile_savePath: controller_hashFile_savePath.stream,
+            showFullPath: false);
+      }
+
+      // ---------- Item is a folder ----------
+      else if (sysItem is Directory) {
+        item = I_FileTree_Folder(
+            path: sysItem.path, stream_hashAlg: controller_hashAlg.stream, stream_hashFile_savePath: controller_hashFile_savePath.stream);
+      }
+
+      // ---------- Item is none of these ----------
+      else {
+        return;
+      }
+
+      setState(() {
+        children.add(S_FileTree_StreamControlled_Item(item: item, controllers: [controller_hashAlg, controller_hashFile_savePath]));
+      });
+    });
+    widget.s_hashAlg_stream?.listen((hash) {
+      globalkey_hashAlgSel.currentState!.set(hash.value);
+    });
+    widget.s_hashFile_savePath_stream.listen((path) {
+      for (S_FileTree_StreamControlled_Item child in children) {
+        child.send(path);
+      }
+    });
+
+    // ---------- Call base method as usual ----------
     super.initState();
+
+    // ---------- Initialize toggle animation ----------
+    _animationcontroller = AnimationController(vsync: this, duration: _duration);
+    _animation_expand = _animationcontroller.drive(CurveTween(curve: Curves.easeIn));
+    _animation_iconturn = _animationcontroller.drive(Tween<double>(begin: 0, end: -0.25).chain(CurveTween(curve: Curves.easeIn)));
+    if (expanded) _animationcontroller.value = 1;
+
+    // ---------- Load all direct children items from system ----------
+    loadChildren();
+  }
+
+  // ##################################################
+  // @brief: Load child items from system path
+  // ##################################################
+  void loadChildren() async {
+    Directory systemDir = Directory(widget.path);
+    Stream<FileSystemEntity> systemItems = systemDir.list();
+    // await for (FileSystemEntity sysItem in systemItems) {
+    systemItems.forEach((sysItem) {
+      s_children.add(sysItem);
+    });
+  }
+}
+
+// ##################################################
+// # ITEM
+// # File tree head (differently designed folder under the hood)
+// ##################################################
+class I_FileTree_Head extends I_FileTree_Folder {
+  // Constructor
+  I_FileTree_Head(
+      {super.key, required super.path, required super.stream_hashAlg, required super.stream_hashFile_savePath, super.showFullPath = true});
+
+  // Style parameter
+  @override
+  bool get _param_showIcon => false;
+  @override
+  TextStyle get _param_textStyle_parent => Style_FileTree_Header_Text_Parent;
+  @override
+  TextStyle get _param_textStyle_name => Style_FileTree_Header_Text_Name;
+  @override
+  Color get _param_color_header => Style_FileTree_Header_Color;
+  @override
+  EdgeInsets get _param_padding => Style_FileTree_Header_Padding;
+}
+
+// ##################################################
+// # ITEM
+// # File item
+// ##################################################
+class I_FileTree_File extends T_FileTree_Item {
+  // Constructor
+  I_FileTree_File(
+      {super.key, required super.path, required super.stream_hashAlg, required super.stream_hashFile_savePath, required super.showFullPath});
+
+  @override
+  State<StatefulWidget> createState() => I_FileTree_File_state();
+}
+
+// ##################################################
+// # STATE
+// # File item
+// ##################################################
+class I_FileTree_File_state extends State<I_FileTree_File> {
+  // State parameter
+  String _hashComp = "";
+  int _hashComp_cursorPos = 0;
+  E_HashComparisonResult _hashComparisonResult = E_HashComparisonResult.none;
+  String? _hashGen; // Generated hash
+  double _hashGenProgress = 0; // Hash generation progress (0-1)
+  StreamController<double> _s_hashGenProgress = StreamController(); // Stream to update live progress
+  bool _hashOngoing = false; // Hash generation ongoing? (Used for abortion)
+
+  // Hash algorithm selector key
+  GlobalKey<T_HashSelector_state> globalkey_hashAlgSel = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(width: Style_FileTree_Item_Expander_Width_px),
+        const Icon(Icons.description),
+        Text(widget.parent, style: Style_FileTree_Item_Text_Parent),
+        Text(widget.name, style: Style_FileTree_Item_Text_Name),
+        SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        Expanded(child: _buildHashGenerationView(context)),
+        SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        T_FileHashSelector(
+            key: globalkey_hashAlgSel,
+            onChanged: (selected) {
+              generateHash(selected);
+            }),
+        SizedBox(width: Style_FileTree_Item_ElementSpaces_px),
+        _buildHashComparisonView()
+      ],
+    );
+  }
+
+  // ##################################################
+  // @brief: Build hash generation view
+  // @param: context
+  // @return: Widget
+  // ##################################################
+  Widget _buildHashGenerationView(BuildContext context) {
+    if (_hashGen == null) {
+      return LinearPercentIndicator(
+        percent: _hashGenProgress,
+        lineHeight: Style_FileTree_HashGen_Prg_Height_px,
+        center: Text("${(_hashGenProgress * 100).toStringAsFixed(1)}%", style: Style_FileTree_HashGen_Prg_Text),
+        progressColor: Style_FileTree_HashGen_Prg_Color,
+      );
+    }
+    return Row(
+      children: [
+        Flexible(
+            child: Container(
+          color: Style_FileTree_HashComp_Colors[_hashComparisonResult],
+          child: Text(_hashGen!, style: Style_FileTree_HashGen_Text),
+        )),
+        SizedBox(
+            height: Style_FileTree_HashSelector_FontSize_px,
+            child: IconButton(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: _hashGen!));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied to clipboard")));
+                },
+                iconSize: Style_FileTree_HashSelector_FontSize_px,
+                padding: EdgeInsets.zero,
+                color: Style_FileTree_HashGen_Text.color,
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                icon: const Icon(Icons.copy))),
+      ],
+    );
+  }
+
+  // ##################################################
+  // @brief: Build hash comparison view
+  // @return: Widget
+  // ##################################################
+  Widget _buildHashComparisonView() {
+    TextEditingController _hashComp_controller = TextEditingController(text: _hashComp);
+    _hashComp_controller.selection = TextSelection.collapsed(offset: _hashComp_cursorPos);
+    return SizedBox(
+      width: Style_FileTree_ComparisonInput_Width_px,
+      height: Style_FileTree_ComparisonInput_Height_px,
+      child: TextField(
+        style: Style_FileTree_ComparisonInput_Text,
+        decoration: Style_FileTree_ComparisonInput_Decoration,
+        controller: _hashComp_controller,
+        onChanged: (String hashComp) {
+          // Update buffer
+          _hashComp = hashComp;
+          _hashComp_cursorPos = _hashComp_controller.selection.baseOffset;
+
+          // Compare
+          _compareHash(hashComp);
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    // ---------- Add event listener to be triggered when updating progress ----------
+    _s_hashGenProgress.stream.listen((prog) {
+      setState(() {
+        _hashGenProgress = prog;
+      });
+    });
+    widget.s_hashAlg_stream?.listen((hash) {
+      globalkey_hashAlgSel.currentState!.set(hash.value);
+    });
+    widget.s_hashFile_savePath_stream.listen((file) {
+      file.value.writeAsStringSync(
+          "${_hashGen},${globalkey_hashAlgSel.currentState!.get()},\"${libpath.relative(widget.path, from: file.rootDir)}\"\n",
+          mode: FileMode.append);
+    });
+    Controller_ComparisonInput.stream.listen((input) {
+      // TODO: Can be done more efficient?
+      if (input.itempath == null || input.itempath == widget.path) {
+        if (input.hashAlg != null) globalkey_hashAlgSel.currentState!.set(input.hashAlg);
+        if (input.compInput != null) {
+          _hashComp = input.compInput!;
+          _hashComp_cursorPos = _hashComp.length;
+          _compareHash(_hashComp);
+        }
+      }
+    });
+
+    // ---------- Call base method as usual ----------
+    super.initState();
+
+    // ---------- Start generating hash ----------
     generateHash(SelectedGlobalHashAlg);
   }
 
   // ##################################################
-  // @brief: Compare generated hash with text input
-  // @param: hashComp
-  // ##################################################
-  void compareHashes(String hashComp) {
-    setState(() {
-      // If any of both hashes is empty, no comparison is done
-      if (_hashGen.isEmpty || hashComp.isEmpty) {
-        _comparisonResult = E_HashComparisonResult.none;
-        return;
-      }
-
-      // For 2 valid inputs, the result is equal or not equal
-      _comparisonResult = _hashGen.toLowerCase() == hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
-
-      return;
-    });
-  }
-
-  // ##################################################
-  // @brief: Calculate hash and update GUI
-  // @param alg
+  // @brief: Generate hash and update progress bar
+  // @param: alg
   // ##################################################
   void generateHash(String? alg) async {
-    // -------------------- Read file --------------------
-    File file = File(widget.filepath);
-    if (!await file.exists()) {
-      // throw FileSystemException("File ${widget.filepath} does not exist");
+    // -------------------- Open file read stream --------------------
+
+    // Check if file exists
+    File file = File(widget.path);
+    if (!file.existsSync()) {
       setState(() {
         _hashGen = "<Can't find file in file system>";
-        _genProgress = 0;
-        _comparisonResult = E_HashComparisonResult.none;
+        _hashGenProgress = 0;
       });
       return;
     }
 
-    // -------------------- Generate hash --------------------
-
-    // Reset old hash and comparison
-    setState(() {
-      _genProgress = 0;
-      _hashGen = "";
-      _comparisonResult = E_HashComparisonResult.none;
-    });
+    // Reset any old status
+    // TODO: Reset _hashGen as well
+    _s_hashGenProgress.add(0);
 
     // File size and processed size for progress calculation
-    int totalBytes = await file.length();
+    int totalBytes = file.lengthSync();
     int bytesRead = 0;
+
+    // -------------------- Choose hash generator --------------------
 
     // Select hash algorithm
     var hashOut = AccumulatorSink<Digest>();
@@ -366,13 +461,13 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       return;
     }
 
-    // -------------------- Start --------------------
-    _ongoing = true;
+    // -------------------- Generate hash block wise --------------------
+    _hashOngoing = true;
 
     // Read file step by step and generate hash
     await for (var chunk in file.openRead()) {
       // Abort process here if flag is unset
-      if (!_ongoing) {
+      if (!_hashOngoing) {
         return;
       }
 
@@ -381,23 +476,20 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
       hasher.add(chunk);
 
       // Update progress bar
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _genProgress = bytesRead / totalBytes;
-      });
+      _s_hashGenProgress.add(bytesRead / totalBytes);
     }
 
-    _ongoing = false;
+    _hashOngoing = false;
+
     // -------------------- Done --------------------
 
     // Extract hash string
     hasher.close();
     String hashString = hashOut.events.single.toString();
 
-    _hashGen = hashString;
-    compareHashes(widget.globKey_HashComparisonView.currentState!.get());
+    setState(() {
+      _hashGen = hashString;
+    });
   }
 
   // ##################################################
@@ -405,7 +497,7 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   // ##################################################
   void abortHashGeneration() {
     // Unset flag to mark abortion
-    _ongoing = false;
+    _hashOngoing = false;
 
     // Reset hash generation view
     setState(() {
@@ -414,142 +506,70 @@ class T_HashGenerationView_state extends State<T_HashGenerationView> {
   }
 
   // ##################################################
-  // @brief: Getter: generated hash
-  // @return: String
+  // @brief: Compare generated hash with text input
+  //         hashComp Set comparison result accordingly
+  // @param: hashComp Text input
   // ##################################################
-  String get HashGen {
-    return _hashGen;
+  void _compareHash(String hashComp) {
+    // If any hash is empty, set comparison result None
+    if (_hashGen!.isEmpty || hashComp.isEmpty) {
+      setState(() {
+        _hashComparisonResult = E_HashComparisonResult.none;
+      });
+      return;
+    }
+
+    // For 2 valid inputs, the result is equal or not equal
+    setState(() {
+      _hashComparisonResult = _hashGen!.toLowerCase() == hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
+    });
   }
 }
 
 // ##################################################
-// # TEMPLATE
-// # Hash comparison view
-// # This widget can be inserted into file view to provide user input for hash comparison
+// # STRUCT
+// # Stream controlled item
 // ##################################################
-class T_HashComparisonView extends StatefulWidget {
-  // Function call on changed
-  final Function(String)? onChanged;
+class S_FileTree_StreamControlled_Item {
+  // Private attributes
+  final T_FileTree_Item _item;
+  final List<StreamController> _controllers;
 
   // Constructor
-  T_HashComparisonView({super.key, this.onChanged});
+  S_FileTree_StreamControlled_Item({required T_FileTree_Item item, required List<StreamController> controllers})
+      : _item = item,
+        _controllers = controllers;
 
-  // Hash comparison view key
-  final globKey_HashCompView = GlobalKey<T_HashComparisonView_state>();
+  // Getter
+  T_FileTree_Item get item => _item;
+  // StreamController get controller => _controller;
+  // Stream get stream => _controller.stream;
 
-  @override
-  State<StatefulWidget> createState() => T_HashComparisonView_state();
-}
-
-// ##################################################
-// # STATE
-// # Hash comparison view state
-// ##################################################
-class T_HashComparisonView_state extends State<T_HashComparisonView> {
-  // state attributes
-  String _hashComp = "";
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-        width: Style_FileTree_ComparisonInput_Width_px,
-        height: Style_FileTree_ComparisonInput_Height_px,
-        child: TextField(
-            style: Style_FileTree_ComparisonInput_Text,
-            decoration: Style_FileTree_ComparisonInput_Decoration,
-            controller: TextEditingController(text: _hashComp),
-            onChanged: _onChange));
-  }
-
-  // ##################################################
-  // @brief: Work on onChange
-  // @param: value
-  // ##################################################
-  void _onChange(String value) {
-    _hashComp = value;
-    if (widget.onChanged != null) {
-      widget.onChanged!(value);
+  // Stream setter
+  void send<T>(T e) {
+    for (StreamController controller in _controllers) {
+      if (controller is StreamController<T>) {
+        controller.add(e);
+      }
     }
   }
-
-  // ##################################################
-  // @brief: Getter/Setter
-  // @param: val
-  // @return: String
-  // ##################################################
-  String get() {
-    return _hashComp;
-  }
-
-  void set(String val) {
-    setState(() {
-      _hashComp = val;
-    });
-    _onChange(val);
-  }
 }
 
 // ##################################################
-// # TEMPLATE
-// # Expandable area
+// # TYPE
+// # Explicit types to be used in stream controllers to identify
 // ##################################################
-class T_Expandable extends StatefulWidget {
-  // Parameter
-  final List<Widget> headerRow;
-  final List<Widget> children;
-
-  // Constructor
-  const T_Expandable({super.key, required this.headerRow, required this.children});
-
-  @override
-  State<T_Expandable> createState() => _T_Expandable_state();
+abstract class TC_Explicit<T> {
+  T _value;
+  TC_Explicit(T value) : _value = value;
+  T get value => _value;
 }
 
-// ##################################################
-// # STATE
-// # Expandable area
-// ##################################################
-class _T_Expandable_state extends State<T_Expandable> {
-  // State parameter
-  bool expanded = true;
+class C_HashAlg extends TC_Explicit<String?> {
+  C_HashAlg(super.value);
+}
 
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> widgetRow = [
-      SizedBox(
-          width: Style_FileTree_Icon_Width_px,
-          height: Style_FileTree_Icon_Height_px,
-          child: IconButton(
-            icon: Icon(expanded ? Icons.chevron_right : Icons.expand_more),
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            padding: EdgeInsets.zero,
-            onPressed: toggle,
-          )),
-    ];
-    widgetRow.addAll(widget.headerRow);
-    return Column(children: [
-      Row(children: widgetRow),
-      Offstage(
-          offstage: !expanded,
-          child: Row(children: [
-            const SizedBox(width: Style_FileTree_SubItem_ShiftRight_px),
-            Expanded(
-              child: Column(
-                children: widget.children,
-              ),
-            )
-          ]))
-    ]);
-  }
-
-  // ##################################################
-  // @brief: Toggle content area
-  // ##################################################
-  void toggle() {
-    setState(() {
-      expanded = !expanded;
-    });
-  }
+class C_HashFile_SavePath extends TC_Explicit<File> {
+  final String? rootDir; // Directory of header if file saves a tree view
+  C_HashFile_SavePath(super.value, [this.rootDir]);
 }

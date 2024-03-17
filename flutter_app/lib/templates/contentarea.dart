@@ -11,9 +11,15 @@
 
 // ignore_for_file: camel_case_types, non_constant_identifier_names, library_private_types_in_public_api
 
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_tree_hasher/definies/datatypes.dart';
 import 'package:file_tree_hasher/definies/defaults.dart';
+import 'package:file_tree_hasher/definies/info.dart';
 import 'package:file_tree_hasher/definies/styles.dart';
 import 'package:file_tree_hasher/functions/hashfile.dart';
 import 'package:file_tree_hasher/templates/contentdivider.dart';
@@ -23,7 +29,6 @@ import 'package:file_tree_hasher/templates/hashselector.dart';
 import 'package:file_tree_hasher/templates/headercontroller.dart';
 import 'package:file_tree_hasher/templates/filetree.dart';
 import 'package:path/path.dart' as libpath;
-import 'package:provider/provider.dart';
 
 // ##################################################
 // # Body content
@@ -31,14 +36,36 @@ import 'package:provider/provider.dart';
 GlobalKey<T_BodyContent_state> BodyContent = GlobalKey<T_BodyContent_state>();
 
 // ##################################################
+// # Hash input update trigger object
+// # Items are identified by path. Null means all items are included
+// # Can update comparison input and selected hash algorithm. Null means not to be updated
+// ##################################################
+class HashInputUpdater {
+  String? itempath; // Itentifies item by path. Null means all items
+  String? compInput; // Hash comparison input to be set. Null means don't update
+  String? hashAlg; // Hash algorithm to be selected. Null means don't update
+  HashInputUpdater({required this.itempath, this.compInput, this.hashAlg});
+}
+
+// ##################################################
+// # Global stream controllers every widget can listen to
+// ##################################################
+StreamController<C_HashAlg> Controller_SelectedGlobalHashAlg = StreamController.broadcast(); // Globally selected hash algorithm
+StreamController<HashInputUpdater> Controller_ComparisonInput = StreamController.broadcast(); // Comparison input to be updated
+
+// ##################################################
 // # CONTENT
 // # Header bar containing general control elements
 // ##################################################
 class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
-  const T_HeaderBar({super.key});
+  // Constructor
+  T_HeaderBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Controller_SelectedGlobalHashAlg.stream.listen((selected) {
+      SelectedGlobalHashAlg = selected.value;
+    });
     return AppBar(
         flexibleSpace: Column(children: [
       const SizedBox(height: 10),
@@ -58,8 +85,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
         // -------------------- Section: Hash algorithm --------------------
         T_HeaderControlSection(headingText: "Algorithm selection", items: [
           T_GlobalHashSelector(onChanged: (selected) {
-            SelectedGlobalHashAlg = selected;
-            BodyContent.currentState!.updateHashAlg(selected);
+            Controller_SelectedGlobalHashAlg.add(C_HashAlg(selected));
           })
         ]),
         // -------------------- Section: Comparison --------------------
@@ -67,7 +93,7 @@ class T_HeaderBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(onPressed: BodyContent.currentState!.loadHashfile, icon: const Icon(Icons.upload_outlined), tooltip: "Load checksum file(s)"),
           IconButton(onPressed: BodyContent.currentState!.safeHashFile, icon: const Icon(Icons.download_outlined), tooltip: "Safe checksum file(s)"),
           IconButton(
-              onPressed: BodyContent.currentState!.clearComparisonInputs,
+              onPressed: () => Controller_ComparisonInput.add(HashInputUpdater(itempath: null, compInput: "")),
               icon: const Icon(Icons.delete_forever_outlined),
               tooltip: "Clear comparison strings")
         ])
@@ -96,16 +122,19 @@ class T_BodyContent extends StatefulWidget {
 // ##################################################
 class T_BodyContent_state extends State<T_BodyContent> {
   // Currently loaded file trees
+  List<S_FileTree_StreamControlled_Item> loadedTrees = List.empty(growable: true);
+  List<S_FileTree_StreamControlled_Item> loadedFiles = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
-    List<T_FileTree> loadedTrees = context.watch<P_FileTrees>().loadedTrees;
-    List<T_FileItem> loadedFiles = context.watch<P_SingleFiles>().loadedFiles;
     return Column(children: [
       ContentDivider_folders(visible: loadedTrees.isNotEmpty),
-      Column(children: loadedTrees),
+      Column(children: loadedTrees.map((c) => c.item).toList()),
       ContentDivider_files(visible: loadedFiles.isNotEmpty),
-      Row(children: [Flexible(child: Column(children: loadedFiles)), const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)])
+      Row(children: [
+        Flexible(child: Column(children: loadedFiles.map((c) => c.item).toList())),
+        const SizedBox(width: Style_FileTree_Item_ElementSpaces_px)
+      ])
     ]);
   }
 
@@ -122,8 +151,15 @@ class T_BodyContent_state extends State<T_BodyContent> {
     }
 
     // -------------------- Show selected folder as tree view --------------------
-    if (!context.mounted) return;
-    context.read<P_FileTrees>().loadFileTree(filetreePath);
+    StreamController<C_HashFile_SavePath> controller_HashFile_SavePath = StreamController();
+    setState(() {
+      loadedTrees.add(S_FileTree_StreamControlled_Item(
+          item: I_FileTree_Head(
+              path: filetreePath!,
+              stream_hashAlg: Controller_SelectedGlobalHashAlg.stream,
+              stream_hashFile_savePath: controller_HashFile_SavePath.stream),
+          controllers: [Controller_SelectedGlobalHashAlg, controller_HashFile_SavePath]));
+    });
   }
 
   // ##################################################
@@ -132,14 +168,27 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void selectNewFiles() async {
     // -------------------- Select files from system --------------------
-    FilePickerResult? filePaths = await FilePicker.platform.pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true);
-    if (filePaths == null) {
+    FilePickerResult? picked = await FilePicker.platform.pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true);
+    if (picked == null) {
       return;
     }
 
     // -------------------- Show selected files in body --------------------
-    if (!context.mounted) return;
-    context.read<P_SingleFiles>().loadFiles(filePaths.paths);
+    List<S_FileTree_StreamControlled_Item> l_loadedFiles = loadedFiles;
+    for (PlatformFile sysFile in picked.files) {
+      String? path = sysFile.path;
+      if (path == null) continue;
+      StreamController<C_HashFile_SavePath> controller_HashFile_SavePath = StreamController();
+      I_FileTree_File file = I_FileTree_File(
+          path: path,
+          stream_hashAlg: Controller_SelectedGlobalHashAlg.stream,
+          stream_hashFile_savePath: controller_HashFile_SavePath.stream,
+          showFullPath: true);
+      l_loadedFiles.add(S_FileTree_StreamControlled_Item(item: file, controllers: [Controller_SelectedGlobalHashAlg, controller_HashFile_SavePath]));
+    }
+    setState(() {
+      loadedFiles = l_loadedFiles;
+    });
   }
 
   // ##################################################
@@ -147,24 +196,10 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // ##################################################
   void clearContent() {
     // Remove all loaded trees and files
-    context.read<P_FileTrees>().clear();
-    context.read<P_SingleFiles>().clear();
-  }
-
-  // ##################################################
-  // @brief: Update all hash algorithms recursively
-  // @param: selected
-  // ##################################################
-  void updateHashAlg(String? selected) {
-    for (T_FileTree view in context.read<P_FileTrees>().loadedTrees) {
-      view.globKey_HashAlgorithm.currentState!.set(selected);
-      for (T_TreeItem item in view.children) {
-        item.globKey_HashAlgorithm.currentState!.set(selected);
-      }
-    }
-    for (T_FileItem item in context.read<P_SingleFiles>().loadedFiles) {
-      item.globKey_HashAlgorithm.currentState!.set(selected);
-    }
+    setState(() {
+      loadedTrees.clear();
+      loadedFiles.clear();
+    });
   }
 
   // ##################################################
@@ -180,12 +215,12 @@ class T_BodyContent_state extends State<T_BodyContent> {
   //                - For single file section the hash files default location is the users home directory
   // ##################################################
   // TODO: What if hash generation is ongoing?
+  // TODO: Add creation date as well
   void safeHashFile() {
     // Get all file trees and single files into widgets
     List<Widget> dialogRows = [];
-    List<T_FileItem> loadedFiles = context.read<P_SingleFiles>().loadedFiles;
-    for (T_FileTree view in context.read<P_FileTrees>().loadedTrees) {
-      dialogRows.add(T_StorageChooserRow(title: view.path, fileTreeView: view));
+    for (S_FileTree_StreamControlled_Item view in loadedTrees) {
+      dialogRows.add(T_StorageChooserRow(title: view.item.path, fileTreeView: view));
     }
     if (loadedFiles.isNotEmpty) {
       dialogRows.add(T_StorageChooserRow(title: HashfileSingletext));
@@ -213,18 +248,25 @@ class T_BodyContent_state extends State<T_BodyContent> {
           onPressed: () {
             for (Widget row in dialogRows) {
               if (row is! T_StorageChooserRow) continue;
-              String storagepath = row.getStoragePath();
+              String hashFilePath = row.getStoragePath();
+              File hashFileSocket = File(hashFilePath);
+              hashFileSocket.writeAsStringSync("${HashFileHeader}\n\n");
               if (row.fileTreeView == null) {
-                GenerateHashfile(SingleFiles_to_FileViewHashes(loadedFiles, HashfileSingletext), storagepath);
+                // TODO: Use absolute file paths for single files
+                hashFileSocket.writeAsStringSync("${HashfileSingletext}\n", mode: FileMode.append);
+                for (S_FileTree_StreamControlled_Item file in loadedFiles) {
+                  file.send(C_HashFile_SavePath(hashFileSocket));
+                }
               } else {
-                T_FileTree view = row.fileTreeView!;
-                GenerateHashfile(FileTreeItems_to_FileViewHashes(view.children, view.path, view.path), storagepath);
+                hashFileSocket.writeAsStringSync("${GetParentPath(hashFilePath)}\n", mode: FileMode.append);
+                S_FileTree_StreamControlled_Item view = row.fileTreeView!;
+                view.send(C_HashFile_SavePath(hashFileSocket, row.fileTreeView!.item.path));
               }
             }
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.check)),
-      IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close))
+          icon: const Icon(Icons.check)), // Exit with saving
+      IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)) // Exit without saving
     ]));
 
     // Show dialog
@@ -244,11 +286,6 @@ class T_BodyContent_state extends State<T_BodyContent> {
   // @brief: Load hash file from system and set comparison texts and hash algorithms accordingly
   // ##################################################
   void loadHashfile() async {
-    // Get loaded trees and files
-    if (!context.mounted) return;
-    List<T_FileTree> loadedTrees = context.read<P_FileTrees>().loadedTrees;
-    List<T_FileItem> loadedFiles = context.read<P_SingleFiles>().loadedFiles;
-
     // -------------------- Pick hash files to load --------------------
     FilePickerResult? filePaths = await FilePicker.platform
         .pickFiles(initialDirectory: GetHomeDir().path, allowMultiple: true, type: FileType.custom, allowedExtensions: ['hash']);
@@ -263,118 +300,40 @@ class T_BodyContent_state extends State<T_BodyContent> {
       if (path == null) {
         continue;
       }
-      C_FileViewHashes? parsedHashfile = LoadHashfile(path);
-      if (parsedHashfile == null) {
-        continue;
-      }
-      String viewpath = parsedHashfile.name;
-      List<C_FileHashPair> hashlist = parsedHashfile.files;
 
-      // ---------- Update single files ----------
-      if (viewpath == HashfileSingletext) {
-        // For all hash string pairs:
-        // Just find if a single file exists with matching path
-        for (C_FileHashPair hashPair in hashlist) {
-          for (T_FileItem singlefile in loadedFiles) {
-            if (singlefile.path == hashPair.file) {
-              singlefile.globKey_HashAlgorithm.currentState!.set(hashPair.algorithm);
-              singlefile.globKey_HashComparisonView.currentState!.set(hashPair.hash ?? "");
-            }
-          }
+      // Read file line by line
+      // Ignore all lines before the mpty line, they are part of the file header
+      bool isRealData = false;
+      String? rootPath;
+      File(path).openRead().transform(utf8.decoder).transform(LineSplitter()).forEach((line) {
+        // Search for empty line to identify usable data
+        if (line.isEmpty) {
+          isRealData = true;
+          return;
         }
-      }
+        if (!isRealData) return;
 
-      // ---------- Update tree views ----------
-      else {
-        // Find matching file tree view
-        T_FileTree? matchingview;
-        for (T_FileTree view in loadedTrees) {
-          if (view.path == viewpath) matchingview = view;
-        }
-        if (matchingview == null) {
-          continue;
+        // First line of usable data is the tree view root path or the marker for single files
+        if (rootPath == null) {
+          rootPath = line;
+          return;
         }
 
-        // For all hash string pairs:
-        // Go along file path and update file view if existing
-        for (C_FileHashPair hashpair in hashlist) {
-          List<String> pathparts = libpath.split(hashpair.file);
-          List<String> folders = pathparts.sublist(0, pathparts.length - 1);
-          String file = pathparts.last;
-          T_FileItem? matchingFileview = _getMatchingFileview(matchingview.children, folders, file);
-          if (matchingFileview == null) {
-            continue;
-          }
-          matchingFileview.globKey_HashAlgorithm.currentState!.set(hashpair.algorithm);
-          matchingFileview.globKey_HashComparisonView.currentState!.set(hashpair.hash ?? "");
-        }
-      }
+        // Get 3 CSV columns from line
+        List<List<String>> csvrow_list = const CsvToListConverter()
+            .convert(line, fieldDelimiter: ",", textDelimiter: '"', eol: LineendingChar, shouldParseNumbers: false, convertEmptyTo: "");
+        if (csvrow_list.isEmpty) return;
+        List csvrow = csvrow_list[0];
+        if (csvrow.length != 3) return;
+        String hashstring = csvrow[0];
+        String hashalg = csvrow[1];
+        String filepath = csvrow[2];
+
+        // Trigger input update
+        // TODO: Update selected hash algorithm as well
+        Controller_ComparisonInput.add(HashInputUpdater(itempath: "${rootPath}/${filepath}", compInput: hashstring, hashAlg: hashalg));
+      });
     }
-  }
-
-  // ##################################################
-  // @brief: Clear all inputs for comparison hash
-  // ##################################################
-  void clearComparisonInputs() {
-    for (T_FileTree view in context.read<P_FileTrees>().loadedTrees) {
-      for (T_TreeItem item in view.children) {
-        if (item is T_FileItem) {
-          item.globKey_HashComparisonView.currentState!.set("");
-        } else if (item is T_FolderItem) {
-          _clearCompInp(item);
-        }
-      }
-    }
-    for (T_FileItem item in context.read<P_SingleFiles>().loadedFiles) {
-      item.globKey_HashComparisonView.currentState!.set("");
-    }
-  }
-
-  // ##################################################
-  // @brief: Clear all inputs for comparison hash for folder sub-items
-  // @param: folder
-  // ##################################################
-  void _clearCompInp(T_FolderItem folder) {
-    for (T_TreeItem item in folder.children) {
-      if (item is T_FileItem) {
-        item.globKey_HashComparisonView.currentState!.set("");
-      } else if (item is T_FolderItem) {
-        _clearCompInp(item);
-      }
-    }
-  }
-
-  // ##################################################
-  // @brief: Get file view element (if existing) that matches a folder path
-  // @param: viewitems
-  // @param: folders
-  // @param: file
-  // @return: T_FileView?
-  // ##################################################
-  T_FileItem? _getMatchingFileview(List<T_TreeItem> viewitems, List<String> folders, String file) {
-    for (T_TreeItem item in viewitems) {
-      // Work on folder
-      if (item is T_FolderItem) {
-        if (folders.isEmpty) {
-          continue; // File searched, folder found
-        }
-        T_FileItem? found = _getMatchingFileview(item.children, folders.sublist(1, folders.length), file);
-        if (found != null) {
-          return found;
-        }
-      }
-
-      // Work on file
-      if (item is T_FileItem) {
-        if (folders.isNotEmpty) {
-          continue; // Folder searched, file found
-        }
-        if (item.name == file) {
-          return item;
-        }
-      }
-    }
-    return null;
   }
 }
 
@@ -385,7 +344,7 @@ class T_BodyContent_state extends State<T_BodyContent> {
 class T_StorageChooserRow extends StatelessWidget {
   // Attributes
   final String title;
-  final T_FileTree? fileTreeView; // null means single files
+  final S_FileTree_StreamControlled_Item? fileTreeView; // null means single files
   final TextEditingController _textEditingController = TextEditingController();
 
   // Constructor
