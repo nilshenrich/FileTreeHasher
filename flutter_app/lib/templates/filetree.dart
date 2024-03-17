@@ -40,8 +40,8 @@ abstract class T_FileTree_Item extends StatefulWidget {
   final String parent; // Elements parents absolute system path
 
   // Status change: Parent stream
-  Stream<C_HashAlg> s_hashAlg_stream; // Selected hash algorithm
-  Stream<C_HashFile_SavePath> s_hashFile_savePath_stream; // File path to save hash file to
+  final Stream<C_HashAlg> s_hashAlg_stream; // Selected hash algorithm
+  final Stream<C_HashFile_SavePath> s_hashFile_savePath_stream; // File path to save hash file to
 
   // Constructor
   T_FileTree_Item(
