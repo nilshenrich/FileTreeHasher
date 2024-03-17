@@ -366,7 +366,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
           _hashComp_cursorPos = hashComp_controller.selection.baseOffset;
 
           // Compare
-          _compareHash(hashComp);
+          _compareHash();
         },
       ),
     );
@@ -396,7 +396,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
         if (input.compInput != null) {
           _hashComp = input.compInput!;
           _hashComp_cursorPos = _hashComp.length;
-          _compareHash(_hashComp);
+          _compareHash(); // Widget is rebuilt from here
         }
       }
     });
@@ -484,11 +484,10 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
 
     // Extract hash string
     hasher.close();
-    String hashString = hashOut.events.single.toString();
+    _hashGen = hashOut.events.single.toString();
 
-    setState(() {
-      _hashGen = hashString;
-    });
+    // Compare hash (Widget is rebuilt from here)
+    _compareHash();
   }
 
   // ##################################################
@@ -509,9 +508,10 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   //         hashComp Set comparison result accordingly
   // @param: hashComp Text input
   // ##################################################
-  void _compareHash(String hashComp) {
+  // TODO: Call on hash generation end
+  void _compareHash() {
     // If any hash is empty, set comparison result None
-    if (_hashGen!.isEmpty || hashComp.isEmpty) {
+    if (_hashGen!.isEmpty || _hashComp.isEmpty) {
       setState(() {
         _hashComparisonResult = E_HashComparisonResult.none;
       });
@@ -520,7 +520,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
 
     // For 2 valid inputs, the result is equal or not equal
     setState(() {
-      _hashComparisonResult = _hashGen!.toLowerCase() == hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
+      _hashComparisonResult = _hashGen!.toLowerCase() == _hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
     });
   }
 }
