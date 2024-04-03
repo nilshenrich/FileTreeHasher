@@ -391,13 +391,19 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     });
     Controller_ComparisonInput.stream.listen((input) {
       // TODO: Can be done more efficient?
+      // TODO: Filter by tree and single files as well
       if (input.itempath == null || input.itempath == widget.path) {
-        if (input.hashAlg != null) globalkey_hashAlgSel.currentState!.set(input.hashAlg);
+        // Update comparison input and selected hash algorithm
+        // Trigger comparison explicitly if hash algorithm didn't change
+        bool triggerComparison = input.hashAlg == null || input.hashAlg == globalkey_hashAlgSel.currentState!.get();
         if (input.compInput != null) {
           _hashComp = input.compInput!;
           _hashComp_cursorPos = _hashComp.length;
-          _compareHash(); // Widget is rebuilt from here
         }
+        if (triggerComparison)
+          _compareHash();
+        else
+          globalkey_hashAlgSel.currentState!.set(input.hashAlg);
       }
     });
 
