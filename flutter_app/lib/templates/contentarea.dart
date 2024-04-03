@@ -322,8 +322,8 @@ class T_BodyContent_state extends State<T_BodyContent> {
         String filepath = csvrow[2];
 
         // Trigger input update
-        // TODO: Update selected hash algorithm as well
-        Controller_ComparisonInput.add(HashInputUpdater(itempath: "$rootPath/$filepath", compInput: hashstring, hashAlg: hashalg));
+        Controller_ComparisonInput.add(
+            HashInputUpdater(itempath: rootPath == HashfileSingletext ? filepath : "$rootPath/$filepath", compInput: hashstring, hashAlg: hashalg));
       });
     }
   }
