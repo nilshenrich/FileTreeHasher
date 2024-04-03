@@ -510,7 +510,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     // If generated hash does not match expected format or comparison is empty, set comparison result None
     String r_allowedChars = "a-fA-F0-9";
     List<int> allowedLengths = [32, 40, 64, 96, 128];
-    if (_hashComp.isEmpty || !RegExp('^(${allowedLengths.map((i) => '^[$r_allowedChars]{$i}\$').join('|')})\$').hasMatch(_hashGen!)) {
+    if (_hashComp.isEmpty || !RegExp('^(${allowedLengths.map((i) => '[$r_allowedChars]{$i}').join('|')})\$').hasMatch(_hashGen!)) {
       setState(() {
         _hashComparisonResult = E_HashComparisonResult.none;
       });
