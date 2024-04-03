@@ -511,7 +511,6 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   //         hashComp Set comparison result accordingly
   // @param: hashComp Text input
   // ##################################################
-  // TODO: Call on hash generation end
   void _compareHash() {
     // If generated hash does not match expected format or comparison is empty, set comparison result None
     String r_allowedChars = "a-fA-F0-9";
