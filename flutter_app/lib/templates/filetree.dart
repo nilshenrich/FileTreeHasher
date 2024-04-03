@@ -2,7 +2,7 @@
 // # @file filetree.dart
 // # @author Nils Henrich
 // # @brief Build file tree from system path and provide hash generating and checking
-// # @version 2.0.0
+// # @version 2.0.0+1
 // # @date 2023-12-07
 // #
 // # @copyright Copyright (c) 2023
@@ -400,10 +400,11 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
           _hashComp = input.compInput!;
           _hashComp_cursorPos = _hashComp.length;
         }
-        if (triggerComparison)
+        if (triggerComparison) {
           _compareHash();
-        else
+        } else {
           globalkey_hashAlgSel.currentState!.set(input.hashAlg);
+        }
       }
     });
 
