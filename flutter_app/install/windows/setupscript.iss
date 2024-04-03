@@ -1,5 +1,5 @@
 #define MyAppName "File Tree Hasher"
-#define MyAppVersion "1.0.1+4"
+#define MyAppVersion "2.0.0"
 #define MyAppPublisher "Nils Henrich"
 #define MyAppURL "https://nilshenrich.github.io/FileTreeHasher/"
 #define MyAppExeName "file_tree_hasher.exe"

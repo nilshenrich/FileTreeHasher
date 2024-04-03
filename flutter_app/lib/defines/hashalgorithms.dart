@@ -2,7 +2,7 @@
 // # @file hashalgorithms.dart
 // # @author Nils Henrich
 // # @brief Global definitions about hash algorithms that are used
-// # @version 1.0.1+4
+// # @version 2.0.0
 // # @date 2023-03-29
 // #
 // # @copyright Copyright (c) 2023
