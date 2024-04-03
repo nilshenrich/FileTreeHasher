@@ -400,10 +400,11 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
           _hashComp = input.compInput!;
           _hashComp_cursorPos = _hashComp.length;
         }
-        if (triggerComparison)
+        if (triggerComparison) {
           _compareHash();
-        else
+        } else {
           globalkey_hashAlgSel.currentState!.set(input.hashAlg);
+        }
       }
     });
 
