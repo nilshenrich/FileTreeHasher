@@ -2,7 +2,7 @@
 // # @file datatypes.dart
 // # @author Nils Henrich
 // # @brief Definition of useful datatypes usable in entire project
-// # @version 1.0.1+4
+// # @version 2.0.0
 // # @date 2023-05-15
 // #
 // # @copyright Copyright (c) 2023
@@ -14,11 +14,12 @@
 // ##################################################
 // # Hash comparison result
 // ##################################################
-
 enum E_HashComparisonResult {
-  none, // No comparison
-  equal, // Generated hash and comparison hash match
-  notEqual, // Generated hash and comparison hash differ
+  none, // Hash generation completed: No comparison
+  queued, // Hash to be generated but not started
+  busy, // Hash being generated
+  equal, // Hash generation completed: hash match
+  notEqual, // Hash generation completed: hash differ
 }
 
 // ##################################################

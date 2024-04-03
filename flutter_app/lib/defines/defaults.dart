@@ -2,7 +2,7 @@
 // # @file defaults
 // # @author Nils Henrich
 // # @brief All globally defined default values are set here
-// # @version 1.0.1+4
+// # @version 2.0.0
 // # @date 2023-03-29
 // #
 // # @copyright Copyright (c) 2023
@@ -12,7 +12,7 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
 import 'dart:io';
-import 'package:file_tree_hasher/definies/hashalgorithms.dart';
+import 'package:file_tree_hasher/defines/hashalgorithms.dart';
 
 // ---------- Default hash algorithm ----------
 // ---------- This algorithm is selected on startup ----------

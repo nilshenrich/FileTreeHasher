@@ -1,7 +1,19 @@
 {
-    "cmake.sourceDirectory": "/home/nils/Dokumente/GitRepos/FileTreeHasher/flutter_app/linux",
     "cSpell.words": [
         "Hasher",
         "nilshenrich"
-    ]
+    ],
+    "dart.lineLength": 150,
+    "[dart]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "editor.suggest.insertMode": "replace",
+        "editor.defaultFormatter": "Dart-Code.dart-code",
+        "editor.inlayHints.enabled": "offUnlessPressed",
+        "editor.rulers": [
+            150
+        ]
+    },
+    "cmake.configureOnOpen": false
 }

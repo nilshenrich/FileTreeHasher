@@ -2,7 +2,7 @@
 // # @file general.dart
 // # @author Nils Henrich
 // # @brief Collection of general functions and algorithms
-// # @version 1.0.1+4
+// # @version 2.0.0
 // # @date 2023-04-22
 // #
 // # @copyright Copyright (c) 2023
@@ -50,7 +50,7 @@ Directory GetHomeDir() {
 // @param: path
 // @return: String
 // ##################################################
-String GetParentPath(String path) {
+String GetParentPath(String path, {bool trailingSlash = false}) {
   String parent = libpath.dirname(path);
 
   // Raltive path without directory
@@ -61,7 +61,9 @@ String GetParentPath(String path) {
   if (RegExp(r"^[A-Za-z]:\\$").hasMatch(parent)) return "";
 
   // Add trailing slash
-  return "$parent/";
+  if (trailingSlash) parent = "$parent/";
+
+  return parent;
 }
 
 // ##################################################

@@ -3,7 +3,7 @@
 // # @author Nils Henrich
 // # @brief Template for hash selection drop-down menu.
 // #        Globally in header bar or special in file tree
-// # @version 1.0.1+4
+// # @version 2.0.0
 // # @date 2023-04-03
 // #
 // # @copyright Copyright (c) 2023
@@ -16,9 +16,9 @@
 // # TEMPLATE
 // # Overall hash selector
 // ##################################################
-import 'package:file_tree_hasher/definies/defaults.dart';
-import 'package:file_tree_hasher/definies/hashalgorithms.dart';
-import 'package:file_tree_hasher/definies/styles.dart';
+import 'package:file_tree_hasher/defines/defaults.dart';
+import 'package:file_tree_hasher/defines/hashalgorithms.dart';
+import 'package:file_tree_hasher/defines/styles.dart';
 import 'package:flutter/material.dart';
 
 abstract class T_HashSelector extends StatefulWidget {

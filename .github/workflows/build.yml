@@ -76,8 +76,11 @@ jobs:
       - name: Create install folder to upload
         run: |
           mkdir ./FileTreeHasher-linux-x64
-          mv flutter_app/build/linux/x64/release/bundle ./FileTreeHasher-linux-x64/
-          cp flutter_app/install/linux/install.sh ./FileTreeHasher-linux-x64/
+          mv flutter_app/build/linux/x64/release/bundle ./FileTreeHasher-linux-x64/bin
+          cp flutter_app/assets/img/logo.png ./FileTreeHasher-linux-x64/icon.png
+          cp flutter_app/install/linux/install.sh ./FileTreeHasher-linux-x64/install.sh
+          sed -i "s/^p_bundlefiles=.*$/p_bundlefiles=\$currentDir\/bin\/*/" ./FileTreeHasher-linux-x64/install.sh
+          sed -i "s/^p_bundleIcon=.*$/p_bundleIcon=\$currentDir\/icon.png/" ./FileTreeHasher-linux-x64/install.sh
 
       - name: Pack bundle to artifact
         uses: actions/upload-artifact@v3
@@ -110,11 +113,16 @@ jobs:
           flutter config --enable-macos-desktop
           flutter build macos --release
 
+      - name: Move application into parent folder
+        run: |
+          mkdir file_tree_hasher
+          mv flutter_app/build/macos/Build/Products/Release/File\ Tree\ Hasher.app file_tree_hasher/
+
       - name: Pack bundle to artifact
         uses: actions/upload-artifact@v3
         with:
           name: FileTreeHasher-macos-x64
-          path: flutter_app/build/macos/Build/Products/Release/File\ Tree\ Hasher.app/
+          path: file_tree_hasher/
           if-no-files-found: error
 
   # Update page and deploy builds
@@ -171,23 +179,22 @@ jobs:
         run: |
           mv assets/downloads/* ../website/assets/downloads/
 
-      - name: Checkout repository on develop
+      - name: Checkout repository on tag
         uses: actions/checkout@v3
-        with:
-          ref: develop
 
       - name: Restore all buffered website (including downloads)
         run: |
           rm -r ./website/
           mv ../website/ .
 
-      - name: Push new website to develop (excluding downloads)
+      - name: Push new website to new branch (excluding downloads)
         run: |
           git config --global user.email "nilshenrich@web.de"
           git config --global user.name "Nils Henrich - deploy workflow"
+          git checkout -b actions/${{ steps.get-tag-name.outputs.out }}
           git add -- . ':!website/assets/downloads/'
           git commit -m "<GitHub Action> Deploy version ${{ steps.get-tag-name.outputs.out }}"
-          git push origin
+          git push --set-upstream origin actions/${{ steps.get-tag-name.outputs.out }}
 
       - name: Clean repository (only website to be left)
         run: |
