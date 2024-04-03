@@ -2,7 +2,7 @@
 // # @file headercontroller.dart
 // # @author Nils Henrich
 // # @brief Template for general control section sitting in the header bar
-// # @version 2.0.0+1
+// # @version 2.0.0+2
 // # @date 2023-03-29
 // #
 // # @copyright Copyright (c) 2023
