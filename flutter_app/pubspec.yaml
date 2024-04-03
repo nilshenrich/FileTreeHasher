@@ -1,7 +1,7 @@
 name: file_tree_hasher
 description: Hash generation and comparison tool
 publish_to: "none"
-version: 2.0.0
+version: 2.0.0+2
 
 environment:
   sdk: ">=3.1.0 <4.0.0"

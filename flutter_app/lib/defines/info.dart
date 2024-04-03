@@ -2,7 +2,7 @@
 // # @file info.dart
 // # @author Nils Henrich
 // # @brief General information about the app
-// # @version 2.0.0
+// # @version 2.0.0+2
 // # @date 2023-06-18
 // #
 // # @copyright Copyright (c) 2023
