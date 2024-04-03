@@ -2,7 +2,7 @@
 // # @file filetree.dart
 // # @author Nils Henrich
 // # @brief Build file tree from system path and provide hash generating and checking
-// # @version 1.0.1+4
+// # @version 2.0.0
 // # @date 2023-12-07
 // #
 // # @copyright Copyright (c) 2023
