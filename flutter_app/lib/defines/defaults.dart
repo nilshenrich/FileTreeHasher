@@ -2,7 +2,7 @@
 // # @file defaults
 // # @author Nils Henrich
 // # @brief All globally defined default values are set here
-// # @version 2.0.0+1
+// # @version 2.0.0+2
 // # @date 2023-03-29
 // #
 // # @copyright Copyright (c) 2023
