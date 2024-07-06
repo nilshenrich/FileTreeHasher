@@ -18,4 +18,4 @@ const String HashFileHeader = """*** File Tree Hasher ***
 Author: Nils Henrich
 Website: https://nilshenrich.github.io/FileTreeHasher/
 Source code: https://github.com/nilshenrich/FileTreeHasher
-Version: 1.0.1+4""";
+Version: 2.0.0+2""";
