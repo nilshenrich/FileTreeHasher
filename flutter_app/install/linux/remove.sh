@@ -17,4 +17,4 @@ rm -f /usr/share/applications/$appname.desktop
 rm -f /usr/local/bin/$appname
 
 # Remove bundle
-rm -rf $installpath/
+rm -rf $installpath
