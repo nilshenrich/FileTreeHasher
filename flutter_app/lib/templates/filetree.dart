@@ -497,6 +497,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // ##################################################
   // @brief: Abort current hash generation
   // ##################################################
+  // BUG: Never called
   void abortHashGeneration() {
     // Unset flag to mark abortion
     _hashOngoing = false;
