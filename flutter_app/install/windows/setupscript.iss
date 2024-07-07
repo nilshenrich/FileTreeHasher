@@ -1,5 +1,5 @@
 #define MyAppName "File Tree Hasher"
-#define MyAppVersion "2.0.1"
+#define MyAppVersion "2.0.1+3"
 #define MyAppPublisher "Nils Henrich"
 #define MyAppURL "https://nilshenrich.github.io/FileTreeHasher/"
 #define MyAppExeName "file_tree_hasher.exe"
@@ -36,7 +36,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\..\build\windows\runner\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Registry]
 ;Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
