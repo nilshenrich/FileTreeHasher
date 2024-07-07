@@ -2,7 +2,7 @@
 // # @file styles.dart
 // # @author Nils Henrich
 // # @brief General widget styles
-// # @version 2.0.0+2
+// # @version 2.0.1
 // # @date 2023-04-03
 // #
 // # @copyright Copyright (c) 2023

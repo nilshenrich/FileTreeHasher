@@ -2,7 +2,7 @@
 // # @file info.dart
 // # @author Nils Henrich
 // # @brief General information about the app
-// # @version 2.0.0+2
+// # @version 2.0.1
 // # @date 2023-06-18
 // #
 // # @copyright Copyright (c) 2023
@@ -18,4 +18,4 @@ const String HashFileHeader = """*** File Tree Hasher ***
 Author: Nils Henrich
 Website: https://nilshenrich.github.io/FileTreeHasher/
 Source code: https://github.com/nilshenrich/FileTreeHasher
-Version: 2.0.0+2""";
+Version: 2.0.1""";
