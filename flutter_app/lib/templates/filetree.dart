@@ -2,7 +2,7 @@
 // # @file filetree.dart
 // # @author Nils Henrich
 // # @brief Build file tree from system path and provide hash generating and checking
-// # @version 2.0.0+2
+// # @version 2.0.1
 // # @date 2023-12-07
 // #
 // # @copyright Copyright (c) 2023
@@ -277,7 +277,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   String _hashComp = "";
   int _hashComp_cursorPos = 0;
   E_HashComparisonResult _hashComparisonResult = E_HashComparisonResult.none;
-  String? _hashGen; // Generated hash
+  String _hashGen = "<No hash to create>"; // Generated hash
   double _hashGenProgress = 0; // Hash generation progress (0-1)
   final StreamController<double> _s_hashGenProgress = StreamController(); // Stream to update live progress
   bool _hashOngoing = false; // Hash generation ongoing? (Used for abortion)
@@ -313,7 +313,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // @return: Widget
   // ##################################################
   Widget _buildHashGenerationView(BuildContext context) {
-    if (_hashGen == null) {
+    if (_hashOngoing) {
       return LinearPercentIndicator(
         percent: _hashGenProgress,
         lineHeight: Style_FileTree_HashGen_Prg_Height_px,
@@ -326,13 +326,13 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
         Flexible(
             child: Container(
           color: Style_FileTree_HashComp_Colors[_hashComparisonResult],
-          child: Text(_hashGen!, style: Style_FileTree_HashGen_Text),
+          child: Text(_hashGen, style: Style_FileTree_HashGen_Text),
         )),
         SizedBox(
             height: Style_FileTree_HashSelector_FontSize_px,
             child: IconButton(
                 onPressed: () {
-                  Clipboard.setData(ClipboardData(text: _hashGen!));
+                  Clipboard.setData(ClipboardData(text: _hashGen));
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied to clipboard")));
                 },
                 iconSize: Style_FileTree_HashSelector_FontSize_px,
@@ -497,6 +497,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
   // ##################################################
   // @brief: Abort current hash generation
   // ##################################################
+  // BUG: Never called
   void abortHashGeneration() {
     // Unset flag to mark abortion
     _hashOngoing = false;
@@ -516,7 +517,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
     // If generated hash does not match expected format or comparison is empty, set comparison result None
     String r_allowedChars = "a-fA-F0-9";
     List<int> allowedLengths = [32, 40, 64, 96, 128];
-    if (_hashComp.isEmpty || !RegExp('^(${allowedLengths.map((i) => '[$r_allowedChars]{$i}').join('|')})\$').hasMatch(_hashGen!)) {
+    if (_hashComp.isEmpty || !RegExp('^(${allowedLengths.map((i) => '[$r_allowedChars]{$i}').join('|')})\$').hasMatch(_hashGen)) {
       setState(() {
         _hashComparisonResult = E_HashComparisonResult.none;
       });
@@ -525,7 +526,7 @@ class I_FileTree_File_state extends State<I_FileTree_File> {
 
     // For 2 valid inputs, the result is equal or not equal
     setState(() {
-      _hashComparisonResult = _hashGen!.toLowerCase() == _hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
+      _hashComparisonResult = _hashGen.toLowerCase() == _hashComp.toLowerCase() ? E_HashComparisonResult.equal : E_HashComparisonResult.notEqual;
     });
   }
 }

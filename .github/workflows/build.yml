@@ -78,7 +78,7 @@ jobs:
           mkdir ./FileTreeHasher-linux-x64
           mv flutter_app/build/linux/x64/release/bundle ./FileTreeHasher-linux-x64/bin
           cp flutter_app/assets/img/logo.png ./FileTreeHasher-linux-x64/icon.png
-          cp flutter_app/install/linux/install.sh ./FileTreeHasher-linux-x64/install.sh
+          cp flutter_app/install/linux/* ./FileTreeHasher-linux-x64/
           sed -i "s/^p_bundlefiles=.*$/p_bundlefiles=\$currentDir\/bin\/*/" ./FileTreeHasher-linux-x64/install.sh
           sed -i "s/^p_bundleIcon=.*$/p_bundleIcon=\$currentDir\/icon.png/" ./FileTreeHasher-linux-x64/install.sh
 

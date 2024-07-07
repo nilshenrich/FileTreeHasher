@@ -6,14 +6,29 @@ if [ "$EUID" -ne 0 ]; then
     exit -1
 fi
 
-
-# Get directory of this file
+# Get directory path of this file
 currentDir=$(dirname $(readlink -f $0))
 
 # Installation path
 binname="file_tree_hasher"
 appname="filetreehasher"
 installpath="/opt/$appname"
+
+# If the installation path already exists, ask to remove it
+if [ -d "/opt/$appname" ]; then
+    echo "File Tree Hasher seems to be already installed."
+    echo "Do you want to remove and reinstall?"
+    echo -n "y/n: "
+    read answer
+    if [ "$answer" == "y" ]; then
+        $currentDir/remove.sh
+    else
+        exit 0
+    fi
+fi
+
+# Get directory of this file
+currentDir=$(dirname $(readlink -f $0))
 
 # Bundle path
 p_bundlefiles=$currentDir/../../build/linux/x64/release/bundle/*
