@@ -143,7 +143,9 @@ class T_BodyContent_state extends State<T_BodyContent> {
     // -------------------- Select folder from system --------------------
     // TODO: Multiple folders could be selected (Button description to be adapted). Think that is not possible for folders
     String? filetreePath = await FilePicker.platform.getDirectoryPath(initialDirectory: GetHomeDir().path);
-    if (filetreePath == null) return;
+    if (filetreePath == null) {
+      return;
+    }
 
     // -------------------- Show selected folder as tree view --------------------
     StreamController<C_HashFile_SavePath> controller_HashFile_SavePath = StreamController();
