@@ -59,7 +59,7 @@ jobs:
       - name: Set up flutter environment
         uses: subosito/flutter-action@v1 # v2 struggles reading version
         with:
-          flutter-version: '3.13.x'
+          flutter-version: '3.22.x'
           channel: 'stable'
 
       - name: Resolve dependecies
