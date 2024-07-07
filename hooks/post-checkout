@@ -18,10 +18,10 @@ root_dir=$(readlink -nf .)
 ##################################################
 # Checked out a release branch
 ##################################################
-if [[ $current_branch == release/* ]]
+if [[ $current_branch == release/* || $current_branch == hotfix/* ]]
 then
     # ---------- Update version ----------
-    version=$(echo $current_branch | sed "s/release\///g" | sed -E "s/^[a-zA-Z]+//g")
+    version=$(echo $current_branch | sed "s/release\///g" | sed "s/hotfix\///g" | sed -E "s/^[a-zA-Z]+//g")
     find $root_dir/flutter_app/lib/ -type f -exec sed -i -E "s/^\/\/\s*(#|)\s*@version\s*[1234567890\.\+]+$/\/\/ # @version $version/g" {} \;
     sed -i -E "s/^version:\s*[1234567890\.\+]+$/version: $version/g" $root_dir/flutter_app/pubspec.yaml
     sed -i -E "s/^#define\s+MyAppVersion\s*\"[1234567890\.\+]+\"/#define MyAppVersion \"$version\"/g" $root_dir/flutter_app/install/windows/setupscript.iss
