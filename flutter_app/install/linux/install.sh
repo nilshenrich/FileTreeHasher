@@ -27,9 +27,6 @@ if [ -d "/opt/$appname" ]; then
     fi
 fi
 
-# Get directory of this file
-currentDir=$(dirname $(readlink -f $0))
-
 # Bundle path
 p_bundlefiles=$currentDir/../../build/linux/x64/release/bundle/*
 p_bundleIcon=$currentDir/../../assets/img/logo.png
