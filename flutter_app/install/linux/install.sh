@@ -6,6 +6,9 @@ if [ "$EUID" -ne 0 ]; then
     exit -1
 fi
 
+# Install necessary packages
+apt install imagemagick
+
 # Get directory path of this file
 currentDir=$(dirname $(readlink -f $0))
 
