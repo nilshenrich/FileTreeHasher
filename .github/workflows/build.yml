@@ -189,8 +189,8 @@ jobs:
 
       - name: Push new website to new branch (excluding downloads)
         run: |
-          git config --global user.email "nilshenrich@web.de"
-          git config --global user.name "Nils Henrich - deploy workflow"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git checkout -b actions/${{ steps.get-tag-name.outputs.out }}
           git add -- . ':!website/assets/downloads/'
           git commit -m "<GitHub Action> Deploy version ${{ steps.get-tag-name.outputs.out }}"
